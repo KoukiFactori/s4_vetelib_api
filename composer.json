@@ -68,7 +68,29 @@
         ],
         "post-update-cmd": [
             "@auto-scripts"
+        ],
+        "start": [
+            "Composer\\Config::disableProcessTimeout",
+            "symfony serve"
+        ],
+        "test:cs": [
+            "php-cs-fixer fix --dry-run"
+        ],
+        "fix:cs": [
+            "php-cs-fixer fix"
+        ],
+        "db": [
+            "php bin/console doctrine:database:drop --force",
+            "php bin/console doctrine:database:create",
+            "php bin/console doctrine:schema:create",
+            "php bin/console doctrine:fixtures:load --no-interaction"
         ]
+    },
+    "scripts-descriptions": {
+        "start": "Lance un serveur web symfony",
+        "fix:cs": "Fix le code PHP avec PHP CS Fixer",
+        "test:cs" : "Test le code PHP avec PHP CS Fixer",
+        "db" : "Supprime et créé une nouvelle base de données, à laquelle on applique des migrations, puis création des données factives"
     },
     "conflict": {
         "symfony/symfony": "*"
