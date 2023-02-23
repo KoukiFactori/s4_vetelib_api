@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Event;
+use App\Entity\TypeEvent;
 use App\Entity\Veterinaire;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -66,7 +67,16 @@ public function getAllEventByClient(Client $client)
     ->setParameter('now', new \DateTime());
 
     return $qb->getQuery()->getResult();
+}
 
+public function getAllEventByType(TypeEvent $typeEvent)
+{
+    $qb = $this->createQueryBuilder('a')
+    ->innerJoin('a.typeEvent', 'typeEvent')
+    ->where('typeEvent = :typeEvent')
+    ->setParameter('typeEvent', $typeEvent );
+
+    return $qb->getQuery()->getResult();
 
 }
 
