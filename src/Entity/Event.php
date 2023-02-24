@@ -77,9 +77,10 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
             openapiContext:
             [
                 'summary' => 'Get all events',
-                'description' => 'Get all events',
+                'description' => 'Get all events of a veterinaire',
                 'response' =>['200' , '401', '403', '404'],
-            ]
+            ],
+            controller: GetAllEventOfVeterinaireController::class,
             ),
         new Post(
             uriTemplate:'/events',
