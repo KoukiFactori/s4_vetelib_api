@@ -18,10 +18,10 @@ use APiPlatform\Metadata\Delete;
 #[ORM\Entity(repositoryClass: EventRepository::class)]
 #[ApiResource(
     operations:[
-        new Get(
-                uriTemplate:'/event/type/{id}',
+        new GetCollection(
+                uriTemplate:'/events/type/{id}',
                 controller: GetEventByTypeController::class,
-                paginationEnabled:false,
+                security:'is_granted("ROLE_VETERINAIRE") and object.veterinaire == user',
                 openapiContext:
                 [
                     'summary' => 'Get collection of events of the same type',
@@ -43,8 +43,9 @@ use APiPlatform\Metadata\Delete;
                 ]
                 ),
         new Get(
-            uriTemplate:'/event/{id}',
+            uriTemplate:'/events/{id}',
             paginationEnabled:false,
+            security:'is_granted("ROLE_USER") and (object.user = user or object.veterinaire = user)',
             openapiContext:
             [
                 'summary' => 'Get one events',
@@ -66,8 +67,8 @@ use APiPlatform\Metadata\Delete;
             ]
             ),
         new GetCollection(
-            uriTemplate:'/event',
-            paginationEnabled:false,
+            uriTemplate:'/events',
+            security:'is_granted("ROLE_VETERINAIRE")',
             openapiContext:
             [
                 'summary' => 'Get all events',
@@ -76,7 +77,8 @@ use APiPlatform\Metadata\Delete;
             ]
             ),
         new Post(
-            uriTemplate:'/event',
+            uriTemplate:'/events',
+            security:'is_granted("ROLE_USER") and (object.user = user or object.veterinaire = user)',
             openapiContext:
                 [
                     'summary' => 'Create an event',
@@ -88,7 +90,8 @@ use APiPlatform\Metadata\Delete;
             
             ),
         new Patch(
-            uriTemplate:'/event/{id}',
+            uriTemplate:'/events/{id}',
+            security:'is_granted("ROLE_USER")',
             openapiContext:
                 [
                     'summary' => 'Update an event',
@@ -110,7 +113,8 @@ use APiPlatform\Metadata\Delete;
 
                 ),
         new Delete(
-            uriTemplate:'/event/{id}',
+            uriTemplate:'/events/{id}',
+            security:'is_granted("ROLE_USER")',
             openapiContext:
                 [
                     'summary' => 'Delete an event',
@@ -131,7 +135,7 @@ use APiPlatform\Metadata\Delete;
                 ]
                 ),
         new Put(
-            uriTemplate:'/event/{id}',
+            uriTemplate:'/events/{id}',
             openapiContext:
                 [
                     'summary' => 'Update an event',
