@@ -82,6 +82,18 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
             ]
             ),
         new Post(
+            uriTemplate:'/event',
+            openapiContext:
+            [
+                'summary' => 'Create an event',
+                'description' => 'Create an event',
+                'response' =>['200' , '401', '403', '404'],
+                
+            ],
+
+            
+            ),
+        new Post(
             uriTemplate:'/events',
             security:'is_granted("ROLE_USER")',
             openapiContext:
@@ -161,7 +173,7 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
                         ],
                     ]
                )
-                             
+                                          
             ]        
 )]
 #[ApiResource(
