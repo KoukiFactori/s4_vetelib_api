@@ -1,0 +1,127 @@
+body {
+  height: 100vh;
+  background: linear-gradient(180deg, #f8e7c1 10%, #f5bd89 100%);
+  background-image: url("/images/background.png");
+
+  padding: 30px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.form__container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  
+  max-width: 600px;
+  width: 100%;
+
+  padding: 30px;
+
+  border-radius: 10px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.form__container h1 {
+  font-size: 4rem;
+  font-weight: bold;
+
+  margin: 5%;
+}
+
+.alert {
+  font-size: 16px;
+  align-self: center;
+  color: red;
+}
+
+
+button {
+  margin-top: 20px;
+}
+
+
+.form_login label {
+  display: none;
+}
+
+@media screen and (min-width: 900px) {
+  .form_login label {
+    display: block;
+  }
+
+  .field {
+    gap: 5px;
+  }
+
+  .form_login {
+    gap: 20px;
+  }
+
+  .field input {
+    margin: 0;
+  }
+}
+/* ============== */
+
+.form_login {
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+}
+
+.field label {
+  font-size: 2rem;
+  color: gray;
+}
+
+.field input {
+  background-color: #1b4758;
+  color: rgba(255, 255, 255, 0.89);
+
+  border-radius: 12px;
+  border-style: hidden;
+  height: 30px;
+
+  padding: 5px;
+
+  margin-top: 2px;
+}
+
+.field input::placeholder {
+  color: rgba(245, 245, 245, 0.473);
+}
+
+.form_login .parameter {
+  display: flex;
+  flex-direction: row;
+}
+
+.form_login .btn[type="submit"] {
+  background-color: #1ac474;
+  color: white;
+  border: none;
+  height: 30px;
+  border-radius: 12px;
+}
+
+@media screen and (min-width: 900px) {
+  .inline_row {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+  }  
+}
