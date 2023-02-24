@@ -69,16 +69,19 @@ public function getAllEventByClient(Client $client)
     return $qb->getQuery()->getResult();
 }
 
-public function getAllEventByType(TypeEvent $typeEvent)
+public function getAllEventByTypeAndVeterinaire(TypeEvent $typeEvent , Veterinaire $veterinaire)
 {
     $qb = $this->createQueryBuilder('a')
     ->innerJoin('a.typeEvent', 'typeEvent')
+    ->innerJoin('a.veterinaire', 'veterinaire')
     ->where('typeEvent = :typeEvent')
-    ->setParameter('typeEvent', $typeEvent );
+    ->andWhere('veterinaire = :veterinaire')
+    ->setParameter('typeEvent', $typeEvent )
+    ->setParameter('veterinaire', $veterinaire );
 
     return $qb->getQuery()->getResult();
-
 }
+
 
 
     /**
