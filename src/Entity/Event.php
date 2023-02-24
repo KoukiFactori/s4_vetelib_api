@@ -13,6 +13,7 @@ use ApiPlatform\Metadata\ApiResource;
 use App\Repository\EventRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use APiPlatform\Metadata\Get;
 use APiPlatform\Metadata\Post;
 use APiPlatform\Metadata\Delete;
@@ -228,12 +229,15 @@ class Event
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['get_event'])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Groups(['get_event'])]
     private ?\DateTimeInterface $date = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['get_event'])]
     private ?string $description = null;
 
     #[ORM\ManyToOne(inversedBy: 'events')]
@@ -247,6 +251,7 @@ class Event
 
     #[ORM\ManyToOne(inversedBy: 'events')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['get_event'])]
     private ?Veterinaire $veterinaire = null;
 
     public function getId(): ?int
