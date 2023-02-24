@@ -92,7 +92,7 @@ use APiPlatform\Metadata\Delete;
             ),
         new Patch(
             uriTemplate:'/events/{id}',
-            security:'is_granted("ROLE_USER")',
+            security:'is_granted("ROLE_USER") and (object.user = user or object.veterinaire = user)',
             openapiContext:
                 [
                     'summary' => 'Update an event',
@@ -115,7 +115,7 @@ use APiPlatform\Metadata\Delete;
                 ),
         new Delete(
             uriTemplate:'/events/{id}',
-            security:'is_granted("ROLE_USER")',
+            security:'is_granted("ROLE_USER") and (object.user = user or object.veterinaire = user)',
             openapiContext:
                 [
                     'summary' => 'Delete an event',
@@ -137,6 +137,7 @@ use APiPlatform\Metadata\Delete;
                 ),
         new Put(
             uriTemplate:'/events/{id}',
+            security:'is_granted("ROLE_USER") and (object.user = user or object.veterinaire = user)',
             openapiContext:
                 [
                     'summary' => 'Update an event',
