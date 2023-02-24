@@ -92,6 +92,7 @@ public function getAllEventByVeterinaire(Veterinaire $veterinaire)
 }
 
 
+
     /**
      * Récupère tous les events entre deux dates
      * 

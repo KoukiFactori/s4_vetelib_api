@@ -50,7 +50,7 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
         new Get(
             uriTemplate:'/events/{id}',
             paginationEnabled:false,
-            security:'is_granted("ROLE_USER") and (object.getVeterinaire() == user or object.getAnimal().getClient() == user)',
+            security:'is_granted("ROLE_USER") and (object.user = user or object.veterinaire = user)',
             openapiContext:
             [
                 'summary' => 'Get one events',
@@ -72,8 +72,8 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
             ]
             ),
         new GetCollection(
-            uriTemplate:'/event',
-            paginationEnabled:false,
+            uriTemplate:'/events',
+            security:'is_granted("ROLE_VETERINAIRE")',
             openapiContext:
             [
                 'summary' => 'Get all events',
@@ -82,7 +82,8 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
             ]
             ),
         new Post(
-            uriTemplate:'/event',
+            uriTemplate:'/events',
+            security:'is_granted("ROLE_USER") and (object.user = user or object.veterinaire = user)',
             openapiContext:
                 [
                     'summary' => 'Create an event',
@@ -108,7 +109,7 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
             ),
         new Patch(
             uriTemplate:'/events/{id}',
-            security:'is_granted("ROLE_USER") and (object.getVeterinaire() == user or object.getAnimal().getClient() == user)',
+            security:'is_granted("ROLE_USER")',
             openapiContext:
                 [
                     'summary' => 'Update an event',
@@ -131,7 +132,7 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
                 ),
         new Delete(
             uriTemplate:'/events/{id}',
-            security:'is_granted("ROLE_USER") and (object.getVeterinaire() == user or object.getAnimal().getClient() == user)',
+            security:'is_granted("ROLE_USER")',
             openapiContext:
                 [
                     'summary' => 'Delete an event',
@@ -153,7 +154,6 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
                 ),
         new Put(
             uriTemplate:'/events/{id}',
-            security:'is_granted("ROLE_USER") and (object.getVeterinaire() == user or object.getAnimal().getClient() == user)',
             openapiContext:
                     [
                         'summary' => 'Update an event',
