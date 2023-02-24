@@ -13,6 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use APiPlatform\Metadata\Get;
 use APiPlatform\Metadata\Post;
+use APiPlatform\Metadata\Delete;
 
 #[ORM\Entity(repositoryClass: EventRepository::class)]
 #[ApiResource(

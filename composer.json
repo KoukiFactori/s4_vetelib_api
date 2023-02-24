@@ -87,19 +87,21 @@
             "php bin/console doctrine:schema:create",
             "php bin/console doctrine:fixtures:load --no-interaction"
         ],
-        "test:codeception": [
+        "test:codeception":[
             "php vendor/bin/codecept clean",
             "cross-env APP_ENV=test php bin/console doctrine:database:drop --force",
             "cross-env APP_ENV=test php bin/console doctrine:database:create",
             "cross-env APP_ENV=test php bin/console doctrine:schema:create --quiet",
             "cross-env SYMFONY_DEPRECATIONS_HELPER=weak php vendor/bin/codecept run --no-artifacts"
         ]
+
     },
     "scripts-descriptions": {
         "start": "Lance un serveur web symfony",
         "fix:cs": "Fix le code PHP avec PHP CS Fixer",
         "test:cs" : "Test le code PHP avec PHP CS Fixer",
-        "db" : "Supprime et créé une nouvelle base de données, à laquelle on applique des migrations, puis création des données factives"
+        "db" : "Supprime et créé une nouvelle base de données, à laquelle on applique des migrations, puis création des données factives",
+        "test:codeception" : "lance les tests codeception"
     },
     "conflict": {
         "symfony/symfony": "*"
