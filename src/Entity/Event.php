@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Put;
 use app\Controller\GetEventByTypeController;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\EventRepository;
@@ -106,6 +107,28 @@ use APiPlatform\Metadata\Post;
                     ],
                 ]
 
+                ),
+
+        new Put(
+            uriTemplate:'/event/{id}',
+            openapiContext:
+                [
+                    'summary' => 'Update an event',
+                    'description' => 'Update an event',
+                    'response' =>['200' , '401', '403', '404'],
+                    'parameters' => [
+                        'id' => [
+                            'name' => 'id',
+                            'in' => 'path',
+                            'description' => 'The id of the event you want to update',
+                            'type' => 'integer',
+                            'required' => true,
+                            'openapi' => [
+                                'example' => 1
+                            ]
+                        ]
+                    ],
+                ]
         )
                      
             ]        
