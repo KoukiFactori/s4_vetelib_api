@@ -10,6 +10,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use APiPlatform\Metadata\Get;
+use APiPlatform\Metadata\Post;
 
 #[ORM\Entity(repositoryClass: EventRepository::class)]
 #[ApiResource(
@@ -71,7 +72,19 @@ use APiPlatform\Metadata\Get;
                 'response' =>['200' , '401', '403', '404'],
             ]
             ),
-        
+        new Post(
+            uriTemplate:'/event',
+            openapiContext:
+            [
+                'summary' => 'Create an event',
+                'description' => 'Create an event',
+                'response' =>['200' , '401', '403', '404'],
+                
+            ],
+
+            
+            ),
+                     
             ]        
 )]
 
