@@ -3,7 +3,10 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
 use App\Repository\UserRepository;
+use App\Controller\GetMeController;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\DiscriminatorColumn;
@@ -12,6 +15,7 @@ use Doctrine\ORM\Mapping\InheritanceType;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[InheritanceType('SINGLE_TABLE')]
@@ -19,19 +23,42 @@ use Symfony\Component\Security\Core\User\UserInterface;
 #[DiscriminatorMap(['client' => Client::class, 'veterinaire' => Veterinaire::class, 'admin' => Admin::class])]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 #[ApiResource]
+#[GetCollection(
+    controller: GetMeController::class,
+    paginationEnabled: false,
+    security: 'is_granted("ROLE_USER")',
+    normalizationContext: ['groups' => ['get_User', 'get_Me']],
+    uriTemplate: '/me',
+    openapiContext: [
+        'summary' => 'Retrieves the connected user',
+        'description' => 'Retrieves the current connected user',
+        'responses' => [
+            '200' => [
+                'description' => 'User!!!!',
+            ],
+            '400' => [
+                'description' => 'Throw an error when not connected',
+            ],
+        ],
+    ]
+)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups('get_User')]
     protected ?int $id = null;
 
+    #[Groups(['get_User', 'set_User'])]
     #[ORM\Column(length: 50)]
     private ?string $lastname = null;
 
+    #[Groups(['get_User', 'set_User'])]
     #[ORM\Column(length: 50)]
     private ?string $firstname = null;
 
+    #[Groups(['get_User', 'set_User'])]
     #[ORM\Column(length: 180, unique: true)]
     protected ?string $email = null;
 
@@ -42,20 +69,26 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var string The hashed password
      */
     #[ORM\Column]
+    #[Groups('set_User')]
     protected ?string $password = null;
 
+    #[Groups(['get_User', 'set_User'])]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $phone = null;
 
+    #[Groups(['get_User', 'set_User'])]
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $birthdate = null;
-
+    
+    #[Groups(['get_User', 'set_User'])]
     #[ORM\Column(length: 60, nullable: true)]
     private ?string $city = null;
 
+    #[Groups(['get_User', 'set_User'])]
     #[ORM\Column(length: 20, nullable: true)]
     private ?string $zipcode = null;
 
+    #[Groups(['get_User', 'set_User'])]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $address = null;
 
