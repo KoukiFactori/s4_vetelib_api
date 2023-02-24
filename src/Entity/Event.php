@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\GetCollection;
 use app\Controller\GetEventByTypeController;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\EventRepository;
@@ -19,7 +20,7 @@ use APiPlatform\Metadata\Get;
                 paginationEnabled:false,
                 openapiContext:
                 [
-                    'summary' => 'Get collection of events',
+                    'summary' => 'Get collection of events of the same type',
                     'description' => 'Get all events by type',
                     'response' =>['200' , '401', '403', '404'],
                     'parameters' => [
@@ -36,7 +37,31 @@ use APiPlatform\Metadata\Get;
                     ],
         
                 ]
-            )
+                ),
+        new Get(
+            uriTemplate:'/event/{id}',
+            paginationEnabled:false,
+            openapiContext:
+            [
+                'summary' => 'Get one events',
+                'description' => 'Get event by id',
+                'response' =>['200' , '401', '403', '404'],
+                'parameters' => [
+                    'id' => [
+                        'name' => 'id',
+                        'in' => 'path',
+                        'description' => 'The id of the event we want to get',
+                        'type' => 'integer',
+                        'required' => true,
+                        'openapi' => [
+                            'example' => 1
+                        ]
+                    ]
+                ],
+
+            ]
+            ),
+
             ]        
 )]
 
