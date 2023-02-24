@@ -80,7 +80,15 @@ public function getAllEventByTypeAndVeterinaire(TypeEvent $typeEvent , Veterinai
 
     return $qb->getQuery()->getResult();
 }
+public function getAllEventByVeterinaire(Veterinaire $veterinaire)
+{
+    $qb = $this->createQueryBuilder('a')
+    ->innerJoin('a.veterinaire', 'veterinaire')
+    ->where('veterinaire = :veterinaire')
+    ->setParameter('veterinaire', $veterinaire );
 
+    return $qb->getQuery()->getResult();
+}
 
 
     /**
