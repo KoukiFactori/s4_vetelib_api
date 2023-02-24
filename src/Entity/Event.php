@@ -2,8 +2,8 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Put;
 use App\Controller\GetAllEventOfClientController;

@@ -11,7 +11,6 @@ class GetEventByTypeController extends AbstractController
 {
     public function __invoke(Event $data , EventRepository $e): array
     {
-  
         return $e->getAllEventByType($data->getTypeEvent());
     }
 }
