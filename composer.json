@@ -88,7 +88,7 @@
             "php bin/console doctrine:schema:create",
             "php bin/console doctrine:fixtures:load --no-interaction"
         ],
-        "test:codeception": [
+        "test:codeception":[
             "php vendor/bin/codecept clean",
             "cross-env APP_ENV=test php bin/console doctrine:database:drop --force",
             "cross-env APP_ENV=test php bin/console doctrine:database:create",
