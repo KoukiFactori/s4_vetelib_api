@@ -71,6 +71,16 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 
             ]
             ),
+        new GetCollection(
+            uriTemplate:'/event',
+            paginationEnabled:false,
+            openapiContext:
+            [
+                'summary' => 'Get all events',
+                'description' => 'Get all events',
+                'response' =>['200' , '401', '403', '404'],
+            ]
+            ),
         new Post(
             uriTemplate:'/events',
             security:'is_granted("ROLE_USER")',
@@ -151,7 +161,7 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
                         ],
                     ]
                )
-                     
+                             
             ]        
 )]
 #[ApiResource(
