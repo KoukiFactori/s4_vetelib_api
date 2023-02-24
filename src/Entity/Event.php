@@ -84,12 +84,12 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
         new Post(
             uriTemplate:'/event',
             openapiContext:
-            [
-                'summary' => 'Create an event',
-                'description' => 'Create an event',
-                'response' =>['200' , '401', '403', '404'],
-                
-            ],
+                [
+                    'summary' => 'Create an event',
+                    'description' => 'Create an event',
+                    'response' =>['200' , '401', '403', '404'],
+                    
+                ],
 
             
             ),
