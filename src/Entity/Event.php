@@ -108,7 +108,27 @@ use APiPlatform\Metadata\Post;
                 ]
 
                 ),
-
+        new Delete(
+            uriTemplate:'/event/{id}',
+            openapiContext:
+                [
+                    'summary' => 'Delete an event',
+                    'description' => 'Delete an event',
+                    'response' =>['200' , '401', '403', '404'],
+                    'parameters' => [
+                        'id' => [
+                            'name' => 'id',
+                            'in' => 'path',
+                            'description' => 'The id of the event you want to delete',
+                            'type' => 'integer',
+                            'required' => true,
+                            'openapi' => [
+                                'example' => 1
+                            ]
+                        ]
+                    ],
+                ]
+                ),
         new Put(
             uriTemplate:'/event/{id}',
             openapiContext:
