@@ -61,7 +61,17 @@ use APiPlatform\Metadata\Get;
 
             ]
             ),
-
+        new GetCollection(
+            uriTemplate:'/event',
+            paginationEnabled:false,
+            openapiContext:
+            [
+                'summary' => 'Get all events',
+                'description' => 'Get all events',
+                'response' =>['200' , '401', '403', '404'],
+            ]
+            ),
+        
             ]        
 )]
 
