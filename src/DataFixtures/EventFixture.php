@@ -17,7 +17,7 @@ class EventFixture extends Fixture implements DependentFixtureInterface
         // Tableau stoquant les évennements déjà présents
         $datetimes = [];
 
-        EventFactory::createMany(2000, function () use (&$datetimes){
+        EventFactory::createMany(100, function () use (&$datetimes){
 
             $veterinaire = VeterinaireFactory::random();
             $vetoId = $veterinaire->getId();

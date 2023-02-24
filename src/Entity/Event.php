@@ -2,24 +2,58 @@
 
 namespace App\Entity;
 
+use app\Controller\GetEventByTypeController;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\EventRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+use APiPlatform\Metadata\Get;
 
 #[ORM\Entity(repositoryClass: EventRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    operations:[
+        new Get(
+                uriTemplate:'/event/type/{id}',
+                controller: GetEventByTypeController::class,
+                paginationEnabled:false,
+                openapiContext:
+                [
+                    'summary' => 'Get collection of events',
+                    'description' => 'Get all events by type',
+                    'response' =>['200' , '401', '403', '404'],
+                    'parameters' => [
+                        'id' => [
+                            'name' => 'id',
+                            'in' => 'path',
+                            'description' => 'The type of event 1 for non urgent 2 for urgent',
+                            'type' => 'integer',
+                            'required' => true,
+                            'openapi' => [
+                                'example' => 1
+                            ]
+                        ]
+                    ],
+        
+                ]
+            )
+            ]        
+)]
+
 class Event
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['get_event'])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Groups(['get_event'])]
     private ?\DateTimeInterface $date = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['get_event'])]
     private ?string $description = null;
 
     #[ORM\ManyToOne(inversedBy: 'events')]
@@ -28,10 +62,12 @@ class Event
 
     #[ORM\ManyToOne(inversedBy: 'events')]
     #[ORM\JoinColumn(nullable: false)]
+
     private ?TypeEvent $typeEvent = null;
 
     #[ORM\ManyToOne(inversedBy: 'events')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['get_event'])]
     private ?Veterinaire $veterinaire = null;
 
     public function getId(): ?int
