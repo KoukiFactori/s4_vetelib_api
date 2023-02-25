@@ -50,7 +50,7 @@ use APiPlatform\Metadata\Delete;
             [
                 'summary' => 'Get one events',
                 'description' => 'Get event by id',
-                'response' =>['200' , '401', '403', '404'],
+                'responses' =>['200' , '401', '403', '404'],
                 'parameters' => [
                     'id' => [
                         'name' => 'id',
@@ -67,13 +67,18 @@ use APiPlatform\Metadata\Delete;
             ]
             ),
         new GetCollection(
-            uriTemplate:'/events',
+            uriTemplate:'/veterinaires/{id}/events',
+            uriVariables: ['id'=> new Link(
+                fromClass: Veterinaire::class,
+                fromProperty: 'id',
+            )],
+
             security:'is_granted("ROLE_VETERINAIRE")',
             openapiContext:
             [
                 'summary' => 'Get all events',
                 'description' => 'Get all events of a veterinaire',
-                'response' =>['200' , '401', '403', '404'],
+                'responses' =>['200' , '401', '403', '404'],
             ],
             controller: GetAllEventOfVeterinaireController::class,
             ),
@@ -84,7 +89,7 @@ use APiPlatform\Metadata\Delete;
                 [
                     'summary' => 'Create an event',
                     'description' => 'Create an event',
-                    'response' =>['200' , '401', '403', '404'],
+                    'responses' =>['200' , '401', '403', '404'],
                     
                 ],
 
@@ -97,7 +102,7 @@ use APiPlatform\Metadata\Delete;
                 [
                     'summary' => 'Update an event',
                     'description' => 'Update an event',
-                    'response' =>['200' , '401', '403', '404'],
+                    'responses' =>['200' , '401', '403', '404'],
                     'parameters' => [
                         'id' => [
                             'name' => 'id',
@@ -120,18 +125,18 @@ use APiPlatform\Metadata\Delete;
                 [
                     'summary' => 'Delete an event',
                     'description' => 'Delete an event',
-                    'response' =>['200' , '401', '403', '404'],
+                    'responses' =>['200' , '401', '403', '404'],
                     'parameters' => [
                         'id' => [
-                            'name' => 'id',
-                            'in' => 'path',
-                            'description' => 'The id of the event you want to delete',
-                            'type' => 'integer',
-                            'required' => true,
-                            'openapi' => [
-                                'example' => 1
+                                'name' => 'id',
+                                'in' => 'path',
+                                'description' => 'The id of the event you want to delete',
+                                'type' => 'integer',
+                                'required' => true,
+                                'openapi' => [
+                                    'example' => 1
+                                ]
                             ]
-                        ]
                     ],
                 ]
                 ),
@@ -139,24 +144,24 @@ use APiPlatform\Metadata\Delete;
             uriTemplate:'/events/{id}',
             security:'is_granted("ROLE_USER") and (object.user = user or object.veterinaire = user)',
             openapiContext:
-                [
-                    'summary' => 'Update an event',
-                    'description' => 'Update an event',
-                    'response' =>['200' , '401', '403', '404'],
-                    'parameters' => [
-                        'id' => [
-                            'name' => 'id',
-                            'in' => 'path',
-                            'description' => 'The id of the event you want to update',
-                            'type' => 'integer',
-                            'required' => true,
-                            'openapi' => [
-                                'example' => 1
+                    [
+                        'summary' => 'Update an event',
+                        'description' => 'Update an event',
+                        'responses' =>['200' , '401', '403', '404'],
+                        'parameters' => [
+                            'id' => [
+                                'name' => 'id',
+                                'in' => 'path',
+                                'description' => 'The id of the event you want to update',
+                                'type' => 'integer',
+                                'required' => true,
+                                'openapi' => [
+                                    'example' => 1
+                                ]
                             ]
-                        ]
-                    ],
-                ]
-        )
+                        ],
+                    ]
+               )
                      
             ]        
 )]
