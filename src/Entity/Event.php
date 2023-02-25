@@ -72,13 +72,18 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
             ]
             ),
         new GetCollection(
-            uriTemplate:'/events',
+            uriTemplate:'/veterinaires/{id}/events',
+            uriVariables: ['id'=> new Link(
+                fromClass: Veterinaire::class,
+                fromProperty: 'id',
+            )],
+
             security:'is_granted("ROLE_VETERINAIRE")',
             openapiContext:
             [
                 'summary' => 'Get all events',
                 'description' => 'Get all events of a veterinaire',
-                'response' =>['200' , '401', '403', '404'],
+                'responses' =>['200' , '401', '403', '404'],
             ],
             controller: GetAllEventOfVeterinaireController::class,
             ),
@@ -90,19 +95,6 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
                     'summary' => 'Create an event',
                     'description' => 'Create an event',
                     'response' =>['200' , '401', '403', '404'],
-                    
-                ],
-
-            
-            ),
-        new Post(
-            uriTemplate:'/events',
-            security:'is_granted("ROLE_USER")',
-            openapiContext:
-                [
-                    'summary' => 'Create an event',
-                    'description' => 'Create an event',
-                    'responses' =>['200' , '401', '403', '404'],
                     
                 ],
 
