@@ -156,6 +156,9 @@ use ApiPlatform\Metadata\Link;
         fromClass: Animal::class,
         fromProperty: 'events',
     )],
+    openapiContext:[
+        'tags' => ['Animal']
+    ]
 )]
 #[ApiResource(
     uriTemplate:'/veterinaires/{id}/events',
@@ -163,11 +166,17 @@ use ApiPlatform\Metadata\Link;
         fromClass: Veterinaire::class,
         fromProperty: 'events',
     )],
+    openapiContext:[
+        'tags' => ['Veterinaire']
+    ]
 )]
 #[ApiResource(
     uriTemplate: '/client/{id}/events',
     security:'is_granted("ROLE_USER") and object.user == user',
     controller: GetAllEventOfClientController::class,
+    openapiContext:[
+        'tags' => ['Client']
+    ]
 )]
 
 class Event
