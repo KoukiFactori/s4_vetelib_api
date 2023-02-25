@@ -22,7 +22,6 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 
 #[ORM\Entity(repositoryClass: EventRepository::class)]
 #[ApiResource(
-
     operations:[
         new GetCollection(
                 uriTemplate:'/events',
@@ -72,12 +71,6 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
             ]
             ),
         new GetCollection(
-            uriTemplate:'/veterinaires/{id}/events',
-            uriVariables: ['id'=> new Link(
-                fromClass: Veterinaire::class,
-                fromProperty: 'id',
-            )],
-
             security:'is_granted("ROLE_VETERINAIRE")',
             openapiContext:
             [
@@ -85,7 +78,6 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
                 'description' => 'Get all events of a veterinaire',
                 'responses' =>['200' , '401', '403', '404'],
             ],
-            controller: GetAllEventOfVeterinaireController::class,
             ),
         new Post(
             uriTemplate:'/events',
