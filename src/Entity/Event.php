@@ -14,9 +14,15 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use APiPlatform\Metadata\Get;
 use APiPlatform\Metadata\Post;
 use APiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Link;
 
 #[ORM\Entity(repositoryClass: EventRepository::class)]
 #[ApiResource(
+    uriTemplate:'/veterinaires/{id}/events',
+    uriVariables: ['id'=> new Link(
+        fromClass: Veterinaire::class,
+        fromProperty: 'events',
+    )],
     operations:[
         new GetCollection(
                 uriTemplate:'/events/type/{id}',
@@ -67,12 +73,6 @@ use APiPlatform\Metadata\Delete;
             ]
             ),
         new GetCollection(
-            uriTemplate:'/veterinaires/{id}/events',
-            uriVariables: ['id'=> new Link(
-                fromClass: Veterinaire::class,
-                fromProperty: 'id',
-            )],
-
             security:'is_granted("ROLE_VETERINAIRE")',
             openapiContext:
             [
@@ -80,7 +80,6 @@ use APiPlatform\Metadata\Delete;
                 'description' => 'Get all events of a veterinaire',
                 'responses' =>['200' , '401', '403', '404'],
             ],
-            controller: GetAllEventOfVeterinaireController::class,
             ),
         new Post(
             uriTemplate:'/events',
