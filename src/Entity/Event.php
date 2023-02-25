@@ -22,6 +22,11 @@ use ApiPlatform\Metadata\Link;
         fromClass: Veterinaire::class,
         fromProperty: 'events',
     )],
+    uriTemplate:'/animals/{id}/events',
+    uriVariables: ['id'=> new Link(
+        fromClass: Animal::class,
+        fromProperty: 'events',
+    )],
     operations:[
         new GetCollection(
                 uriTemplate:'/events/type/{id}',
