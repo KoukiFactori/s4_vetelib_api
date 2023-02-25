@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
 use App\Repository\UserRepository;
 use App\Controller\GetMeController;
 use Doctrine\DBAL\Types\Types;
@@ -22,7 +23,21 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[DiscriminatorColumn(name: 'discr', type: 'string')]
 #[DiscriminatorMap(['client' => Client::class, 'veterinaire' => Veterinaire::class, 'admin' => Admin::class])]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
-#[ApiResource]
+#[GetCollection(
+    security: 'is_granted("ROLE_ADMIN")',
+    openapiContext: [
+        'summary' => 'Retrieves all users',
+        'description' => 'Retrieves all the users in the database',
+        'responses' => [
+            '200' => [
+                'description' => 'List of users',
+            ],
+            '401' => [
+                'description' => "You don't have permission to interact with this route",
+            ],
+        ],
+    ]
+)]
 #[GetCollection(
     uriTemplate: '/@me',
     controller: GetMeController::class,
@@ -41,6 +56,11 @@ use Symfony\Component\Serializer\Annotation\Groups;
             ],
         ],
     ]
+)]
+#[Patch(
+    security: 'is_granted("ROLE_USER") and object = user',
+    normalizationContext: ['groups' => ['user:get', 'me:get']],
+    denormalizationContext: ['groups' => ['user:set']]
 )]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
