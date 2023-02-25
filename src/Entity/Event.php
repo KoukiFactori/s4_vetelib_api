@@ -17,16 +17,7 @@ use ApiPlatform\Metadata\Link;
 
 #[ORM\Entity(repositoryClass: EventRepository::class)]
 #[ApiResource(
-    uriTemplate:'/veterinaires/{id}/events',
-    uriVariables: ['id'=> new Link(
-        fromClass: Veterinaire::class,
-        fromProperty: 'events',
-    )],
-    uriTemplate:'/animals/{id}/events',
-    uriVariables: ['id'=> new Link(
-        fromClass: Animal::class,
-        fromProperty: 'events',
-    )],
+
     operations:[
         new GetCollection(
                 uriTemplate:'/events/type/{id}',
@@ -52,29 +43,6 @@ use ApiPlatform\Metadata\Link;
         
                 ]
                 ),
-        new GetCollection(
-            uriTemplate: '/client/{id}/events',
-            security:'is_granted("ROLE_USER") and object.user == user',
-            controller: GetAllEventOfClientController::class,
-            openapiContext:
-            [
-                'summary' => 'Get all events of a client',
-                'description' => 'Get all events of a client',
-                'responses' =>['200' , '401', '403', '404'],
-                'parameters' => [
-                    'id' => [
-                        'name' => 'id',
-                        'in' => 'path',
-                        'description' => 'The id of the client we want to get all events',
-                        'type' => 'integer',
-                        'required' => true,
-                        'openapi' => [
-                            'example' => 1
-                        ]
-                    ]
-                ],
-            ]
-            ),
         new Get(
             uriTemplate:'/events/{id}',
             paginationEnabled:false,
@@ -98,15 +66,6 @@ use ApiPlatform\Metadata\Link;
                 ],
 
             ]
-            ),
-        new GetCollection(
-            security:'is_granted("ROLE_VETERINAIRE")',
-            openapiContext:
-            [
-                'summary' => 'Get all events',
-                'description' => 'Get all events of a veterinaire',
-                'responses' =>['200' , '401', '403', '404'],
-            ],
             ),
         new Post(
             uriTemplate:'/events',
@@ -190,6 +149,25 @@ use ApiPlatform\Metadata\Link;
                )
                      
             ]        
+)]
+#[ApiResource(
+    uriTemplate:'/animals/{id}/events',
+    uriVariables: ['id'=> new Link(
+        fromClass: Animal::class,
+        fromProperty: 'events',
+    )],
+)]
+#[ApiResource(
+    uriTemplate:'/veterinaires/{id}/events',
+    uriVariables: ['id'=> new Link(
+        fromClass: Veterinaire::class,
+        fromProperty: 'events',
+    )],
+)]
+#[ApiResource(
+    uriTemplate: '/client/{id}/events',
+    security:'is_granted("ROLE_USER") and object.user == user',
+    controller: GetAllEventOfClientController::class,
 )]
 
 class Event
