@@ -46,6 +46,29 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
         
                 ]
                 ),
+        new GetCollection(
+            uriTemplate: '/client/{id}/events',
+            security:'is_granted("ROLE_USER") and object.user == user',
+            controller: GetAllEventOfClientController::class,
+            openapiContext:
+            [
+                'summary' => 'Get all events of a client',
+                'description' => 'Get all events of a client',
+                'responses' =>['200' , '401', '403', '404'],
+                'parameters' => [
+                    'id' => [
+                        'name' => 'id',
+                        'in' => 'path',
+                        'description' => 'The id of the client we want to get all events',
+                        'type' => 'integer',
+                        'required' => true,
+                        'openapi' => [
+                            'example' => 1
+                        ]
+                    ]
+                ],
+            ]
+            ),
         new Get(
             uriTemplate:'/events/{id}',
             paginationEnabled:false,
