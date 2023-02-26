@@ -2,8 +2,8 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Put;
 use App\Controller\GetAllEventOfClientController;
@@ -18,6 +18,7 @@ use APiPlatform\Metadata\Post;
 use APiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Link;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+
 
 #[ORM\Entity(repositoryClass: EventRepository::class)]
 #[ApiResource(
@@ -197,8 +198,8 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
     [
         new GetCollection(
             uriTemplate:'/animals/{id}/events',
-            controller: GetAllEventOfAnimalController::class,
-            security:'is_granted("ROLE_USER") and object.animal == user',  
+            paginationEnabled:false,
+            security:'is_granted("ROLE_USER")',  
             ),
 ])]
 #[ApiResource(
@@ -239,8 +240,7 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 )]
 #[ApiResource(
     uriTemplate: '/client/{id}/events',
-    security:'is_granted("ROLE_CLIENT") and object.user == user',
-    controller: GetAllEventOfClientController::class,
+    security:'is_granted("ROLE_CLIENT")',
     openapiContext:[
         'tags' => ['Client']
     ],
@@ -248,13 +248,13 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
         new GetCollection(
             uriTemplate:'/client/{id}/events',
             controller: GetAllEventOfClientController::class,
-            security:'is_granted("ROLE_USER") and object.user == user',
+            security:'is_granted("ROLE_USER")',
             
 )],
            
             ),
 ]
-
+#[ApiFilter(SearchFilter::class, properties: ['typeEvent.getLibType()' => 'exact'])]
 class Event
 {
     #[ORM\Id]
