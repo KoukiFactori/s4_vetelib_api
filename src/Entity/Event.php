@@ -6,7 +6,8 @@ use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Put;
-use app\Controller\GetAllEventOfClientController;
+use App\Controller\GetAllEventOfClientController;
+use App\Controller\GetAllEventOfAnimalController;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\EventRepository;
 use Doctrine\DBAL\Types\Types;
@@ -164,8 +165,8 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
     [
         new GetCollection(
             uriTemplate:'/animals/{id}/events',
-            paginationEnabled:false,
-            security:'is_granted("ROLE_USER")',  
+            security:'is_granted("ROLE_USER") or is_granted("ROLE_ADMIN")',
+            controller:GetAllEventOfAnimalController::class,  
             ),
 ])]
 #[ApiResource(
