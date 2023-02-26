@@ -2,10 +2,11 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Put;
-use app\Controller\GetEventByTypeController;
+use app\Controller\GetAllEventOfClientController;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\EventRepository;
 use Doctrine\DBAL\Types\Types;
@@ -14,29 +15,29 @@ use APiPlatform\Metadata\Get;
 use APiPlatform\Metadata\Post;
 use APiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Link;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 
 #[ORM\Entity(repositoryClass: EventRepository::class)]
 #[ApiResource(
 
     operations:[
         new GetCollection(
-                uriTemplate:'/events/type/{id}',
-                controller: GetEventByTypeController::class,
-                security:'is_granted("ROLE_VETERINAIRE") and object.getVeterinaire() == user',
+                uriTemplate:'/events',
+                security:'is_granted("ROLE_ADMIN")',
                 openapiContext:
                 [
                     'summary' => 'Get collection of events of the same type',
                     'description' => 'Get all events by type',
                     'response' =>['200' , '401', '403', '404'],
                     'parameters' => [
-                        'id' => [
-                            'name' => 'id',
-                            'in' => 'path',
-                            'description' => 'The type of event 1 for non urgent 2 for urgent',
-                            'type' => 'integer',
-                            'required' => true,
+                        'libType' => [
+                            'name' => 'libType',
+                            'in' => 'typeEvent.getLibType()',
+                            'description' => 'The type of the event we want to get  (Urgent, Non Urgent)',
+                            'type' => 'string',
+                            'required' => false,
                             'openapi' => [
-                                'example' => 1
+                                'example' => 'Urgent'
                             ]
                         ]
                     ],
@@ -163,8 +164,8 @@ use ApiPlatform\Metadata\Link;
     [
         new GetCollection(
             uriTemplate:'/animals/{id}/events',
-            controller: GetAllEventOfAnimalController::class,
-            security:'is_granted("ROLE_USER") and object.animal == user',  
+            paginationEnabled:false,
+            security:'is_granted("ROLE_USER")',  
             ),
 ])]
 #[ApiResource(
@@ -172,24 +173,39 @@ use ApiPlatform\Metadata\Link;
     uriVariables: ['id'=> new Link(
         fromClass: Veterinaire::class,
         fromProperty: 'events',
+    
     )],
-    openapiContext:[
-        'tags' => ['Veterinaire']
-    ],
     operations:
     [
         new GetCollection(
-            uriTemplate:'/veterinaires/{id}/events',
-            controller: GetAllEventOfVeterinaireController::class,
-            security:'is_granted("ROLE_USER") and object.veterinaire == user',
-           
-            ),
+                security:'is_granted("ROLE_USER") or is_granted("ROLE_ADMIN")',
+                paginationEnabled:false,
+                openapiContext:
+                [
+                    'tags' => ['Veterinaire'],
+                    'summary' => 'Get collection of events of the same type',
+                    'description' => 'Get all events by type',
+                    'response' =>['200' , '401', '403', '404'],
+                    'parameters' => [
+                        'libType' => [
+                            'name' => 'libType',
+                            'in' => 'typeEvent.getLibType()',
+                            'description' => 'The type of the event we want to get  (Urgent, Non Urgent)',
+                            'type' => 'string',
+                            'required' => false,
+                            'openapi' => [
+                                'example' => 'Urgent'
+                            ]
+                        ]
+                    ],
+        
+                ]
+                ),
     ]
 )]
 #[ApiResource(
     uriTemplate: '/client/{id}/events',
-    security:'is_granted("ROLE_CLIENT") and object.user == user',
-    controller: GetAllEventOfClientController::class,
+    security:'is_granted("ROLE_CLIENT")',
     openapiContext:[
         'tags' => ['Client']
     ],
@@ -197,13 +213,13 @@ use ApiPlatform\Metadata\Link;
         new GetCollection(
             uriTemplate:'/client/{id}/events',
             controller: GetAllEventOfClientController::class,
-            security:'is_granted("ROLE_USER") and object.user == user',
+            security:'is_granted("ROLE_USER")',
             
 )],
            
             ),
 ]
-
+#[ApiFilter(SearchFilter::class, properties: ['typeEvent.getLibType()' => 'exact'])]
 class Event
 {
     #[ORM\Id]
