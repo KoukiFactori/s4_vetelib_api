@@ -8,6 +8,7 @@ use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Put;
 use App\Controller\GetAllEventOfClientController;
 use App\Controller\GetAllEventOfAnimalController;
+use App\Controller\GetAllEventOfVeterinaireController;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\EventRepository;
 use Doctrine\DBAL\Types\Types;
@@ -179,8 +180,9 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
     operations:
     [
         new GetCollection(
-                security:'is_granted("ROLE_USER") or is_granted("ROLE_ADMIN")',
+                security:'is_granted("ROLE_VETERINAIRE") or is_granted("ROLE_ADMIN")',
                 paginationEnabled:false,
+                controller:GetAllEventOfVeterinaireController::class,
                 openapiContext:
                 [
                     'tags' => ['Veterinaire'],
@@ -190,7 +192,7 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
                     'parameters' => [
                         'libType' => [
                             'name' => 'libType',
-                            'in' => 'typeEvent.getLibType()',
+                            'in' => 'query',
                             'description' => 'The type of the event we want to get  (Urgent, Non Urgent)',
                             'type' => 'string',
                             'required' => false,
