@@ -198,8 +198,8 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
     [
         new GetCollection(
             uriTemplate:'/animals/{id}/events',
-            paginationEnabled:false,
-            security:'is_granted("ROLE_USER")',  
+            security:'is_granted("ROLE_USER") or is_granted("ROLE_ADMIN")',
+            controller:GetAllEventOfAnimalController::class,  
             ),
 ])]
 #[ApiResource(
