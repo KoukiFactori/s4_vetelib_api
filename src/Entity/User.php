@@ -2,10 +2,11 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
-use App\Repository\UserRepository;
 use App\Controller\GetMeController;
+use App\Repository\UserRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\DiscriminatorColumn;
@@ -21,6 +22,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[DiscriminatorColumn(name: 'discr', type: 'string')]
 #[DiscriminatorMap(['client' => Client::class, 'veterinaire' => Veterinaire::class, 'admin' => Admin::class])]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
+#[ApiResource(
+    normalizationContext: ['groups' => ['user:get']]
+)]
 #[GetCollection(
     security: 'is_granted("ROLE_ADMIN")',
     openapiContext: [
@@ -37,11 +41,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
     ]
 )]
 #[GetCollection(
-    uriTemplate: '/@me',
     controller: GetMeController::class,
     paginationEnabled: false,
     security: 'is_granted("ROLE_USER")',
-    normalizationContext: ['groups' => ['user:get', 'me:get']],
+    uriTemplate: '/me',
     openapiContext: [
         'summary' => 'Retrieves the connected user',
         'description' => 'Retrieves the current connected user',
@@ -57,7 +60,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
 )]
 #[Patch(
     security: 'is_granted("ROLE_USER") and object = user',
-    normalizationContext: ['groups' => ['user:get', 'me:get']],
     denormalizationContext: ['groups' => ['user:set']]
 )]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
@@ -97,7 +99,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['user:get', 'user:set'])]
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $birthdate = null;
-    
+
     #[Groups(['user:get', 'user:set'])]
     #[ORM\Column(length: 60, nullable: true)]
     private ?string $city = null;
@@ -211,7 +213,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-        /**
+    /**
      * A visual identifier that represents this user.
      *
      * @see UserInterface
