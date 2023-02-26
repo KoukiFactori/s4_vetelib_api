@@ -22,7 +22,7 @@ use ApiPlatform\Metadata\Link;
         new GetCollection(
                 uriTemplate:'/events/type/{id}',
                 controller: GetEventByTypeController::class,
-                security:'is_granted("ROLE_VETERINAIRE") and object.veterinaire == user',
+                security:'is_granted("ROLE_VETERINAIRE") and object.getVeterinaire() == user',
                 openapiContext:
                 [
                     'summary' => 'Get collection of events of the same type',
@@ -46,7 +46,7 @@ use ApiPlatform\Metadata\Link;
         new Get(
             uriTemplate:'/events/{id}',
             paginationEnabled:false,
-            security:'is_granted("ROLE_USER") and (object.user = user or object.veterinaire = user)',
+            security:'is_granted("ROLE_USER") and object.getVeterinaire() == user)',
             openapiContext:
             [
                 'summary' => 'Get one events',
@@ -69,7 +69,7 @@ use ApiPlatform\Metadata\Link;
             ),
         new Post(
             uriTemplate:'/events',
-            security:'is_granted("ROLE_USER") and (object.user = user or object.veterinaire = user)',
+            security:'is_granted("ROLE_USER") and object.getVeterinaire() == user',
             openapiContext:
                 [
                     'summary' => 'Create an event',
@@ -82,7 +82,7 @@ use ApiPlatform\Metadata\Link;
             ),
         new Patch(
             uriTemplate:'/events/{id}',
-            security:'is_granted("ROLE_USER") and (object.user = user or object.veterinaire = user)',
+            security:'is_granted("ROLE_USER") and object.getVeterinaire() == user',
             openapiContext:
                 [
                     'summary' => 'Update an event',
@@ -105,7 +105,7 @@ use ApiPlatform\Metadata\Link;
                 ),
         new Delete(
             uriTemplate:'/events/{id}',
-            security:'is_granted("ROLE_USER") and (object.user = user or object.veterinaire = user)',
+            security:'is_granted("ROLE_USER") and object.getVeterinaire() == user',
             openapiContext:
                 [
                     'summary' => 'Delete an event',
@@ -127,7 +127,7 @@ use ApiPlatform\Metadata\Link;
                 ),
         new Put(
             uriTemplate:'/events/{id}',
-            security:'is_granted("ROLE_USER") and (object.user = user or object.veterinaire = user)',
+            security:'is_granted("ROLE_USER") and object.getVeterinaire() == user',
             openapiContext:
                     [
                         'summary' => 'Update an event',
@@ -158,8 +158,15 @@ use ApiPlatform\Metadata\Link;
     )],
     openapiContext:[
         'tags' => ['Animal']
-    ]
-)]
+    ],
+    operations:
+    [
+        new GetCollection(
+            uriTemplate:'/animals/{id}/events',
+            controller: GetAllEventOfAnimalController::class,
+            security:'is_granted("ROLE_USER") and object.animal == user',  
+            ),
+])]
 #[ApiResource(
     uriTemplate:'/veterinaires/{id}/events',
     uriVariables: ['id'=> new Link(
@@ -168,16 +175,34 @@ use ApiPlatform\Metadata\Link;
     )],
     openapiContext:[
         'tags' => ['Veterinaire']
+    ],
+    operations:
+    [
+        new GetCollection(
+            uriTemplate:'/veterinaires/{id}/events',
+            controller: GetAllEventOfVeterinaireController::class,
+            security:'is_granted("ROLE_USER") and object.veterinaire == user',
+           
+            ),
     ]
 )]
 #[ApiResource(
     uriTemplate: '/client/{id}/events',
-    security:'is_granted("ROLE_USER") and object.user == user',
+    security:'is_granted("ROLE_CLIENT") and object.user == user',
     controller: GetAllEventOfClientController::class,
     openapiContext:[
         'tags' => ['Client']
-    ]
-)]
+    ],
+    operations:[
+        new GetCollection(
+            uriTemplate:'/client/{id}/events',
+            controller: GetAllEventOfClientController::class,
+            security:'is_granted("ROLE_USER") and object.user == user',
+            
+)],
+           
+            ),
+]
 
 class Event
 {
