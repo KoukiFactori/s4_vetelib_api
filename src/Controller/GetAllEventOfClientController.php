@@ -4,14 +4,23 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Repository\EventRepository;
+use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
 class GetAllEventOfClientController extends AbstractController
 {
-    public function __invoke(EventRepository $er , int $id): array
+    private EventRepository $er;
+    private UserRepository $ur;
+
+    public function __construct(EventRepository $er, UserRepository $ur)
     {
-        return $er->getAllEventByClient($this->getDoctrine()->getRepository(User::class)->find($id));
+        $this->er = $er;
+        $this->ur = $ur;
+    }
+    public function __invoke( int $id): array
+    {
+        return $this->er->getAllEventByClient($this->ur->find($id));
     }
 }
