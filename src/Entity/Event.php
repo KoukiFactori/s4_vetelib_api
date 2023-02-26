@@ -71,7 +71,7 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
         new Get(
             uriTemplate:'/events/{id}',
             paginationEnabled:false,
-            security:'is_granted("ROLE_USER") and (object.user = user or object.veterinaire = user)',
+            security:'is_granted("ROLE_USER") and object.getVeterinaire() == user)',
             openapiContext:
             [
                 'summary' => 'Get one events',
@@ -103,7 +103,7 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
             ),
         new Post(
             uriTemplate:'/events',
-            security:'is_granted("ROLE_USER") and (object.user = user or object.veterinaire = user)',
+            security:'is_granted("ROLE_USER") and object.getVeterinaire() == user',
             openapiContext:
                 [
                     'summary' => 'Create an event',
@@ -116,7 +116,7 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
             ),
         new Patch(
             uriTemplate:'/events/{id}',
-            security:'is_granted("ROLE_USER") and (object.user = user or object.veterinaire = user)',
+            security:'is_granted("ROLE_USER") and object.getVeterinaire() == user',
             openapiContext:
                 [
                     'summary' => 'Update an event',
@@ -139,7 +139,7 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
                 ),
         new Delete(
             uriTemplate:'/events/{id}',
-            security:'is_granted("ROLE_USER") and (object.user = user or object.veterinaire = user)',
+            security:'is_granted("ROLE_USER") and object.getVeterinaire() == user',
             openapiContext:
                 [
                     'summary' => 'Delete an event',
@@ -161,7 +161,7 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
                 ),
         new Put(
             uriTemplate:'/events/{id}',
-            security:'is_granted("ROLE_USER") and (object.user = user or object.veterinaire = user)',
+            security:'is_granted("ROLE_USER") and object.getVeterinaire() == user',
             openapiContext:
                     [
                         'summary' => 'Update an event',
@@ -197,8 +197,8 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
     [
         new GetCollection(
             uriTemplate:'/animals/{id}/events',
-            security:'is_granted("ROLE_USER") or is_granted("ROLE_ADMIN")',
-            controller:GetAllEventOfAnimalController::class,  
+            controller: GetAllEventOfAnimalController::class,
+            security:'is_granted("ROLE_USER") and object.animal == user',  
             ),
 ])]
 #[ApiResource(
@@ -238,22 +238,23 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
     ]
 )]
 #[ApiResource(
-    uriTemplate: '/clients/{id}/events',
-    security:'is_granted("ROLE_CLIENT")',
+    uriTemplate: '/client/{id}/events',
+    security:'is_granted("ROLE_CLIENT") and object.user == user',
+    controller: GetAllEventOfClientController::class,
     openapiContext:[
         'tags' => ['Client']
     ],
     operations:[
         new GetCollection(
-            uriTemplate:'/clients/{id}/events',
+            uriTemplate:'/client/{id}/events',
             controller: GetAllEventOfClientController::class,
-            security:'is_granted("ROLE_USER")',
+            security:'is_granted("ROLE_USER") and object.user == user',
             
 )],
            
             ),
 ]
-#[ApiFilter(SearchFilter::class, properties: ['typeEvent.getLibType()' => 'exact'])]
+
 class Event
 {
     #[ORM\Id]
