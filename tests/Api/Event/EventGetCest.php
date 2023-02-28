@@ -17,5 +17,17 @@ class UserGetMeCest
         $I->seeResponseCodeIs(HttpCode::UNAUTHORIZED);
     }
 
-
+    public function authenticatedVeterinaireCantGetOtherVeterinaireEvent(ApiTester $I): void
+    {
+        $veterinaire = UserFactory::createOne();
+        $I->amAuthenticatedAs($veterinaire->object());
+        $veterinaire2 = UserFactory::createOne();
+        EventFactory::createOne(
+            [
+                'veterinaire' =>'/api/veterinaires/'.$veterinaire2->getId(),
+            ]
+        );
+        $I->sendGET('/api/events/1');
+        $I->seeResponseCodeIs(HttpCode::FORBIDDEN);
+    }
 }
