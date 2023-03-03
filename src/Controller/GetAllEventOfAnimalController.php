@@ -32,7 +32,7 @@ class GetAllEventOfAnimalController extends AbstractController
             if ($animal->getClient()->getId() == $this->getUser()->getId()) {
                 $events= $this->er->findEventByAnimal($animal);
             } else {
-                throw new AccessDeniedException("Vous n'avez pas accès à cet animal");
+                throw new AccessDeniedException("Vous n'avez pas accès au rendez vous de cet animal");
             }
        }
          return $events;

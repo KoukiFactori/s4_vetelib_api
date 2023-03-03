@@ -207,14 +207,14 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
     ]
 )]
 #[ApiResource(
-    uriTemplate: '/client/{id}/events',
+    uriTemplate: '/clients/{id}/events',
     security:'is_granted("ROLE_CLIENT")',
     openapiContext:[
         'tags' => ['Client']
     ],
     operations:[
         new GetCollection(
-            uriTemplate:'/client/{id}/events',
+            uriTemplate:'/clients/{id}/events',
             controller: GetAllEventOfClientController::class,
             security:'is_granted("ROLE_USER")',
             
