@@ -72,7 +72,7 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
             ),
         new Post(
             uriTemplate:'/events',
-            security:'is_granted("ROLE_USER") and (object.getVeterinaire() == user or object.getAnimal().getClient() == user)',
+            security:'is_granted("ROLE_USER")',
             openapiContext:
                 [
                     'summary' => 'Create an event',

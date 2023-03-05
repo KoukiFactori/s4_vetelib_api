@@ -63,4 +63,74 @@ class EventPutPatchPostDeleteCest
         $I->sendDELETE('/api/events/1');
         $I->seeResponseCodeIs(HttpCode::UNAUTHORIZED);
     }
+    public function authenticatedVeterinaireCanPostPatchPutDeleteOwnEvent(ApiTester $I){
+        TypeEventFactory::createOne();
+        $client = ClientFactory::createOne();
+        $espece=EspeceFactory::createOne();
+        AnimalFactory::createOne(
+            [   'espece' => $espece,
+                'client' => $client
+            ]
+        );
+        $I->amLoggedInAs(VeterinaireFactory::createOne()->object());
+        $dataInitPost=[
+            "date"=> "2023-03-11T09:30:00+00:00",
+            "description"=> "test1",
+            "animal"=> "/api/animals/1",
+            "typeEvent"=> "/api/type_events/1",
+            "veterinaire"=> "/api/veterinaires/2"
+        ];
+        $I->sendPOST('/api/events',$dataInitPost);
+        $I->seeResponseCodeIs(HttpCode::CREATED);
+        $dataInitPatch=[
+            "id"=>2,
+            "description"=> "test2",
+        ];
+        $I->sendPATCH('/api/events/1',$dataInitPatch);
+        $I->seeResponseCodeIs(HttpCode::OK);
+        $dataInitPut=[
+            "description"=> "test3",
+        ];
+        $I->sendPUT('/api/events/1',$dataInitPut);
+        $I->seeResponseCodeIs(HttpCode::OK);
+        $I->sendDELETE('/api/events/1');
+        $I->seeResponseCodeIs(HttpCode::NO_CONTENT);
+
+    }
+    public function authenticatedClientCanPostPatchPutDeleteOwnEvent(APITester $I){
+        TypeEventFactory::createOne();
+        VeterinaireFactory::createOne();
+        $client = ClientFactory::createOne();
+        $espece=EspeceFactory::createOne();
+        AnimalFactory::createOne(
+            [   'espece' => $espece,
+                'client' => $client
+            ]
+        );
+        $I->amLoggedInAs($client->object());
+        $dataInitPost=[
+            "date"=> "2023-03-11T09:30:00+00:00",
+            "description"=> "test1",
+            "animal"=> "/api/animals/1",
+            "typeEvent"=> "/api/type_events/1",
+            "veterinaire"=> "/api/veterinaires/1"
+        ];
+        $I->sendPOST('/api/events',$dataInitPost);
+        $I->seeResponseCodeIs(HttpCode::CREATED);
+        $dataInitPatch=[
+            "id"=>2,
+            "description"=> "test2",
+        ];
+        $I->sendPATCH('/api/events/1',$dataInitPatch);
+        $I->seeResponseCodeIs(HttpCode::OK);
+        $dataInitPut=[
+            "description"=> "test3",
+        ];
+        $I->sendPUT('/api/events/1',$dataInitPut);
+        $I->seeResponseCodeIs(HttpCode::OK);
+        $I->sendDELETE('/api/events/1');
+        $I->seeResponseCodeIs(HttpCode::NO_CONTENT);
+    }
+    
+    
 }
