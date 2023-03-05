@@ -1,0 +1,66 @@
+<?php
+
+namespace App\Tests\Api\Event;
+
+use App\Entity\Event;
+use App\Factory\AnimalFactory;
+use App\Factory\ClientFactory;
+use App\Factory\EspeceFactory;
+use App\Factory\EventFactory;
+use App\Factory\TypeEventFactory;
+use App\Factory\UserFactory;
+use App\Factory\VeterinaireFactory;
+use App\Repository\VeterinaireRepository;
+use App\Tests\Support\ApiTester;
+use Codeception\Util\HttpCode;
+
+class EventPutPatchPostDeleteCest
+{   
+
+    
+    private function InitialiseData(){
+        $veterinaire = VeterinaireFactory::createOne();
+        $type=TypeEventFactory::createOne();
+        $client = ClientFactory::createOne();
+        $espece=EspeceFactory::createOne();
+        $animal = AnimalFactory::createOne(
+            [   'espece' => $espece,
+                'client' => $client
+            ]
+        );
+        $event = EventFactory::createOne(
+            [   'typeEvent' => $type,
+                'date' => new \DateTime('2021-01-01'),
+                'veterinaire' => $veterinaire,
+                'animal' => $animal
+            ]
+        );
+
+    }
+    public function anonymousUserCannotPostPatchPutDeleteEvent(ApiTester $I): void{
+        $this->InitialiseData();
+        $dataInitPost=[
+            "id"=>2,
+            "date"=> "2023-03-11T09:30:00+00:00",
+            "description"=> "test1",
+            "animal"=> "/api/animals/1",
+            "typeEvent"=> "/api/type_events/1",
+            "veterinaire"=> "/api/veterinaires/1"
+        ];
+        $I->sendPOST('/api/events',$dataInitPost);
+        $I->seeResponseCodeIs(HttpCode::UNAUTHORIZED);
+        $dataInitPatch=[
+            "id"=>2,
+            "description"=> "test2",
+        ];
+        $I->sendPATCH('/api/events/1',$dataInitPatch);
+        $I->seeResponseCodeIs(HttpCode::UNAUTHORIZED);
+        $dataInitPut=[
+            "description"=> "test3",
+        ];
+        $I->sendPUT('/api/events/1',$dataInitPut);
+        $I->seeResponseCodeIs(HttpCode::UNAUTHORIZED);
+        $I->sendDELETE('/api/events/1');
+        $I->seeResponseCodeIs(HttpCode::UNAUTHORIZED);
+    }
+}
