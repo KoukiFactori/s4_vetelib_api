@@ -131,6 +131,23 @@ class EventPutPatchPostDeleteCest
         $I->sendDELETE('/api/events/1');
         $I->seeResponseCodeIs(HttpCode::NO_CONTENT);
     }
-    
+    public function authenticatedVeterinaireCantPutPatchDeleteForOther(ApiTester $I)
+    {
+        $this->InitialiseData();
+        $I->amLoggedInAs(VeterinaireFactory::createOne()->object());
+        $I->seeResponseCodeIs(HttpCode::FORBIDDEN);
+        $dataInitPatch=[
+            "description"=> "test2",
+        ];
+        $I->sendPATCH('/api/events/2',$dataInitPatch);
+        $I->seeResponseCodeIs(HttpCode::FORBIDDEN);
+        $dataInitPut=[
+            "description"=> "test3",
+        ];
+        $I->sendPUT('/api/events/2',$dataInitPut);
+        $I->seeResponseCodeIs(HttpCode::FORBIDDEN);
+        $I->sendDELETE('/api/events/2');
+        $I->seeResponseCodeIs(HttpCode::FORBIDDEN);
+    }
     
 }
