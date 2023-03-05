@@ -108,7 +108,7 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
                 ),
         new Delete(
             uriTemplate:'/events/{id}',
-            security:'is_granted("ROLE_USER") and object.getVeterinaire() == user',
+            security:'is_granted("ROLE_USER") and (object.getVeterinaire() == user or object.getAnimal().getClient() == user)',
             openapiContext:
                 [
                     'summary' => 'Delete an event',

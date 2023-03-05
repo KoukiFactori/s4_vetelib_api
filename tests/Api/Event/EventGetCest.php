@@ -14,7 +14,7 @@ use App\Repository\VeterinaireRepository;
 use App\Tests\Support\ApiTester;
 use Codeception\Util\HttpCode;
 
-class UserGetMeCest
+class EventGetCest
 {   
 
     
