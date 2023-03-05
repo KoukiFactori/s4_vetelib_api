@@ -6,8 +6,7 @@ use App\Entity\User;
 use App\Repository\AnimalRepository;
 use App\Repository\EventRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Routing\Annotation\Route;
+
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class GetAllEventOfAnimalController extends AbstractController
