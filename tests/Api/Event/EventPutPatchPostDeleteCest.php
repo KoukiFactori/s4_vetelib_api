@@ -2,152 +2,171 @@
 
 namespace App\Tests\Api\Event;
 
-use App\Entity\Event;
 use App\Factory\AnimalFactory;
 use App\Factory\ClientFactory;
 use App\Factory\EspeceFactory;
 use App\Factory\EventFactory;
 use App\Factory\TypeEventFactory;
-use App\Factory\UserFactory;
 use App\Factory\VeterinaireFactory;
-use App\Repository\VeterinaireRepository;
 use App\Tests\Support\ApiTester;
 use Codeception\Util\HttpCode;
 
 class EventPutPatchPostDeleteCest
-{   
-
-    
-    private function InitialiseData(){
+{
+    private function InitialiseData()
+    {
         $veterinaire = VeterinaireFactory::createOne();
-        $type=TypeEventFactory::createOne();
+        $type = TypeEventFactory::createOne();
         $client = ClientFactory::createOne();
-        $espece=EspeceFactory::createOne();
+        $espece = EspeceFactory::createOne();
         $animal = AnimalFactory::createOne(
-            [   'espece' => $espece,
-                'client' => $client
+            ['espece' => $espece,
+                'client' => $client,
             ]
         );
         $event = EventFactory::createOne(
-            [   'typeEvent' => $type,
+            ['typeEvent' => $type,
                 'date' => new \DateTime('2021-01-01'),
                 'veterinaire' => $veterinaire,
-                'animal' => $animal
+                'animal' => $animal,
             ]
         );
-
     }
-    public function anonymousUserCannotPostPatchPutDeleteEvent(ApiTester $I): void{
+
+    public function anonymousUserCannotPostPatchPutDeleteEvent(ApiTester $I): void
+    {
         $this->InitialiseData();
-        $dataInitPost=[
-            "id"=>2,
-            "date"=> "2023-03-11T09:30:00+00:00",
-            "description"=> "test1",
-            "animal"=> "/api/animals/1",
-            "typeEvent"=> "/api/type_events/1",
-            "veterinaire"=> "/api/veterinaires/1"
+        $dataInitPost = [
+            'id' => 2,
+            'date' => '2023-03-11T09:30:00+00:00',
+            'description' => 'test1',
+            'animal' => '/api/animals/1',
+            'typeEvent' => '/api/type_events/1',
+            'veterinaire' => '/api/veterinaires/1',
         ];
-        $I->sendPOST('/api/events',$dataInitPost);
+        $I->sendPOST('/api/events', $dataInitPost);
         $I->seeResponseCodeIs(HttpCode::UNAUTHORIZED);
-        $dataInitPatch=[
-            "id"=>2,
-            "description"=> "test2",
+        $dataInitPatch = [
+            'id' => 2,
+            'description' => 'test2',
         ];
-        $I->sendPATCH('/api/events/1',$dataInitPatch);
+        $I->sendPATCH('/api/events/1', $dataInitPatch);
         $I->seeResponseCodeIs(HttpCode::UNAUTHORIZED);
-        $dataInitPut=[
-            "description"=> "test3",
+        $dataInitPut = [
+            'description' => 'test3',
         ];
-        $I->sendPUT('/api/events/1',$dataInitPut);
+        $I->sendPUT('/api/events/1', $dataInitPut);
         $I->seeResponseCodeIs(HttpCode::UNAUTHORIZED);
         $I->sendDELETE('/api/events/1');
         $I->seeResponseCodeIs(HttpCode::UNAUTHORIZED);
     }
-    public function authenticatedVeterinaireCanPostPatchPutDeleteOwnEvent(ApiTester $I){
+
+    public function authenticatedVeterinaireCanPostPatchPutDeleteOwnEvent(ApiTester $I)
+    {
         TypeEventFactory::createOne();
         $client = ClientFactory::createOne();
-        $espece=EspeceFactory::createOne();
+        $espece = EspeceFactory::createOne();
         AnimalFactory::createOne(
-            [   'espece' => $espece,
-                'client' => $client
+            ['espece' => $espece,
+                'client' => $client,
             ]
         );
         $I->amLoggedInAs(VeterinaireFactory::createOne()->object());
-        $dataInitPost=[
-            "date"=> "2023-03-11T09:30:00+00:00",
-            "description"=> "test1",
-            "animal"=> "/api/animals/1",
-            "typeEvent"=> "/api/type_events/1",
-            "veterinaire"=> "/api/veterinaires/2"
+        $dataInitPost = [
+            'date' => '2023-03-11T09:30:00+00:00',
+            'description' => 'test1',
+            'animal' => '/api/animals/1',
+            'typeEvent' => '/api/type_events/1',
+            'veterinaire' => '/api/veterinaires/2',
         ];
-        $I->sendPOST('/api/events',$dataInitPost);
+        $I->sendPOST('/api/events', $dataInitPost);
         $I->seeResponseCodeIs(HttpCode::CREATED);
-        $dataInitPatch=[
-            "id"=>2,
-            "description"=> "test2",
+        $dataInitPatch = [
+            'id' => 2,
+            'description' => 'test2',
         ];
-        $I->sendPATCH('/api/events/1',$dataInitPatch);
+        $I->sendPATCH('/api/events/1', $dataInitPatch);
         $I->seeResponseCodeIs(HttpCode::OK);
-        $dataInitPut=[
-            "description"=> "test3",
+        $dataInitPut = [
+            'description' => 'test3',
         ];
-        $I->sendPUT('/api/events/1',$dataInitPut);
+        $I->sendPUT('/api/events/1', $dataInitPut);
         $I->seeResponseCodeIs(HttpCode::OK);
         $I->sendDELETE('/api/events/1');
         $I->seeResponseCodeIs(HttpCode::NO_CONTENT);
-
     }
-    public function authenticatedClientCanPostPatchPutDeleteOwnEvent(APITester $I){
+
+    public function authenticatedClientCanPostPatchPutDeleteOwnEvent(APITester $I)
+    {
         TypeEventFactory::createOne();
         VeterinaireFactory::createOne();
         $client = ClientFactory::createOne();
-        $espece=EspeceFactory::createOne();
+        $espece = EspeceFactory::createOne();
         AnimalFactory::createOne(
-            [   'espece' => $espece,
-                'client' => $client
+            ['espece' => $espece,
+                'client' => $client,
             ]
         );
         $I->amLoggedInAs($client->object());
-        $dataInitPost=[
-            "date"=> "2023-03-11T09:30:00+00:00",
-            "description"=> "test1",
-            "animal"=> "/api/animals/1",
-            "typeEvent"=> "/api/type_events/1",
-            "veterinaire"=> "/api/veterinaires/1"
+        $dataInitPost = [
+            'date' => '2023-03-11T09:30:00+00:00',
+            'description' => 'test1',
+            'animal' => '/api/animals/1',
+            'typeEvent' => '/api/type_events/1',
+            'veterinaire' => '/api/veterinaires/1',
         ];
-        $I->sendPOST('/api/events',$dataInitPost);
+        $I->sendPOST('/api/events', $dataInitPost);
         $I->seeResponseCodeIs(HttpCode::CREATED);
-        $dataInitPatch=[
-            "id"=>2,
-            "description"=> "test2",
+        $dataInitPatch = [
+            'id' => 2,
+            'description' => 'test2',
         ];
-        $I->sendPATCH('/api/events/1',$dataInitPatch);
+        $I->sendPATCH('/api/events/1', $dataInitPatch);
         $I->seeResponseCodeIs(HttpCode::OK);
-        $dataInitPut=[
-            "description"=> "test3",
+        $dataInitPut = [
+            'description' => 'test3',
         ];
-        $I->sendPUT('/api/events/1',$dataInitPut);
+        $I->sendPUT('/api/events/1', $dataInitPut);
         $I->seeResponseCodeIs(HttpCode::OK);
         $I->sendDELETE('/api/events/1');
         $I->seeResponseCodeIs(HttpCode::NO_CONTENT);
     }
+
     public function authenticatedVeterinaireCantPutPatchDeleteForOther(ApiTester $I)
     {
-        $this->InitialiseData();
-        $I->amLoggedInAs(VeterinaireFactory::createOne()->object());
-        $I->seeResponseCodeIs(HttpCode::FORBIDDEN);
-        $dataInitPatch=[
-            "description"=> "test2",
+        $veterinaire = VeterinaireFactory::createOne();
+        $type = TypeEventFactory::createOne();
+        $client = ClientFactory::createOne();
+        $espece = EspeceFactory::createOne();
+        $animal = AnimalFactory::createOne(
+            ['espece' => $espece,
+                'client' => $client,
+            ]
+        );
+        $veterinaire2 = VeterinaireFactory::createOne();
+        $I->amOnPage('/login');
+        $I->amLoggedInAs($veterinaire2->object());
+        $dataInitPost = [
+           'date' => '2023-03-11T09:30:00+00:00',
+           'description' => 'test1',
+           'animal' => '/api/animals/1',
+           'typeEvent' => '/api/type_events/1',
+           'veterinaire' => '/api/veterinaires/1',
         ];
-        $I->sendPATCH('/api/events/2',$dataInitPatch);
+
+        $I->sendPOST('/api/events', $dataInitPost);
         $I->seeResponseCodeIs(HttpCode::FORBIDDEN);
-        $dataInitPut=[
-            "description"=> "test3",
+        $dataInitPatch = [
+            'description' => 'test2',
         ];
-        $I->sendPUT('/api/events/2',$dataInitPut);
+        $I->sendPATCH('/api/events/2', $dataInitPatch);
+        $I->seeResponseCodeIs(HttpCode::FORBIDDEN);
+        $dataInitPut = [
+            'description' => 'test3',
+        ];
+        $I->sendPUT('/api/events/2', $dataInitPut);
         $I->seeResponseCodeIs(HttpCode::FORBIDDEN);
         $I->sendDELETE('/api/events/2');
         $I->seeResponseCodeIs(HttpCode::FORBIDDEN);
     }
-    
 }

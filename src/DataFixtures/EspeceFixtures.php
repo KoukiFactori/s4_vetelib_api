@@ -16,6 +16,5 @@ class EspeceFixtures extends Fixture
         foreach ($especes as $element) {
             EspeceFactory::createOne($element);
         }
-        
     }
 }

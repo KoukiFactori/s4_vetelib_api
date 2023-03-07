@@ -43,7 +43,7 @@ class VeterinaireRepository extends ServiceEntityRepository
     {
         $events = $this->createQueryBuilder('veto')
             ->addSelect('event')
-            ->leftJoin("veto.events", 'event')
+            ->leftJoin('veto.events', 'event')
             ->where('event.date >= :start')
             ->andWhere('event.date <= :end')
             ->orderBy('event.date')

@@ -41,11 +41,10 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
             ]
         );
     }
-      /**
+
+    /**
      * Override to control what happens when the user hits a secure page
      * but isn't logged in yet.
-     *
-     * @return RedirectResponse
      *
      * @throws HttpException
      */
@@ -61,6 +60,7 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
 
         return new RedirectResponse($url);
     }
+
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
         if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {

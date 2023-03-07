@@ -50,7 +50,7 @@ final class AdminFactory extends UserFactory
     protected function getDefaults(): array
     {
         return array_merge(parent::getDefaults(), [
-            'roles' => ['ROLE_ADMIN']
+            'roles' => ['ROLE_ADMIN'],
         ]);
     }
 
@@ -61,9 +61,9 @@ final class AdminFactory extends UserFactory
     {
         /** @var AdminFactory $self */
         $self = parent::initialize();
+
         return $self;
     }
-
 
     protected static function getClass(): string
     {

@@ -11,21 +11,21 @@ use Zenstruck\Foundry\RepositoryProxy;
 /**
  * @extends ModelFactory<Espece>
  *
- * @method        Espece|Proxy create(array|callable $attributes = [])
- * @method static Espece|Proxy createOne(array $attributes = [])
- * @method static Espece|Proxy find(object|array|mixed $criteria)
- * @method static Espece|Proxy findOrCreate(array $attributes)
- * @method static Espece|Proxy first(string $sortedField = 'id')
- * @method static Espece|Proxy last(string $sortedField = 'id')
- * @method static Espece|Proxy random(array $attributes = [])
- * @method static Espece|Proxy randomOrCreate(array $attributes = [])
+ * @method        Espece|Proxy                     create(array|callable $attributes = [])
+ * @method static Espece|Proxy                     createOne(array $attributes = [])
+ * @method static Espece|Proxy                     find(object|array|mixed $criteria)
+ * @method static Espece|Proxy                     findOrCreate(array $attributes)
+ * @method static Espece|Proxy                     first(string $sortedField = 'id')
+ * @method static Espece|Proxy                     last(string $sortedField = 'id')
+ * @method static Espece|Proxy                     random(array $attributes = [])
+ * @method static Espece|Proxy                     randomOrCreate(array $attributes = [])
  * @method static EspeceRepository|RepositoryProxy repository()
- * @method static Espece[]|Proxy[] all()
- * @method static Espece[]|Proxy[] createMany(int $number, array|callable $attributes = [])
- * @method static Espece[]|Proxy[] createSequence(array|callable $sequence)
- * @method static Espece[]|Proxy[] findBy(array $attributes)
- * @method static Espece[]|Proxy[] randomRange(int $min, int $max, array $attributes = [])
- * @method static Espece[]|Proxy[] randomSet(int $number, array $attributes = [])
+ * @method static Espece[]|Proxy[]                 all()
+ * @method static Espece[]|Proxy[]                 createMany(int $number, array|callable $attributes = [])
+ * @method static Espece[]|Proxy[]                 createSequence(array|callable $sequence)
+ * @method static Espece[]|Proxy[]                 findBy(array $attributes)
+ * @method static Espece[]|Proxy[]                 randomRange(int $min, int $max, array $attributes = [])
+ * @method static Espece[]|Proxy[]                 randomSet(int $number, array $attributes = [])
  */
 final class EspeceFactory extends ModelFactory
 {
@@ -47,7 +47,7 @@ final class EspeceFactory extends ModelFactory
     protected function getDefaults(): array
     {
         return [
-            'name' => mb_convert_case(self::faker()->word(), MB_CASE_TITLE, "UTF-8")
+            'name' => mb_convert_case(self::faker()->word(), MB_CASE_TITLE, 'UTF-8'),
         ];
     }
 

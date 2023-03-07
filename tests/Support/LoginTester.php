@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace App\Tests\Support;
 
 /**
- * Inherited Methods
+ * Inherited Methods.
+ *
  * @method void wantTo($text)
  * @method void wantToTest($text)
  * @method void execute($callable)
@@ -18,12 +19,12 @@ namespace App\Tests\Support;
  * @method void pause($vars = [])
  *
  * @SuppressWarnings(PHPMD)
-*/
+ */
 class LoginTester extends \Codeception\Actor
 {
     use _generated\LoginTesterActions;
 
-    /**
+    /*
      * Define custom actions here
      */
 }

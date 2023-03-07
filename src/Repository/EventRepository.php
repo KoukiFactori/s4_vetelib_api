@@ -2,13 +2,13 @@
 
 namespace App\Repository;
 
+use app\Entity\Animal;
+use app\Entity\Client;
 use App\Entity\Event;
 use App\Entity\TypeEvent;
 use App\Entity\Veterinaire;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use app\Entity\Animal;
-use app\Entity\Client;
 
 /**
  * @extends ServiceEntityRepository<Event>
@@ -44,17 +44,17 @@ class EventRepository extends ServiceEntityRepository
     }
 
     public function findEventByAnimal(Animal $animal)
-{
-    $qb = $this->createQueryBuilder('a');
+    {
+        $qb = $this->createQueryBuilder('a');
 
-    $qb
-        ->where('a.animal = :animal')
-        ->orderBy("a.date", 'ASC')
-        ->setParameter('animal', $animal)
-    ;
+        $qb
+            ->where('a.animal = :animal')
+            ->orderBy('a.date', 'ASC')
+            ->setParameter('animal', $animal)
+        ;
 
-    return $qb->getQuery()->getResult();
-}
+        return $qb->getQuery()->getResult();
+    }
 
 public function getAllEventByClient(Client $client)
 {
@@ -63,38 +63,38 @@ public function getAllEventByClient(Client $client)
     ->innerJoin('animal.client', 'client')
     ->where('client = :client')
     ->andWhere(' a.date > :now')
-    ->setParameter('client', $client )
+    ->setParameter('client', $client)
     ->setParameter('now', new \DateTime());
 
     return $qb->getQuery()->getResult();
 }
 
-public function getAllEventByTypeAndVeterinaire(TypeEvent $typeEvent , Veterinaire $veterinaire)
+public function getAllEventByTypeAndVeterinaire(TypeEvent $typeEvent, Veterinaire $veterinaire)
 {
     $qb = $this->createQueryBuilder('a')
     ->innerJoin('a.typeEvent', 'typeEvent')
     ->innerJoin('a.veterinaire', 'veterinaire')
     ->where('typeEvent = :typeEvent')
     ->andWhere('veterinaire = :veterinaire')
-    ->setParameter('typeEvent', $typeEvent )
-    ->setParameter('veterinaire', $veterinaire );
+    ->setParameter('typeEvent', $typeEvent)
+    ->setParameter('veterinaire', $veterinaire);
 
     return $qb->getQuery()->getResult();
 }
+
 public function getAllEventByVeterinaire(Veterinaire $veterinaire)
 {
     $qb = $this->createQueryBuilder('a')
     ->innerJoin('a.veterinaire', 'veterinaire')
     ->where('veterinaire = :veterinaire')
-    ->setParameter('veterinaire', $veterinaire );
+    ->setParameter('veterinaire', $veterinaire);
 
     return $qb->getQuery()->getResult();
 }
 
-
     /**
-     * Récupère tous les events entre deux dates
-     * 
+     * Récupère tous les events entre deux dates.
+     *
      * @return Event[]
      */
     public function getVeterinaireEventsBetween(int $vetoId, \DateTimeInterface $start, \DateTimeInterface $end): array

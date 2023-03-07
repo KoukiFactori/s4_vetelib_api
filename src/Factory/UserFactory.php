@@ -3,7 +3,6 @@
 namespace App\Factory;
 
 use App\Entity\User;
-use App\Repository\ClientRepository;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Zenstruck\Foundry\ModelFactory;
 use Zenstruck\Foundry\Proxy;
@@ -63,7 +62,7 @@ class UserFactory extends ModelFactory
             'lastname' => $lastname,
             'zipcode' => self::faker()->postcode(),
             'password' => 'miaou',
-            'roles' => []
+            'roles' => [],
         ];
     }
 

@@ -2,59 +2,55 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
-use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\Patch;
-use ApiPlatform\Metadata\Put;
-use App\Controller\GetAllEventOfClientController;
-use App\Controller\GetAllEventOfAnimalController;
-use App\Controller\GetAllEventOfVeterinaireController;
 use ApiPlatform\Metadata\ApiResource;
+use APiPlatform\Metadata\Delete;
+use APiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Link;
+use ApiPlatform\Metadata\Patch;
+use APiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
+use App\Controller\GetAllEventOfAnimalController;
+use App\Controller\GetAllEventOfClientController;
+use App\Controller\GetAllEventOfVeterinaireController;
 use App\Repository\EventRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use APiPlatform\Metadata\Get;
-use APiPlatform\Metadata\Post;
-use APiPlatform\Metadata\Delete;
-use ApiPlatform\Metadata\Link;
-use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 
 #[ORM\Entity(repositoryClass: EventRepository::class)]
 #[ApiResource(
-
-    operations:[
+    operations: [
         new GetCollection(
-                uriTemplate:'/events',
-                security:'is_granted("ROLE_ADMIN")',
-                openapiContext:
-                [
-                    'summary' => 'Get collection of events of the same type',
-                    'description' => 'Get all events by type',
-                    'response' =>['200' , '401', '403', '404'],
-                    'parameters' => [
-                        'libType' => [
-                            'name' => 'libType',
-                            'in' => 'typeEvent.getLibType()',
-                            'description' => 'The type of the event we want to get  (Urgent, Non Urgent)',
-                            'type' => 'string',
-                            'required' => false,
-                            'openapi' => [
-                                'example' => 'Urgent'
-                            ]
-                        ]
+            uriTemplate: '/events',
+            security: 'is_granted("ROLE_ADMIN")',
+            openapiContext: [
+                'summary' => 'Get collection of events of the same type',
+                'description' => 'Get all events by type',
+                'response' => ['200', '401', '403', '404'],
+                'parameters' => [
+                    'libType' => [
+                        'name' => 'libType',
+                        'in' => 'typeEvent.getLibType()',
+                        'description' => 'The type of the event we want to get  (Urgent, Non Urgent)',
+                        'type' => 'string',
+                        'required' => false,
+                        'openapi' => [
+                            'example' => 'Urgent',
+                        ],
                     ],
-        
-                ]
-                ),
+                ],
+            ]
+        ),
         new Get(
-            uriTemplate:'/events/{id}',
-            paginationEnabled:false,
-            security:'is_granted("ROLE_USER") and (object.getVeterinaire() == user or object.getAnimal().getClient() == user)',
-            openapiContext:
-            [
+            uriTemplate: '/events/{id}',
+            paginationEnabled: false,
+            security: 'is_granted("ROLE_USER") and (object.getVeterinaire() == user or object.getAnimal().getClient() == user)',
+            openapiContext: [
                 'summary' => 'Get one events',
                 'description' => 'Get event by id',
-                'responses' =>['200' , '401', '403', '404'],
+                'responses' => ['200', '401', '403', '404'],
                 'parameters' => [
                     'id' => [
                         'name' => 'id',
@@ -63,34 +59,28 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
                         'type' => 'integer',
                         'required' => true,
                         'openapi' => [
-                            'example' => 1
-                        ]
-                    ]
+                            'example' => 1,
+                        ],
+                    ],
                 ],
-
             ]
-            ),
+        ),
         new Post(
-            uriTemplate:'/events',
-            security:'is_granted("ROLE_USER")',
-            openapiContext:
-                [
+            uriTemplate: '/events',
+            security: 'is_granted("ROLE_USER")',
+            openapiContext: [
                     'summary' => 'Create an event',
                     'description' => 'Create an event',
-                    'responses' =>['200' , '401', '403', '404'],
-                    
+                    'responses' => ['200', '401', '403', '404'],
                 ],
-
-            
-            ),
+        ),
         new Patch(
-            uriTemplate:'/events/{id}',
-            security:'is_granted("ROLE_USER") and (object.getVeterinaire() == user or object.getAnimal().getClient() == user)',
-            openapiContext:
-                [
+            uriTemplate: '/events/{id}',
+            security: 'is_granted("ROLE_USER") and (object.getVeterinaire() == user or object.getAnimal().getClient() == user)',
+            openapiContext: [
                     'summary' => 'Update an event',
                     'description' => 'Update an event',
-                    'responses' =>['200' , '401', '403', '404'],
+                    'responses' => ['200', '401', '403', '404'],
                     'parameters' => [
                         'id' => [
                             'name' => 'id',
@@ -99,21 +89,19 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
                             'type' => 'integer',
                             'required' => true,
                             'openapi' => [
-                                'example' => 1
-                            ]
-                        ]
+                                'example' => 1,
+                            ],
+                        ],
                     ],
                 ]
-
-                ),
+        ),
         new Delete(
-            uriTemplate:'/events/{id}',
-            security:'is_granted("ROLE_USER") and (object.getVeterinaire() == user or object.getAnimal().getClient() == user)',
-            openapiContext:
-                [
+            uriTemplate: '/events/{id}',
+            security: 'is_granted("ROLE_USER") and (object.getVeterinaire() == user or object.getAnimal().getClient() == user)',
+            openapiContext: [
                     'summary' => 'Delete an event',
                     'description' => 'Delete an event',
-                    'responses' =>['200' , '401', '403', '404'],
+                    'responses' => ['200', '401', '403', '404'],
                     'parameters' => [
                         'id' => [
                                 'name' => 'id',
@@ -122,20 +110,19 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
                                 'type' => 'integer',
                                 'required' => true,
                                 'openapi' => [
-                                    'example' => 1
-                                ]
-                            ]
+                                    'example' => 1,
+                                ],
+                            ],
                     ],
                 ]
-                ),
+        ),
         new Put(
-            uriTemplate:'/events/{id}',
-            security:'is_granted("ROLE_USER") and (object.getVeterinaire() == user or object.getAnimal().getClient() == user)',
-            openapiContext:
-                    [
+            uriTemplate: '/events/{id}',
+            security: 'is_granted("ROLE_USER") and (object.getVeterinaire() == user or object.getAnimal().getClient() == user)',
+            openapiContext: [
                         'summary' => 'Update an event',
                         'description' => 'Update an event',
-                        'responses' =>['200' , '401', '403', '404'],
+                        'responses' => ['200', '401', '403', '404'],
                         'parameters' => [
                             'id' => [
                                 'name' => 'id',
@@ -144,83 +131,75 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
                                 'type' => 'integer',
                                 'required' => true,
                                 'openapi' => [
-                                    'example' => 1
-                                ]
-                            ]
+                                    'example' => 1,
+                                ],
+                            ],
                         ],
                     ]
-               )
-                     
-            ]        
+        ),
+            ]
 )]
 #[ApiResource(
-    uriTemplate:'/animals/{id}/events',
-    uriVariables: ['id'=> new Link(
+    uriTemplate: '/animals/{id}/events',
+    uriVariables: ['id' => new Link(
         fromClass: Animal::class,
         fromProperty: 'events',
     )],
-    openapiContext:[
-        'tags' => ['Animal']
+    openapiContext: [
+        'tags' => ['Animal'],
     ],
-    operations:
-    [
+    operations: [
         new GetCollection(
-            uriTemplate:'/animals/{id}/events',
-            security:'is_granted("ROLE_USER") or is_granted("ROLE_ADMIN")',
-            controller:GetAllEventOfAnimalController::class,  
-            ),
+            uriTemplate: '/animals/{id}/events',
+            security: 'is_granted("ROLE_USER") or is_granted("ROLE_ADMIN")',
+            controller: GetAllEventOfAnimalController::class,
+        ),
 ])]
 #[ApiResource(
-    uriTemplate:'/veterinaires/{id}/events',
-    uriVariables: ['id'=> new Link(
+    uriTemplate: '/veterinaires/{id}/events',
+    uriVariables: ['id' => new Link(
         fromClass: Veterinaire::class,
         fromProperty: 'events',
-    
     )],
-    operations:
-    [
+    operations: [
         new GetCollection(
-                security:'is_granted("ROLE_VETERINAIRE") or is_granted("ROLE_ADMIN")',
-                paginationEnabled:false,
-                controller:GetAllEventOfVeterinaireController::class,
-                openapiContext:
-                [
-                    'tags' => ['Veterinaire'],
-                    'summary' => 'Get collection of events of the same type',
-                    'description' => 'Get all events by type',
-                    'response' =>['200' , '401', '403', '404'],
-                    'parameters' => [
-                        'libType' => [
-                            'name' => 'libType',
-                            'in' => 'query',
-                            'description' => 'The type of the event we want to get  (Urgent, Non Urgent)',
-                            'type' => 'string',
-                            'required' => false,
-                            'openapi' => [
-                                'example' => 'Urgent'
-                            ]
-                        ]
+            security: 'is_granted("ROLE_VETERINAIRE") or is_granted("ROLE_ADMIN")',
+            paginationEnabled: false,
+            controller: GetAllEventOfVeterinaireController::class,
+            openapiContext: [
+                'tags' => ['Veterinaire'],
+                'summary' => 'Get collection of events of the same type',
+                'description' => 'Get all events by type',
+                'response' => ['200', '401', '403', '404'],
+                'parameters' => [
+                    'libType' => [
+                        'name' => 'libType',
+                        'in' => 'query',
+                        'description' => 'The type of the event we want to get  (Urgent, Non Urgent)',
+                        'type' => 'string',
+                        'required' => false,
+                        'openapi' => [
+                            'example' => 'Urgent',
+                        ],
                     ],
-        
-                ]
-                ),
+                ],
+            ]
+        ),
     ]
 )]
 #[ApiResource(
     uriTemplate: '/clients/{id}/events',
-    security:'is_granted("ROLE_CLIENT")',
-    openapiContext:[
-        'tags' => ['Client']
+    security: 'is_granted("ROLE_CLIENT")',
+    openapiContext: [
+        'tags' => ['Client'],
     ],
-    operations:[
+    operations: [
         new GetCollection(
-            uriTemplate:'/clients/{id}/events',
+            uriTemplate: '/clients/{id}/events',
             controller: GetAllEventOfClientController::class,
-            security:'is_granted("ROLE_USER")',
-            
-)],
-           
-            ),
+            security: 'is_granted("ROLE_USER")',
+        )],
+),
 ]
 #[ApiFilter(SearchFilter::class, properties: ['typeEvent.getLibType()' => 'exact'])]
 class Event
@@ -242,7 +221,6 @@ class Event
 
     #[ORM\ManyToOne(inversedBy: 'events')]
     #[ORM\JoinColumn(nullable: false)]
-
     private ?TypeEvent $typeEvent = null;
 
     #[ORM\ManyToOne(inversedBy: 'events')]

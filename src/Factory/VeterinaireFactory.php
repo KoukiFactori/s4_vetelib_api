@@ -50,7 +50,7 @@ final class VeterinaireFactory extends UserFactory
     protected function getDefaults(): array
     {
         return array_merge(parent::getDefaults(), [
-            'roles' => ['ROLE_VETERINAIRE']
+            'roles' => ['ROLE_VETERINAIRE'],
         ]);
     }
 
@@ -61,9 +61,9 @@ final class VeterinaireFactory extends UserFactory
     {
         /** @var VeterinaireFactory $self */
         $self = parent::initialize();
+
         return $self;
     }
-
 
     protected static function getClass(): string
     {

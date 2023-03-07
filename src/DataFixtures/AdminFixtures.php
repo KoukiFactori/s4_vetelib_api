@@ -10,6 +10,6 @@ class AdminFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        AdminFactory::createOne(['firstname'=>'Nicolas','lastname'=>'Mossmann','email'=>'nicolas.mossmann@etudiant.univ-reims.fr']);
+        AdminFactory::createOne(['firstname' => 'Nicolas', 'lastname' => 'Mossmann', 'email' => 'nicolas.mossmann@etudiant.univ-reims.fr']);
     }
 }

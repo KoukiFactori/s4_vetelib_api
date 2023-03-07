@@ -14,8 +14,7 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Espece[]    findAll()
  * @method Espece[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class
- EspeceRepository extends ServiceEntityRepository
+class EspeceRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {

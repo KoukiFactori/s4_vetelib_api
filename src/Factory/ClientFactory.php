@@ -50,7 +50,7 @@ final class ClientFactory extends UserFactory
     protected function getDefaults(): array
     {
         return array_merge(parent::getDefaults(), [
-            'roles' => ['ROLE_CLIENT']
+            'roles' => ['ROLE_CLIENT'],
         ]);
     }
 
@@ -61,9 +61,9 @@ final class ClientFactory extends UserFactory
     {
         /** @var ClientFactory $self */
         $self = parent::initialize();
+
         return $self;
     }
-
 
     protected static function getClass(): string
     {

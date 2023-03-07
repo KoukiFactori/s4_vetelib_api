@@ -50,4 +50,3 @@ class Veterinaire extends User
         return $this;
     }
 }
- 
