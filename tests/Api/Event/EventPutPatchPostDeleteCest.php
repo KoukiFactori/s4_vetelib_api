@@ -169,4 +169,46 @@ class EventPutPatchPostDeleteCest
         $I->sendDELETE('/api/events/2');
         $I->seeResponseCodeIs(HttpCode::FORBIDDEN);
     }
+    public function authenticatedClientCantPutPatchDeleteForOther(ApiTester $I)
+    {
+
+        $veterinaire = VeterinaireFactory::createOne();
+        $type = TypeEventFactory::createOne();
+        $client = ClientFactory::createOne();
+        $espece = EspeceFactory::createOne();
+        $client2 = ClientFactory::createOne();
+        $animal = AnimalFactory::createOne(
+            ['espece' => $espece,
+                'client' => $client,
+            ]
+        );
+        $client2 = ClientFactory::createOne();
+        $I->amOnPage('/login');
+        $I->amLoggedInAs($client2->object());
+        $dataInitPost = [
+           'date' => '2023-03-11T09:30:00+00:00',
+           'description' => 'test1',
+           'animal' => '/api/animals/1',
+           'typeEvent' => '/api/type_events/1',
+           'veterinaire' => '/api/veterinaires/1',
+        ];
+
+        $I->sendPOST('/api/events', $dataInitPost);
+        $I->seeResponseCodeIs(HttpCode::FORBIDDEN);
+        $dataInitPatch = [
+            'description' => 'test2',
+        ];
+        $I->sendPATCH('/api/events/2', $dataInitPatch);
+        $I->seeResponseCodeIs(HttpCode::FORBIDDEN);
+        $dataInitPut = [
+            'description' => 'test3',
+        ];
+        $I->sendPUT('/api/events/2', $dataInitPut);
+        $I->seeResponseCodeIs(HttpCode::FORBIDDEN);
+        $I->sendDELETE('/api/events/2');
+        $I->seeResponseCodeIs(HttpCode::FORBIDDEN);
+
+    }
 }
+
+
