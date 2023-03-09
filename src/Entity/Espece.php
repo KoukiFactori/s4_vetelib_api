@@ -79,6 +79,43 @@ use Doctrine\ORM\Mapping as ORM;
                 ],
             ]
         ),
+        new Patch(
+            uriTemplate: 'especes/{id}',
+            security: "is_granted('ROLE_ADMIN')",
+            openapiContext: [
+                'summary' => 'Update a Species',
+                'description' => 'Update a species',
+                'responses' => [
+                    '200' => [
+                        'description' => 'Species updated',
+                    ],
+                    '401' => [
+                        'description' => 'Not authorized, you are not logged in',
+                    ],
+                    '403' => [
+                        'description' => 'Not authorized, you do not have the rights',
+                    ],
+                    '404' => [
+                        'description' => 'The species does not exist',
+                    ],
+                    '500' => [
+                        'description' => 'Server Error',
+                    ],
+                ],
+                'parameters' => [
+                    [
+                        'name' => 'id',
+                        'in' => 'path',
+                        'description' => 'The id of the species',
+                        'required' => true,
+                        'type' => 'integer',
+                        'openapi' => [
+                            'example' => 1,
+                        ],
+                    ],
+                ],
+            ]
+        ),
     ]
 )]
 class Espece
