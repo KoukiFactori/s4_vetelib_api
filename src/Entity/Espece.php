@@ -3,11 +3,22 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
 use App\Repository\EspeceRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: EspeceRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    operations: [
+        new GetCollection(
+            security: "is_granted('ROLE_USER')",
+            openapiContext: [
+                'summary' => 'Récupérer la collection des espèces',
+                'description' => 'Récupérer la collection des espèces',
+            ]
+        ),
+    ]
+)]
 class Espece
 {
     #[ORM\Id]
