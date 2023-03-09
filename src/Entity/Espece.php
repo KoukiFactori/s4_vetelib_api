@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use App\Repository\EspeceRepository;
 use Doctrine\ORM\Mapping as ORM;
@@ -17,8 +18,44 @@ use Doctrine\ORM\Mapping as ORM;
                 'description' => 'Récupérer la collection des espèces',
             ]
         ),
-    ]
-)]
+        new Get(
+            uriTemplate: '/especes/{id}',
+            paginationEnabled: false,
+            security: "is_granted('ROLE_USER')",
+            openapiContext: [
+                'summary' => 'Get One Species',
+                'description' => 'Get one species',
+                'responses' => [
+                    '200' => [
+                        'description' => 'Recovery of the species by its id',
+                    ],
+                    '401' => [
+                        'description' => 'Not authorized, you are not logged in',
+                    ],
+                    '403' => [
+                        'description' => 'Not authorized, you do not have the rights',
+                    ],
+                    '404' => [
+                        'description' => 'The species does not exist',
+                    ],
+                    '500' => [
+                        'description' => 'Server Error',
+                    ],
+                ],
+                'parameters' => [
+                    [
+                        'name' => 'id',
+                        'in' => 'path',
+                        'description' => 'The id of the species',
+                        'required' => true,
+                        'type' => 'integer',
+                        'openapi' => [
+                            'example' => 1,
+                        ],
+                    ],
+                ],
+            ],
+        )])]
 class Espece
 {
     #[ORM\Id]
