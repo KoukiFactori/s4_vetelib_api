@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
 use App\Repository\EspeceRepository;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -55,7 +56,31 @@ use Doctrine\ORM\Mapping as ORM;
                     ],
                 ],
             ],
-        )])]
+        ),
+        new Post(
+            uriTemplate: '/especes',
+            security: "is_granted('ROLE_ADMIN')",
+            openapiContext: [
+                'summary' => 'Create a Species',
+                'description' => 'Create a species',
+                'responses' => [
+                    '201' => [
+                        'description' => 'Species created',
+                    ],
+                    '401' => [
+                        'description' => 'Not authorized, you are not logged in',
+                    ],
+                    '403' => [
+                        'description' => 'Not authorized, you do not have the rights',
+                    ],
+                    '500' => [
+                        'description' => 'Server Error',
+                    ],
+                ],
+            ]
+        ),
+    ]
+)]
 class Espece
 {
     #[ORM\Id]
