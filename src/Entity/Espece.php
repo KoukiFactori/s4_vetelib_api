@@ -116,6 +116,43 @@ use Doctrine\ORM\Mapping as ORM;
                 ],
             ]
         ),
+        new Delete(
+            uriTemplate: 'especes/{id}',
+            security: "is_granted('ROLE_ADMIN')",
+            openapiContext: [
+                'summary' => 'Delete a Species',
+                'description' => 'Delete a species',
+                'responses' => [
+                    '204' => [
+                        'description' => 'Species deleted',
+                    ],
+                    '401' => [
+                        'description' => 'Not authorized, you are not logged in',
+                    ],
+                    '403' => [
+                        'description' => 'Not authorized, you do not have the rights',
+                    ],
+                    '404' => [
+                        'description' => 'The species does not exist',
+                    ],
+                    '500' => [
+                        'description' => 'Server Error',
+                    ],
+                ],
+                'parameters' => [
+                    [
+                        'name' => 'id',
+                        'in' => 'path',
+                        'description' => 'The id of the species',
+                        'required' => true,
+                        'type' => 'integer',
+                        'openapi' => [
+                            'example' => 1,
+                        ],
+                    ],
+                ],
+            ]
+        ),
     ]
 )]
 class Espece
