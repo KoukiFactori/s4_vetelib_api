@@ -16,4 +16,12 @@ class GetEspeceCest
         $I->sendGET('/api/especes/1');
         $I->seeResponseCodeIs(200);
     }
+
+    public function anonymousUserCannotGetEspece(ApiTester $I): void
+    {
+        EspeceFactory::createOne();
+        $I->sendGET('/api/especes/1');
+        $I->seeResponseCodeIs(401);
+    }
+
 }
