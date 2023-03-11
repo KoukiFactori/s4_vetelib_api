@@ -13,12 +13,12 @@ use App\Factory\VeterinaireFactory;
 use App\Repository\VeterinaireRepository;
 use App\Tests\Support\ApiTester;
 use Codeception\Util\HttpCode;
+use Symfony\Component\Security\Core\Security;
 
 class EventPutPatchPostDeleteCest
-{   
-
-    
-    private function InitialiseData(){
+{
+    private function InitialiseData()
+    {
         $veterinaire = VeterinaireFactory::createOne();
         $type=TypeEventFactory::createOne();
         $client = ClientFactory::createOne();
@@ -131,10 +131,31 @@ class EventPutPatchPostDeleteCest
         $I->sendDELETE('/api/events/1');
         $I->seeResponseCodeIs(HttpCode::NO_CONTENT);
     }
-    public function authenticatedVeterinaireCantPutPatchDeleteForOther(ApiTester $I)
+
+    public function authenticatedVeterinaireCantPutPatchDeleteForOther(ApiTester $I ,)
     {
-        $this->InitialiseData();
-        $I->amLoggedInAs(VeterinaireFactory::createOne()->object());
+        $veterinaire = VeterinaireFactory::createOne();
+        $type = TypeEventFactory::createOne();
+        $client = ClientFactory::createOne();
+        $espece = EspeceFactory::createOne();
+        $animal = AnimalFactory::createOne(
+            ['espece' => $espece,
+                'client' => $client,
+            ]
+        );
+        
+        $veterinaire2 = VeterinaireFactory::createOne();
+        $I->amOnPage('/login');
+        $I->amLoggedInAs($veterinaire2->object());
+        $dataInitPost = [
+           'date' => '2023-03-11T09:30:00+00:00',
+           'description' => 'test1',
+           'animal' => '/api/animals/1',
+           'typeEvent' => '/api/type_events/1',
+           'veterinaire' => '/api/veterinaires/1',
+        ];
+
+        $I->sendPOST('/api/events', $dataInitPost);
         $I->seeResponseCodeIs(HttpCode::FORBIDDEN);
         $dataInitPatch=[
             "description"=> "test2",

@@ -1,4 +1,6 @@
 api_platform:
+    exception_to_status:
+        Symfony\Component\Security\Core\Exception\AccessDeniedException: 403
     mapping:
         paths: ['%kernel.project_dir%/src/Entity']
     patch_formats:
