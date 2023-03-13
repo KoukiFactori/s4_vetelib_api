@@ -16,6 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ApiResource(
     operations: [
         new GetCollection(
+            uriTemplate: '/especes',
             security: "is_granted('ROLE_USER')",
             openapiContext: [
                 'summary' => 'Récupérer la collection des espèces',
@@ -83,7 +84,7 @@ use Doctrine\ORM\Mapping as ORM;
             ]
         ),
         new Patch(
-            uriTemplate: 'especes/{id}',
+            uriTemplate: '/especes/{id}',
             security: "is_granted('ROLE_ADMIN')",
             openapiContext: [
                 'summary' => 'Update a Species',
@@ -120,7 +121,7 @@ use Doctrine\ORM\Mapping as ORM;
             ]
         ),
         new Put(
-            uriTemplate: 'especes/{id}',
+            uriTemplate: '/especes/{id}',
             security: "is_granted('ROLE_ADMIN')",
             openapiContext: [
                 'summary' => 'Update a Species',
@@ -157,7 +158,7 @@ use Doctrine\ORM\Mapping as ORM;
             ]
         ),
         new Delete(
-            uriTemplate: 'especes/{id}',
+            uriTemplate: '/especes/{id}',
             security: "is_granted('ROLE_ADMIN')",
             openapiContext: [
                 'summary' => 'Delete a Species',
