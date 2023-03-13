@@ -3,6 +3,7 @@
 namespace App\Tests\Api\Espece;
 
 use App\Factory\AdminFactory;
+use App\Factory\ClientFactory;
 use App\Factory\EspeceFactory;
 use App\Tests\Support\ApiTester;
 
@@ -27,4 +28,16 @@ class PutEspeceCest
         ]);
         $I->seeResponseCodeIs(200);
     }
+
+    public function authenticatedClientCannotPutEspece(ApiTester $I): void
+    {
+        $user = ClientFactory::createOne();
+        EspeceFactory::createOne();
+        $I->amLoggedInAs($user->object());
+        $I->sendPUT('/api/especes/1', [
+            'name' => 'test',
+        ]);
+        $I->seeResponseCodeIs(403);
+    }
+
 }
