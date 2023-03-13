@@ -3,6 +3,7 @@
 namespace App\Tests\Api\Espece;
 
 use App\Factory\AdminFactory;
+use App\Factory\ClientFactory;
 use App\Tests\Support\ApiTester;
 
 class CreateEspeceCest
@@ -24,5 +25,16 @@ class CreateEspeceCest
         ]);
         $I->seeResponseCodeIs(201);
     }
+
+    public function authenticatedClientCannotCreateEspece(ApiTester $I): void
+    {
+        $user = ClientFactory::createOne();
+        $I->amLoggedInAs($user->object());
+        $I->sendPOST('/api/especes', [
+            'name' => 'test',
+        ]);
+        $I->seeResponseCodeIs(403);
+    }
+
 
 }
