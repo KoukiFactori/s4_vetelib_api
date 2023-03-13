@@ -4,6 +4,7 @@ namespace App\Tests\Api\Espece;
 
 use App\Factory\AdminFactory;
 use App\Factory\ClientFactory;
+use App\Factory\VeterinaireFactory;
 use App\Tests\Support\ApiTester;
 
 class CreateEspeceCest
@@ -36,5 +37,14 @@ class CreateEspeceCest
         $I->seeResponseCodeIs(403);
     }
 
+    public function authenticatedVeterinaireCannotCreateEspece(ApiTester $I): void
+    {
+        $user = VeterinaireFactory::createOne();
+        $I->amLoggedInAs($user->object());
+        $I->sendPOST('/api/especes', [
+            'name' => 'test',
+        ]);
+        $I->seeResponseCodeIs(403);
+    }
 
 }
