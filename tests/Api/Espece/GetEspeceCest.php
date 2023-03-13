@@ -2,6 +2,7 @@
 
 namespace App\Tests\Api\Espece;
 
+use App\Factory\AdminFactory;
 use App\Factory\ClientFactory;
 use App\Factory\EspeceFactory;
 use App\Factory\VeterinaireFactory;
@@ -22,6 +23,15 @@ class GetEspeceCest
     {
         EspeceFactory::createOne();
         $user = VeterinaireFactory::createOne();
+        $I->amLoggedInAs($user->object());
+        $I->sendGET('/api/especes/1');
+        $I->seeResponseCodeIs(200);
+    }
+
+    public function authenticatedAdminCanGetEspece(ApiTester $I): void
+    {
+        EspeceFactory::createOne();
+        $user = AdminFactory::createOne();
         $I->amLoggedInAs($user->object());
         $I->sendGET('/api/especes/1');
         $I->seeResponseCodeIs(200);
