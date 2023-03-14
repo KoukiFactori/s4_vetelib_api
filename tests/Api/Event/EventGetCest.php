@@ -13,7 +13,7 @@ use App\Factory\VeterinaireFactory;
 use App\Repository\VeterinaireRepository;
 use App\Tests\Support\ApiTester;
 use Codeception\Util\HttpCode;
-
+use App\Exception\PostEventAccessDeniedException;
 class EventGetCest
 {   
 
@@ -48,12 +48,34 @@ class EventGetCest
     {
         $veterinaire = VeterinaireFactory::createOne();
         $I->amLoggedInAs($veterinaire->object());
-        $this->InitialiseData();
-        $I->sendGET('/api/veterinaires/2/events');
-        $I->seeResponseCodeIs(HttpCode::FORBIDDEN);
+        $type = TypeEventFactory::createOne();
+        $client = ClientFactory::createOne();
+        $espece = EspeceFactory::createOne();
+        $animal = AnimalFactory::createOne(
+            ['espece' => $espece,
+                'client' => $client,
+            ]
+        );
+        $event = EventFactory::createOne(
+            ['typeEvent' => $type,
+                'date' => new \DateTime('2021-01-01'),
+                'veterinaire' => $veterinaire,
+                'animal' => $animal,
+            ]
+
+        );
+        $veterinaire2 = VeterinaireFactory::createOne();
+        $I->amLoggedInAs($veterinaire2->object());
+        try {
+            $I->sendGET('/api/veterinaires/2/events');
+        } catch (PostEventAccessDeniedException $e) {
+            $I->seeResponseCodeIs(HttpCode::FORBIDDEN);
+        }
+
     }
-    public function AuthenticatedVeterinaireCanGetHisEvent(ApiTester $I ): void
-    {   
+
+    public function AuthenticatedVeterinaireCanGetHisEvent(ApiTester $I): void
+    {
         $veterinaire = VeterinaireFactory::createOne();
         $I->amLoggedInAs($veterinaire->object());
         $type=TypeEventFactory::createOne();
@@ -76,12 +98,33 @@ class EventGetCest
     }
 
     public function AuthenticatedClientCantGetOtherClientEvent(ApiTester $I): void
-    {   $this->InitialiseData();
+    {
+        $veterinaire = VeterinaireFactory::createOne();
+        $type = TypeEventFactory::createOne();
+        $client = ClientFactory::createOne();
+        $I->amLoggedInAs($client->object());
+        $espece = EspeceFactory::createOne();
+        $animal = AnimalFactory::createOne(
+            ['espece' => $espece,
+                'client' => $client,
+            ]
+        );
+        $event = EventFactory::createOne(
+            ['typeEvent' => $type,
+                'date' => new \DateTime('2021-01-01'),
+                'veterinaire' => $veterinaire,
+                'animal' => $animal,
+            ]
+        );
         $user = ClientFactory::createOne();
         $I->amLoggedInAs($user->object());
-        $I->sendGET('/api/clients/2/events');
-        $I->seeResponseCodeIs(HttpCode::FORBIDDEN);
+        try {
+            $I->sendGET('/api/clients/2/events');
+        } catch (PostEventAccessDeniedException $e) {
+            $I->seeResponseCodeIs(HttpCode::FORBIDDEN);
+        }
     }
+
     public function AuthenticatedClientCanGetHisEvent(ApiTester $I): void
     {
         $user = ClientFactory::createOne();
