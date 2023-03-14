@@ -103,10 +103,12 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
             ],
             ),
         new Post(
-            uriTemplate:'/events',
-            security:'is_granted("ROLE_USER") and object.getVeterinaire() == user',
-            openapiContext:
-                [
+            exceptionToStatus: [
+                'App\Exception\PostEventAccessDeniedException' => 403,
+            ],
+            uriTemplate: '/events',
+            security: 'is_granted("ROLE_USER")',
+            openapiContext: [
                     'summary' => 'Create an event',
                     'description' => 'Create an event',
                     'response' =>['200' , '401', '403', '404'],
