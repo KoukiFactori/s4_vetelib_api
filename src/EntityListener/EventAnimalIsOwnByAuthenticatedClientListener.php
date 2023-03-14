@@ -8,7 +8,7 @@ use App\Entity\Event;
 use Doctrine\Bundle\DoctrineBundle\Attribute\AsEntityListener;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Events;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use App\Exception\PostEventAccessDeniedException;
 use Symfony\Component\Security\Core\Security;
 
 #[AsEntityListener(
@@ -31,7 +31,7 @@ class EventAnimalIsOwnByAuthenticatedClientListener
         if ($this->security->isGranted('ROLE_CLIENT')) {
             if ($this->security->getUser()->getId() != $event->getAnimal()->getClient()->getId()) {
 
-                throw new AccessDeniedException("Vous ne pouvez pas creer ce rendez-vous , vous n'etes pas le propriétaire de l'animal");
+                throw new PostEventAccessDeniedException();
             }
         }
 
@@ -39,7 +39,7 @@ class EventAnimalIsOwnByAuthenticatedClientListener
 
             if ($this->security->getUser()->getId() != $event->getVeterinaire()->getId()) {
  
-                throw new AccessDeniedException("Vous ne pouvez pas creer ce rendez-vous , vous n'etes pas le veterinaire concerné");
+                throw new PostEventAccessDeniedException();
             }
         }
     }
