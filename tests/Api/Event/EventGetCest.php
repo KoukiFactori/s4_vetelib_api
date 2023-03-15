@@ -130,23 +130,23 @@ class EventGetCest
         $user = ClientFactory::createOne();
         $veterinaire = VeterinaireFactory::createOne();
         $I->amLoggedInAs($user->object());
-        $type=TypeEventFactory::createOne();
-        $client = ClientFactory::createOne();
-        $espece=EspeceFactory::createOne();
+        $type = TypeEventFactory::createOne();
+        $espece = EspeceFactory::createOne();
         $animal = AnimalFactory::createOne(
-            [   'espece' => $espece,
-                'client' => $client
+            ['espece' => $espece,
+                'client' => $user,
             ]
         );
-        $event = EventFactory::createOne(
-            [   'typeEvent' => $type,
+         EventFactory::createOne(
+            ['typeEvent' => $type,
                 'date' => new \DateTime('2021-01-01'),
                 'veterinaire' => $veterinaire,
-                'animal' => $animal
+                'animal' => $animal,
             ]
         );
         $I->sendGET('/api/clients/1/events');
         $I->seeResponseCodeIs(HttpCode::OK);
+
     }
 
 }

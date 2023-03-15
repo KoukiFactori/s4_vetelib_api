@@ -8,12 +8,10 @@ use App\Factory\ClientFactory;
 use App\Factory\EspeceFactory;
 use App\Factory\EventFactory;
 use App\Factory\TypeEventFactory;
-use App\Factory\UserFactory;
 use App\Factory\VeterinaireFactory;
-use App\Repository\VeterinaireRepository;
 use App\Tests\Support\ApiTester;
 use Codeception\Util\HttpCode;
-use Symfony\Component\Security\Core\Security;
+
 
 class EventPutPatchPostDeleteCest
 {
