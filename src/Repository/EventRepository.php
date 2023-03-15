@@ -91,8 +91,6 @@ public function getAllEventByVeterinaire(Veterinaire $veterinaire)
     return $qb->getQuery()->getResult();
 }
 
-    return $qb->getQuery()->getResult();
-}
 
 
     /**
