@@ -93,11 +93,11 @@ class EventPostCest
     }
 
     public function authenticatedVeterinaireCantPostForOther(ApiTester $I ,)
-    {   $veterinaire = VeterinaireFactory::createOne();
-        $type = TypeEventFactory::createOne();
+    {   VeterinaireFactory::createOne();
+        TypeEventFactory::createOne();
         $client = ClientFactory::createOne();
         $espece = EspeceFactory::createOne();
-        $animal = AnimalFactory::createOne(
+        AnimalFactory::createOne(
             ['espece' => $espece,
                 'client' => $client,
             ]
@@ -123,12 +123,11 @@ class EventPostCest
     public function authenticatedClientCantPostForOther(ApiTester $I)
     {
 
-        $veterinaire = VeterinaireFactory::createOne();
-        $type = TypeEventFactory::createOne();
+        VeterinaireFactory::createOne();
+        TypeEventFactory::createOne();
         $client = ClientFactory::createOne();
         $espece = EspeceFactory::createOne();
-        $client2 = ClientFactory::createOne();
-        $animal = AnimalFactory::createOne(
+        AnimalFactory::createOne(
             ['espece' => $espece,
                 'client' => $client,
             ]
@@ -157,7 +156,6 @@ class EventPostCest
         TypeEventFactory::createOne();
         $client = ClientFactory::createOne();
         $espece = EspeceFactory::createOne();
-        $client2 = ClientFactory::createOne();
         AnimalFactory::createOne(
             ['espece' => $espece,
                 'client' => $client,
