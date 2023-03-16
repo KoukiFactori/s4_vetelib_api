@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use App\Repository\AnimalRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -19,6 +20,44 @@ use Doctrine\ORM\Mapping as ORM;
             openapiContext: [
                 'summary' => 'Get all animals',
                 'description' => 'Get all animals',
+            ],
+        ),
+        new Get(
+            uriTemplate: '/animals/{id}',
+            paginationEnabled: false,
+            security: 'is_granted("ROLE_USER")',
+            openapiContext: [
+                'summary' => 'Get One Animal',
+                'description' => 'Get one Animal',
+                'responses' => [
+                    '200' => [
+                        'description' => 'Recovery of the animal by its id',
+                    ],
+                    '401' => [
+                        'description' => 'Not authorized, you are not logged in',
+                    ],
+                    '403' => [
+                        'description' => 'Not authorized, you do not have the rights',
+                    ],
+                    '404' => [
+                        'description' => 'The animal does not exist',
+                    ],
+                    '500' => [
+                        'description' => 'Server Error',
+                    ],
+                ],
+                'parameters' => [
+                    [
+                        'name' => 'id',
+                        'in' => 'path',
+                        'description' => 'The id of the animal',
+                        'required' => true,
+                        'type' => 'integer',
+                        'openapi' => [
+                            'example' => 1,
+                        ],
+                    ],
+                ],
             ],
         ),
     ]
