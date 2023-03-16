@@ -3,6 +3,7 @@
 namespace App\Tests\Api\Event;
 
 
+use App\Factory\AdminFactory;
 use App\Factory\AnimalFactory;
 use App\Factory\ClientFactory;
 use App\Factory\EspeceFactory;
@@ -35,7 +36,7 @@ class EventPostCest
         );
 
     }
-    public function anonymousUserCan((ApiTester $I): void{
+    public function anonymousUserCantPostEvent(ApiTester $I): void{
     $this->InitialiseData();
     $dataInitPost = [
         'id' => 2,
@@ -119,7 +120,7 @@ class EventPostCest
         $I->seeResponseCodeIs(HttpCode::FORBIDDEN);
     }
     }
-    public function authenticatedClientCantPosteForOther(ApiTester $I)
+    public function authenticatedClientCantPostForOther(ApiTester $I)
     {
 
         $veterinaire = VeterinaireFactory::createOne();
@@ -149,5 +150,30 @@ class EventPostCest
          catch (AccessDeniedException $th) {
             $I->seeResponseCodeIs(HttpCode::FORBIDDEN);
         }
+    }
+    public function adminCanPostOther(ApiTester $I)
+    {
+        VeterinaireFactory::createOne();
+        TypeEventFactory::createOne();
+        $client = ClientFactory::createOne();
+        $espece = EspeceFactory::createOne();
+        $client2 = ClientFactory::createOne();
+        AnimalFactory::createOne(
+            ['espece' => $espece,
+                'client' => $client,
+            ]
+        );
+        $admin= AdminFactory::createOne();
+        $I->amOnPage('/login');
+        $I->amLoggedInAs($admin->object());
+        $dataInitPost = [
+           'date' => '2023-03-11T09:30:00+00:00',
+           'description' => 'test1',
+           'animal' => '/api/animals/1',
+           'typeEvent' => '/api/type_events/1',
+           'veterinaire' => '/api/veterinaires/1',
+        ];
+        $I->sendPOST('/api/events', $dataInitPost);
+        $I->seeResponseCodeIs(HttpCode::CREATED);
     }
 }
