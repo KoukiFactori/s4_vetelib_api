@@ -25,7 +25,7 @@ use Doctrine\ORM\Mapping as ORM;
         new Get(
             uriTemplate: '/animals/{id}',
             paginationEnabled: false,
-            security: 'is_granted("ROLE_USER")',
+            security: 'is_granted("ROLE_ADMIN") or is_granted("ROLE_VETERINAIRE") or (is_granted("ROLE_CLIENT") and object.getClient() == user)',   // Un client ne peut voir que ses animaux
             openapiContext: [
                 'summary' => 'Get One Animal',
                 'description' => 'Get one Animal',
