@@ -12,14 +12,9 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class GetAllEventOfClientController extends AbstractController
 {
-    private EventRepository $er;
-    private UserRepository $ur;
 
-    public function __construct(EventRepository $er, UserRepository $ur)
-    {
-        $this->er = $er;
-        $this->ur = $ur;
-    }
+
+    public function __construct(private EventRepository $er,private  UserRepository $ur){}
     public function __invoke( int $id): array
     {
         if ($this->getUser()->getId()!= $id) {

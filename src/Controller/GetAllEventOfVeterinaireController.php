@@ -11,14 +11,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class GetAllEventOfVeterinaireController extends AbstractController
 {
-    private EventRepository $er;
-    private VeterinaireRepository $vr;
-
-    public function __construct(EventRepository $er, VeterinaireRepository $vr)
-    {
-        $this->er = $er;
-        $this->vr = $vr;
-    }
+    public function __construct(private EventRepository $er, private VeterinaireRepository $vr){}
     public function __invoke(int $id): array
     {
         if ($this->getUser()->getId()!= $id) {
