@@ -16,5 +16,16 @@ Class CreateTypeEventCest
         $I->seeResponseCodeIs(401);
     }
 
+    public function authenticatedAdminCanCreateTypeEvent(ApiTester $I): void
+    {
+        $user = AdminFactory::createOne();
+        $I->amLoggedInAs($user->object());
+        $I->sendPOST('/api/type_events', [
+            'name' => 'test',
+        ]);
+        $I->seeResponseCodeIs(201);
+    }
+
+
 
 }
