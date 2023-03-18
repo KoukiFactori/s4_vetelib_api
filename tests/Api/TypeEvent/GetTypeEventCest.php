@@ -33,5 +33,12 @@ class GetTypeEventCest
         $I->sendGET('/api/type_events');
         $I->seeResponseCodeIs(HttpCode::OK);
     }
+
+    public function anonymoususerCannotGetOneTypeEvent(ApiTester $I): void
+    {
+        $I->sendGET('/api/type_events/1');
+        $I->seeResponseCodeIs(HttpCode::UNAUTHORIZED);
+    }
+    
 }
 
