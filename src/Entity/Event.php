@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\BooleanFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
@@ -30,6 +31,7 @@ use Doctrine\ORM\Mapping as ORM;
                 'summary' => 'Get collection of events of the same type',
                 'description' => 'Get all events by type',
                 'response' => ['200', '401', '403', '404'],
+                
                 ],
             
         ),
@@ -130,6 +132,7 @@ use Doctrine\ORM\Mapping as ORM;
             ]
 )]
 #[ApiFilter(SearchFilter::class, properties: ['typeEvent.libType' => 'exact'])]
+#[ApiFilter(BooleanFilter::class)]
 #[ApiResource(
     uriTemplate: '/animals/{id}/events',
     uriVariables: ['id' => new Link(
@@ -163,23 +166,13 @@ use Doctrine\ORM\Mapping as ORM;
                 'summary' => 'Get collection of events of the same type',
                 'description' => 'Get all events by type',
                 'response' => ['200', '401', '403', '404'],
-                'parameters' => [
-                    'libType' => [
-                        'name' => 'libType',
-                        'in' => 'query',
-                        'description' => 'The type of the event we want to get  (Urgent, Non Urgent)',
-                        'type' => 'string',
-                        'required' => false,
-                        'openapi' => [
-                            'example' => 'Urgent',
-                        ],
                     ],
-                ],
-            ]
+                
         ),
     ]
 )]
 #[ApiFilter(SearchFilter::class, properties: ['typeEvent.libType' => 'exact'])]
+#[ApiFilter(BooleanFilter::class)]
 #[ApiResource(
     uriTemplate: '/clients/{id}/events',
     security: 'is_granted("ROLE_CLIENT")',
@@ -194,7 +187,7 @@ use Doctrine\ORM\Mapping as ORM;
         )],
 ),
 ]
-
+#[ApiFilter(SearchFilter::class, properties: ['typeEvent.getLibType()' => 'exact'])]
 class Event
 {
     #[ORM\Id]
