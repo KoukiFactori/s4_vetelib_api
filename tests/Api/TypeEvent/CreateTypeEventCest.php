@@ -12,7 +12,7 @@ Class CreateTypeEventCest
     public function anonymousUserCannotCreateTypeEvent(ApiTester $I): void
     {
         $I->sendPOST('/api/typeEvents', [
-            'name' => 'test',
+            'libType' => 'test',
         ]);
         $I->seeResponseCodeIs(HttpCode::UNAUTHORIZED);
     }
@@ -22,7 +22,7 @@ Class CreateTypeEventCest
         $user = AdminFactory::createOne();
         $I->amLoggedInAs($user->object());
         $I->sendPOST('/api/typeEvents', [
-            'name' => 'test',
+            'libType' => 'test',
         ]);
         $I->seeResponseCodeIs(HttpCode::CREATED);
     }
@@ -32,7 +32,7 @@ Class CreateTypeEventCest
         $user = ClientFactory::createOne();
         $I->amLoggedInAs($user->object());
         $I->sendPOST('/api/typeEvents', [
-            'name' => 'test',
+            'libType' => 'test',
         ]);
         $I->seeResponseCodeIs(HttpCode::FORBIDDEN);
     }
@@ -42,7 +42,7 @@ Class CreateTypeEventCest
         $user = VeterinaireFactory::createOne();
         $I->amLoggedInAs($user->object());
         $I->sendPOST('/api/typeEvents', [
-            'name' => 'test',
+            'libType' => 'test',
         ]);
         $I->seeResponseCodeIs(HttpCode::FORBIDDEN);
     }
