@@ -5,6 +5,7 @@ use App\Factory\AdminFactory;
 use App\Factory\ClientFactory;
 use App\Factory\VeterinaireFactory;
 use App\Tests\Support\ApiTester;
+use Codeception\Util\HttpCode;
 
 Class CreateTypeEventCest
 {
@@ -13,7 +14,7 @@ Class CreateTypeEventCest
         $I->sendPOST('/api/type_events', [
             'name' => 'test',
         ]);
-        $I->seeResponseCodeIs(401);
+        $I->seeResponseCodeIs(HttpCode::UNAUTHORIZED);
     }
 
     public function authenticatedAdminCanCreateTypeEvent(ApiTester $I): void
@@ -23,7 +24,7 @@ Class CreateTypeEventCest
         $I->sendPOST('/api/type_events', [
             'name' => 'test',
         ]);
-        $I->seeResponseCodeIs(201);
+        $I->seeResponseCodeIs(HttpCode::CREATED);
     }
 
     public function authenticatedClientCannotCreateTypeEvent(ApiTester $I): void
@@ -33,7 +34,7 @@ Class CreateTypeEventCest
         $I->sendPOST('/api/type_events', [
             'name' => 'test',
         ]);
-        $I->seeResponseCodeIs(403);
+        $I->seeResponseCodeIs(HttpCode::FORBIDDEN);
     }
 
     public function authenticatedVeterinaireCannotCreateTypeEvent(ApiTester $I): void
@@ -43,7 +44,7 @@ Class CreateTypeEventCest
         $I->sendPOST('/api/type_events', [
             'name' => 'test',
         ]);
-        $I->seeResponseCodeIs();
+        $I->seeResponseCodeIs(HttpCode::FORBIDDEN);
     }
 
 }
