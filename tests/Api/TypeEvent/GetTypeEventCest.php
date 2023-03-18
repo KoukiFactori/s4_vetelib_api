@@ -1,6 +1,9 @@
 <?php
 
 namespace App\Tests\Api\TypeEvent;
+use ApiPlatform\Symfony\Bundle\Test\Client;
+use App\Factory\AdminFactory;
+use App\Factory\ClientFactory;
 use App\Tests\Support\ApiTester;
 use Codeception\Util\HttpCode;
 
@@ -13,13 +16,13 @@ class GetTypeEventCest
     }
     public function authenticatedAdminCanGetTypeEvent(ApiTester $I): void
     {
-        $I->amLoggedInAsAdmin();
+        $I->amLoggedIn(AdminFactory::createOne()->object());
         $I->sendGET('/api/type_events');
         $I->seeResponseCodeIs(HttpCode::OK);
     }
     public function authenticatedClientCanGetTypeEvent(ApiTester $I): void
     {
-        $I->amLoggedInAsClient();
+        $I->amLoggedInAsClient(ClientFactory::createOne()->object());
         $I->sendGET('/api/type_events');
         $I->seeResponseCodeIs(HttpCode::OK);
     }
