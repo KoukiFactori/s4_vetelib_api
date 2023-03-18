@@ -154,6 +154,7 @@ use Doctrine\ORM\Mapping as ORM;
         fromClass: Veterinaire::class,
         fromProperty: 'events',
     )],
+
     operations: [
         new GetCollection(
             security: 'is_granted("ROLE_VETERINAIRE") or is_granted("ROLE_ADMIN")',
@@ -180,6 +181,7 @@ use Doctrine\ORM\Mapping as ORM;
         ),
     ]
 )]
+#[ApiFilter(SearchFilter::class, properties: ['typeEvent.libType' => 'exact'])]
 #[ApiResource(
     uriTemplate: '/clients/{id}/events',
     security: 'is_granted("ROLE_CLIENT")',
