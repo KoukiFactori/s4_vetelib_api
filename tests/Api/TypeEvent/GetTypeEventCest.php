@@ -39,6 +39,18 @@ class GetTypeEventCest
         $I->sendGET('/api/type_events/1');
         $I->seeResponseCodeIs(HttpCode::UNAUTHORIZED);
     }
-    
+    public function authenticatedAdminCanGetOneTypeEvent(ApiTester $I): void
+    {
+        $I->amLoggedIn(AdminFactory::createOne()->object());
+        $I->sendGET('/api/type_events/1');
+        $I->seeResponseCodeIs(HttpCode::OK);
+    }
+
+    public function authenticatedClientCanGetOneTypeEvent(ApiTester $I): void
+    {
+        $I->amLoggedInAsClient(ClientFactory::createOne()->object());
+        $I->sendGET('/api/type_events/1');
+        $I->seeResponseCodeIs(HttpCode::OK);
+    }
 }
 
