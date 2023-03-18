@@ -29,19 +29,8 @@ use Doctrine\ORM\Mapping as ORM;
                 'summary' => 'Get collection of events of the same type',
                 'description' => 'Get all events by type',
                 'response' => ['200', '401', '403', '404'],
-                'parameters' => [
-                    'libType' => [
-                        'name' => 'libType',
-                        'in' => 'typeEvent.getLibType()',
-                        'description' => 'The type of the event we want to get  (Urgent, Non Urgent)',
-                        'type' => 'string',
-                        'required' => false,
-                        'openapi' => [
-                            'example' => 'Urgent',
-                        ],
-                    ],
                 ],
-            ]
+            
         ),
         new Get(
             uriTemplate: '/events/{id}',
@@ -142,6 +131,7 @@ use Doctrine\ORM\Mapping as ORM;
         ),
             ]
 )]
+#[ApiFilter(SearchFilter::class, properties: ['typeEvent.libType' => 'exact'])]
 #[ApiResource(
     uriTemplate: '/animals/{id}/events',
     uriVariables: ['id' => new Link(
@@ -204,7 +194,7 @@ use Doctrine\ORM\Mapping as ORM;
         )],
 ),
 ]
-#[ApiFilter(SearchFilter::class, properties: ['typeEvent.getLibType()' => 'exact'])]
+
 class Event
 {
     #[ORM\Id]
