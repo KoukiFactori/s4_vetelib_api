@@ -26,6 +26,16 @@ Class CreateTypeEventCest
         $I->seeResponseCodeIs(201);
     }
 
+    public function authenticatedClientCannotCreateTypeEvent(ApiTester $I): void
+    {
+        $user = ClientFactory::createOne();
+        $I->amLoggedInAs($user->object());
+        $I->sendPOST('/api/type_events', [
+            'name' => 'test',
+        ]);
+        $I->seeResponseCodeIs(403);
+    }
+
 
 
 }
