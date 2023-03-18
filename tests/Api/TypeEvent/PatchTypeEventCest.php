@@ -4,6 +4,7 @@ namespace App\Tests\Api\TypeEvent;
 use App\Factory\AdminFactory;
 use App\Factory\ClientFactory;
 use App\Factory\TypeEventFactory;
+use App\Factory\VeterinaireFactory;
 use App\Tests\Support\ApiTester;
 use Codeception\Util\HttpCode;
 
@@ -31,6 +32,17 @@ class PatchTypeEventCest
     public function authenticatedClientCannotPatchTypeEvent(ApiTester $I): void
     {
         $user = ClientFactory::createOne();
+        TypeEventFactory::createOne();
+        $I->amLoggedInAs($user->object());
+        $I->sendPATCH('/api/typeEvents/1', [
+            'name' => 'test',
+        ]);
+        $I->seeResponseCodeIs(HttpCode::FORBIDDEN);
+    }
+
+    public function authenticatedVeterinaireCannotPatchTypeEvent(ApiTester $I): void
+    {
+        $user = VeterinaireFactory::createOne();
         TypeEventFactory::createOne();
         $I->amLoggedInAs($user->object());
         $I->sendPATCH('/api/typeEvents/1', [
