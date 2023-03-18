@@ -5,6 +5,7 @@ use App\Factory\AdminFactory;
 use App\Factory\ClientFactory;
 use App\Factory\TypeEventFactory;
 use App\Tests\Support\ApiTester;
+use Codeception\Util\HttpCode;
 
 class PatchTypeEventCest
 {
@@ -14,7 +15,7 @@ class PatchTypeEventCest
         $I->sendPATCH('/api/typeEvents/1', [
             'name' => 'test',
         ]);
-        $I->seeResponseCodeIs(401);
+        $I->seeResponseCodeIs(HttpCode::UNAUTHORIZED);
     }
     public function authenticatedAdminCanPatchTypeEvent(ApiTester $I): void
     {
@@ -24,7 +25,7 @@ class PatchTypeEventCest
         $I->sendPATCH('/api/typeEvents/1', [
             'name' => 'test',
         ]);
-        $I->seeResponseCodeIs(200);
+        $I->seeResponseCodeIs(HttpCode::OK);
     }
 
     public function authenticatedClientCannotPatchTypeEvent(ApiTester $I): void
@@ -35,6 +36,6 @@ class PatchTypeEventCest
         $I->sendPATCH('/api/typeEvents/1', [
             'name' => 'test',
         ]);
-        $I->seeResponseCodeIs(403);
+        $I->seeResponseCodeIs(HttpCode::FORBIDDEN);
     }
 }
