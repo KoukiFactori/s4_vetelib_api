@@ -221,6 +221,9 @@ class Event
     #[ORM\JoinColumn(nullable: false)]
     private ?Veterinaire $veterinaire = null;
 
+    #[ORM\Column]
+    private ?bool $isUrgent = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -282,6 +285,18 @@ class Event
     public function setVeterinaire(?Veterinaire $veterinaire): self
     {
         $this->veterinaire = $veterinaire;
+
+        return $this;
+    }
+
+    public function isIsUrgent(): ?bool
+    {
+        return $this->isUrgent;
+    }
+
+    public function setIsUrgent(bool $isUrgent): self
+    {
+        $this->isUrgent = $isUrgent;
 
         return $this;
     }
