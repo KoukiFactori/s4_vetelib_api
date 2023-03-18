@@ -36,6 +36,14 @@ Class CreateTypeEventCest
         $I->seeResponseCodeIs(403);
     }
 
-
+    public function authenticatedVeterinaireCannotCreateTypeEvent(ApiTester $I): void
+    {
+        $user = VeterinaireFactory::createOne();
+        $I->amLoggedInAs($user->object());
+        $I->sendPOST('/api/type_events', [
+            'name' => 'test',
+        ]);
+        $I->seeResponseCodeIs(403);
+    }
 
 }
