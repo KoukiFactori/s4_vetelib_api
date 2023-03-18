@@ -4,6 +4,7 @@ namespace App\Tests\Api\TypeEvent;
 use ApiPlatform\Symfony\Bundle\Test\Client;
 use App\Factory\AdminFactory;
 use App\Factory\ClientFactory;
+use App\Factory\VeterinaireFactory;
 use App\Tests\Support\ApiTester;
 use Codeception\Util\HttpCode;
 
@@ -23,6 +24,12 @@ class GetTypeEventCest
     public function authenticatedClientCanGetTypeEvent(ApiTester $I): void
     {
         $I->amLoggedInAsClient(ClientFactory::createOne()->object());
+        $I->sendGET('/api/type_events');
+        $I->seeResponseCodeIs(HttpCode::OK);
+    }
+    public function authenticatedVeterinaireCanGetTypeEvent(ApiTester $I): void
+    {
+        $I->amLoggedIn(VeterinaireFactory::createOne()->object());
         $I->sendGET('/api/type_events');
         $I->seeResponseCodeIs(HttpCode::OK);
     }
