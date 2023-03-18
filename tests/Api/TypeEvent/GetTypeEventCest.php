@@ -52,5 +52,11 @@ class GetTypeEventCest
         $I->sendGET('/api/type_events/1');
         $I->seeResponseCodeIs(HttpCode::OK);
     }
+    public function authenticatedVeterinaireCanGetOneTypeEvent(ApiTester $I): void
+    {
+        $I->amLoggedIn(VeterinaireFactory::createOne()->object());
+        $I->sendGET('/api/type_events/1');
+        $I->seeResponseCodeIs(HttpCode::OK);
+    }
 }
 
