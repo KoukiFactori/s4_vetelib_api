@@ -17,19 +17,19 @@ class GetTypeEventCest
     }
     public function authenticatedAdminCanGetTypeEvent(ApiTester $I): void
     {
-        $I->amLoggedIn(AdminFactory::createOne()->object());
+        $I->amLoggedInAs(AdminFactory::createOne()->object());
         $I->sendGET('/api/typeEvents');
         $I->seeResponseCodeIs(HttpCode::OK);
     }
     public function authenticatedClientCanGetTypeEvent(ApiTester $I): void
     {
-        $I->amLoggedInAsClient(ClientFactory::createOne()->object());
+        $I->amLoggedInAs(ClientFactory::createOne()->object());
         $I->sendGET('/api/typeEvents');
         $I->seeResponseCodeIs(HttpCode::OK);
     }
     public function authenticatedVeterinaireCanGetTypeEvent(ApiTester $I): void
     {
-        $I->amLoggedIn(VeterinaireFactory::createOne()->object());
+        $I->amLoggedInAs(VeterinaireFactory::createOne()->object());
         $I->sendGET('/api/typeEvents');
         $I->seeResponseCodeIs(HttpCode::OK);
     }
@@ -41,20 +41,20 @@ class GetTypeEventCest
     }
     public function authenticatedAdminCanGetOneTypeEvent(ApiTester $I): void
     {
-        $I->amLoggedIn(AdminFactory::createOne()->object());
+        $I->amLoggedInAs(AdminFactory::createOne()->object());
         $I->sendGET('/api/typeEvents/1');
         $I->seeResponseCodeIs(HttpCode::OK);
     }
 
     public function authenticatedClientCanGetOneTypeEvent(ApiTester $I): void
     {
-        $I->amLoggedInAsClient(ClientFactory::createOne()->object());
+        $I->amLoggedInAs(ClientFactory::createOne()->object());
         $I->sendGET('/api/typeEvents/1');
         $I->seeResponseCodeIs(HttpCode::OK);
     }
     public function authenticatedVeterinaireCanGetOneTypeEvent(ApiTester $I): void
     {
-        $I->amLoggedIn(VeterinaireFactory::createOne()->object());
+        $I->amLoggedInAs(VeterinaireFactory::createOne()->object());
         $I->sendGET('/api/typeEvents/1');
         $I->seeResponseCodeIs(HttpCode::OK);
     }
