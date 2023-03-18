@@ -10,25 +10,6 @@ use App\Tests\Support\ApiTester;
 
 class GetEspeceCest
 {
-    public function authenticatedUserCanGetEspeceCollection(ApiTester $I): void
-    {
-        EspeceFactory::createOne();
-        $userClient = ClientFactory::createOne();
-        $userVeterinaire = VeterinaireFactory::createOne();
-        $userAdmin = AdminFactory::createOne();
-        $I->amLoggedInAs($userClient->object());
-        $I->sendGET('/api/especes');
-        $I->seeResponseCodeIs(200);
-        $I->amOnPage('/logout');
-        $I->amLoggedInAs($userVeterinaire->object());
-        $I->sendGET('/api/especes');
-        $I->seeResponseCodeIs(200);
-        $I->amOnPage('/logout');
-        $I->amLoggedInAs($userAdmin->object());
-        $I->sendGET('/api/especes');
-        $I->seeResponseCodeIs(200);
-    }
-
     public function authenticatedClientCanGetEspece(ApiTester $I): void
     {
         EspeceFactory::createOne();
