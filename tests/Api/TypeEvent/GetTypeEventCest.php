@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Tests\Api\TypeEvent;
-use ApiPlatform\Symfony\Bundle\Test\Client;
+
 use App\Factory\AdminFactory;
 use App\Factory\ClientFactory;
 use App\Factory\VeterinaireFactory;
