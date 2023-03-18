@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\GetCollection;
@@ -198,6 +199,43 @@ use Doctrine\ORM\Mapping as ORM;
                                     ],
                                 ],
                             ],
+                        ],
+                    ],
+                ],
+            ]
+        ),
+        new Delete(
+            uriTemplate: '/typeEvents/{id}',
+            security: "is_granted('ROLE_ADMIN')",
+            openapiContext: [
+                'summary' => 'Delete a type event',
+                'description' => 'Delete a type event',
+                'responses' => [
+                    '204' => [
+                        'description' => 'The type event has been deleted',
+                    ],
+                    '401' => [
+                        'description' => 'Not authorized, you are not logged in',
+                    ],
+                    '403' => [
+                        'description' => 'Not authorized, you do not have the rights',
+                    ],
+                    '404' => [
+                        'description' => 'The type event does not exist',
+                    ],
+                    '500' => [
+                        'description' => 'Server Error',
+                    ],
+                ],
+                'parameters' => [
+                    [
+                        'name' => 'id',
+                        'in' => 'path',
+                        'description' => 'The id of the type event',
+                        'required' => true,
+                        'type' => 'integer',
+                        'openapi' => [
+                            'example' => 1,
                         ],
                     ],
                 ],
