@@ -1,0 +1,53 @@
+<?php
+
+namespace App\Tests\Api\TypeEvent;
+use App\Factory\AdminFactory;
+use App\Factory\ClientFactory;
+use App\Factory\TypeEventFactory;
+use App\Factory\VeterinaireFactory;
+use App\Tests\Support\ApiTester;
+use Codeception\Util\HttpCode;
+
+class PutTypeEventCest
+{
+    public function anonymousUserCannotPutTypeEvent(ApiTester $I): void
+    {
+        TypeEventFactory::createOne();
+        $I->sendPUT('/api/typeEvents/1', [
+            'name' => 'test',
+        ]);
+        $I->seeResponseCodeIs(HttpCode::UNAUTHORIZED);
+    }
+    public function authenticatedAdminCanPutTypeEvent(ApiTester $I): void
+    {
+        $user = AdminFactory::createOne();
+        TypeEventFactory::createOne();
+        $I->amLoggedInAs($user->object());
+        $I->sendPUT('/api/typeEvents/1', [
+            'name' => 'test',
+        ]);
+        $I->seeResponseCodeIs(HttpCode::OK);
+    }
+
+    public function authenticatedClientCannotPutTypeEvent(ApiTester $I): void
+    {
+        $user = ClientFactory::createOne();
+        TypeEventFactory::createOne();
+        $I->amLoggedInAs($user->object());
+        $I->sendPUT('/api/typeEvents/1', [
+            'name' => 'test',
+        ]);
+        $I->seeResponseCodeIs(HttpCode::FORBIDDEN);
+    }
+
+    public function authenticatedVeterinaireCannotPutTypeEvent(ApiTester $I): void
+    {
+        $user = VeterinaireFactory::createOne();
+        TypeEventFactory::createOne();
+        $I->amLoggedInAs($user->object());
+        $I->sendPUT('/api/typeEvents/1', [
+            'name' => 'test',
+        ]);
+        $I->seeResponseCodeIs(HttpCode::FORBIDDEN);
+    }
+}
