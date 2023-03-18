@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
 use App\Repository\AnimalRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -32,6 +33,43 @@ use Doctrine\ORM\Mapping as ORM;
                 'responses' => [
                     '200' => [
                         'description' => 'Recovery of the animal by its id',
+                    ],
+                    '401' => [
+                        'description' => 'Not authorized, you are not logged in',
+                    ],
+                    '403' => [
+                        'description' => 'Not authorized, you do not have the rights',
+                    ],
+                    '404' => [
+                        'description' => 'The animal does not exist',
+                    ],
+                    '500' => [
+                        'description' => 'Server Error',
+                    ],
+                ],
+                'parameters' => [
+                    [
+                        'name' => 'id',
+                        'in' => 'path',
+                        'description' => 'The id of the animal',
+                        'required' => true,
+                        'type' => 'integer',
+                        'openapi' => [
+                            'example' => 1,
+                        ],
+                    ],
+                ],
+            ],
+        ),
+        new Post(
+            uriTemplate: '/animals',
+            security: 'is_granted("ROLE_ADMIN") or (is_granted("ROLE_CLIENT") and object.getClient() == user)',   // Un client ne peut pas créer d'animal pour un autre client
+            openapiContext: [
+                'summary' => 'Create an animal',
+                'description' => 'Create an animal',
+                'responses' => [
+                    '201' => [
+                        'description' => 'Animal created',
                     ],
                     '401' => [
                         'description' => 'Not authorized, you are not logged in',
