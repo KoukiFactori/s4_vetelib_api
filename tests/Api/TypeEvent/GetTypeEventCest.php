@@ -11,6 +11,11 @@ class GetTypeEventCest
         $I->sendGET('/api/type_events');
         $I->seeResponseCodeIs(HttpCode::UNAUTHORIZED);
     }
-    
+    public function authenticatedAdminCanGetTypeEvent(ApiTester $I): void
+    {
+        $I->amLoggedInAsAdmin();
+        $I->sendGET('/api/type_events');
+        $I->seeResponseCodeIs(HttpCode::OK);
+    }
 }
 
