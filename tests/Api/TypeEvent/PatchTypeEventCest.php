@@ -2,6 +2,7 @@
 
 namespace App\Tests\Api\TypeEvent;
 use App\Factory\AdminFactory;
+use App\Factory\ClientFactory;
 use App\Factory\TypeEventFactory;
 use App\Tests\Support\ApiTester;
 
@@ -24,5 +25,16 @@ class PatchTypeEventCest
             'name' => 'test',
         ]);
         $I->seeResponseCodeIs(200);
+    }
+
+    public function authenticatedClientCannotPatchTypeEvent(ApiTester $I): void
+    {
+        $user = ClientFactory::createOne();
+        TypeEventFactory::createOne();
+        $I->amLoggedInAs($user->object());
+        $I->sendPATCH('/api/typeEvents/1', [
+            'name' => 'test',
+        ]);
+        $I->seeResponseCodeIs(403);
     }
 }
