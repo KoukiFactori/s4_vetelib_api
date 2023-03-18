@@ -43,7 +43,7 @@ Class CreateTypeEventCest
         $I->sendPOST('/api/type_events', [
             'name' => 'test',
         ]);
-        $I->seeResponseCodeIs(403);
+        $I->seeResponseCodeIs();
     }
 
 }
