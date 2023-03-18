@@ -17,5 +17,11 @@ class GetTypeEventCest
         $I->sendGET('/api/type_events');
         $I->seeResponseCodeIs(HttpCode::OK);
     }
+    public function authenticatedClientCannotGetTypeEvent(ApiTester $I): void
+    {
+        $I->amLoggedInAsClient();
+        $I->sendGET('/api/type_events');
+        $I->seeResponseCodeIs(HttpCode::FORBIDDEN);
+    }
 }
 
