@@ -36,7 +36,10 @@ class EventAnimalIsOwnByAuthenticatedClientListener
         }
 
         if ($this->security->isGranted('ROLE_VETERINAIRE')) {
-
+            if($event->getVeterinaire() == null)
+            {
+                $event->setVeterinaire($this->security->getUser());
+            }
             if ($this->security->getUser()->getId() != $event->getVeterinaire()->getId()) {
  
                 throw new AccessDeniedException();
