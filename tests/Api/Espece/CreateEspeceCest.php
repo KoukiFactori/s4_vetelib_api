@@ -6,6 +6,7 @@ use App\Factory\AdminFactory;
 use App\Factory\ClientFactory;
 use App\Factory\VeterinaireFactory;
 use App\Tests\Support\ApiTester;
+use Codeception\Util\HttpCode;
 
 class CreateEspeceCest
 {
@@ -14,7 +15,7 @@ class CreateEspeceCest
         $I->sendPOST('/api/especes', [
             'name' => 'test',
         ]);
-        $I->seeResponseCodeIs(401);
+        $I->seeResponseCodeIs(HttpCode::UNAUTHORIZED);
     }
 
     public function authenticatedAdminCanCreateEspece(ApiTester $I): void
@@ -24,7 +25,7 @@ class CreateEspeceCest
         $I->sendPOST('/api/especes', [
             'name' => 'test',
         ]);
-        $I->seeResponseCodeIs(201);
+        $I->seeResponseCodeIs(HttpCode::CREATED);
     }
 
     public function authenticatedClientCannotCreateEspece(ApiTester $I): void
@@ -34,7 +35,7 @@ class CreateEspeceCest
         $I->sendPOST('/api/especes', [
             'name' => 'test',
         ]);
-        $I->seeResponseCodeIs(403);
+        $I->seeResponseCodeIs(HttpCode::FORBIDDEN);
     }
 
     public function authenticatedVeterinaireCannotCreateEspece(ApiTester $I): void
@@ -44,7 +45,7 @@ class CreateEspeceCest
         $I->sendPOST('/api/especes', [
             'name' => 'test',
         ]);
-        $I->seeResponseCodeIs(403);
+        $I->seeResponseCodeIs(HttpCode::FORBIDDEN);
     }
 
 }
