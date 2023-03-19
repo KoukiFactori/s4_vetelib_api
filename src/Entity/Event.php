@@ -56,7 +56,7 @@ use Doctrine\ORM\Mapping as ORM;
         ),
         new Post(
             exceptionToStatus: [
-                'App\Exception\PostEventAccessDeniedException' => 403,
+                'App\Exception\AccessDeniedException' => 403,
             ],
             uriTemplate: '/events',
             security: 'is_granted("ROLE_USER")',
