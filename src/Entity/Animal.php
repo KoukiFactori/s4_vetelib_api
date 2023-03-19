@@ -63,7 +63,7 @@ use Doctrine\ORM\Mapping as ORM;
         ),
         new Post(
             uriTemplate: '/animals',
-            security: 'is_granted("ROLE_ADMIN") or (is_granted("ROLE_CLIENT") and object.getClient() == user)',   // Un client ne peut pas créer d'animal pour un autre client
+            security: 'is_granted("ROLE_ADMIN") or is_granted("ROLE_CLIENT")',   // Un client ne peut pas créer d'animal pour un autre client
             openapiContext: [
                 'summary' => 'Create an animal',
                 'description' => 'Create an animal',
@@ -83,19 +83,7 @@ use Doctrine\ORM\Mapping as ORM;
                     '500' => [
                         'description' => 'Server Error',
                     ],
-                ],
-                'parameters' => [
-                    [
-                        'name' => 'id',
-                        'in' => 'path',
-                        'description' => 'The id of the animal',
-                        'required' => true,
-                        'type' => 'integer',
-                        'openapi' => [
-                            'example' => 1,
-                        ],
-                    ],
-                ],
+                ],  
             ],
         ),
     ]
