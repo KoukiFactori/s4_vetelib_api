@@ -12,8 +12,8 @@ use Symfony\Component\Security\Core\Security;
 
 
 #[AsEntityListener(
-    events: Events::prePersist,
-    entity: Animal::class
+    entity: Animal::class,
+    event: Events::prePersist
 )]
 class AnimalsCreateIsOwnByAuthenticatedClientListener
 {
@@ -30,7 +30,7 @@ class AnimalsCreateIsOwnByAuthenticatedClientListener
         if ($this->security->isGranted('ROLE_CLIENT')) {
             if ($this->security->getUser()->getId() != $animal->getClient()->getId()) {
 
-                throw new AccessDeniedException();
+                throw new AccessDeniedException("Vous ne pouvez pas créer un animal pour un autre client");
             }
         }
     }
