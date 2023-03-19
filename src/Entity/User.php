@@ -2,20 +2,21 @@
 
 namespace App\Entity;
 
+use ApiPlatform\OpenApi\Model;
+use Doctrine\DBAL\Types\Types;
+use ApiPlatform\Metadata\Patch;
+use Doctrine\ORM\Mapping as ORM;
+use App\Repository\UserRepository;
+use App\Controller\GetMeController;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\Patch;
-use App\Controller\GetMeController;
-use App\Repository\UserRepository;
-use Doctrine\DBAL\Types\Types;
-use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\Mapping\DiscriminatorColumn;
-use Doctrine\ORM\Mapping\DiscriminatorMap;
 use Doctrine\ORM\Mapping\InheritanceType;
+use Doctrine\ORM\Mapping\DiscriminatorMap;
+use Doctrine\ORM\Mapping\DiscriminatorColumn;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[InheritanceType('SINGLE_TABLE')]
@@ -60,7 +61,17 @@ use Symfony\Component\Serializer\Annotation\Groups;
 )]
 #[Patch(
     security: 'is_granted("ROLE_USER") and object = user',
-    denormalizationContext: ['groups' => ['user:set']]
+    denormalizationContext: ['groups' => ['user:set']],
+    openapi: new Model\Operation(
+        summary: 'Patch an User',
+        description: 'Allow user to patch informations by providing said informations',
+        responses: [
+            "500" => "Server Error, try later",
+            "403" => "You don't permission to interact with this entity",
+            "401" => "Unauthorized.",
+            "201" => "Updated"
+        ]
+    )
 )]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
