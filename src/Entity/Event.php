@@ -160,7 +160,6 @@ use Doctrine\ORM\Mapping as ORM;
         new GetCollection(
             security: 'is_granted("ROLE_VETERINAIRE") or is_granted("ROLE_ADMIN")',
             paginationEnabled: false,
-            controller: GetAllEventOfVeterinaireController::class,
             openapiContext: [
                 'tags' => ['Veterinaire'],
                 'summary' => 'Get collection of events of the same type',
