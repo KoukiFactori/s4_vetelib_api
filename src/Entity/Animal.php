@@ -10,6 +10,7 @@ use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use App\Repository\AnimalRepository;
+use App\Validator\AuthenticatedUserAnimal;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -91,7 +92,7 @@ use Doctrine\ORM\Mapping as ORM;
         ),
         new Patch(
             uriTemplate: '/animals/{id}',
-            security: 'is_granted("ROLE_ADMIN")',
+            security: 'is_granted("ROLE_ADMIN") or (is_granted("ROLE_CLIENT") and object.getClient() == user)',   // Un client ne peut pas modifier un animal qui ne lui appartient pas
             openapiContext: [
                 'summary' => 'Update an animal',
                 'description' => 'Update an animal',
@@ -221,6 +222,7 @@ class Animal
 
     #[ORM\ManyToOne(inversedBy: 'animals')]
     #[ORM\JoinColumn(nullable: false)]
+    #[AuthenticatedUserAnimal]
     private ?Client $client = null;
 
     #[ORM\OneToMany(mappedBy: 'animal', targetEntity: Event::class)]

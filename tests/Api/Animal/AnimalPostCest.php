@@ -74,6 +74,6 @@ class AnimalPostCest
             'client' => '/api/clients/2',
             'birthdate' => '2021-01-01',
         ]);
-        $I->seeResponseCodeIs(HttpCode::FORBIDDEN);
+        $I->seeResponseCodeIs(HttpCode::UNPROCESSABLE_ENTITY);
     }
 }
