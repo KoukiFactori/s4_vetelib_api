@@ -63,24 +63,6 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
         );
     }
 
-    /**
-     * Override to control what happens when the user hits a secure page
-     * but isn't logged in yet.
-     *
-     * @throws HttpException
-     */
-    public function start(Request $request, AuthenticationException $authException = null): RedirectResponse
-    {
-        /** @var string $route current route */
-        $route = $request->get('_route');
-        // API route ?
-        if (str_starts_with($route, '_api_')) {
-            throw new HttpException(Response::HTTP_UNAUTHORIZED);
-        }
-        $url = $this->getLoginUrl($request);
-
-        return new RedirectResponse($url);
-    }
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
         if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
