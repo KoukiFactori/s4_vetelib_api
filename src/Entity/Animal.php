@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use App\Repository\AnimalRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -83,7 +84,44 @@ use Doctrine\ORM\Mapping as ORM;
                     '500' => [
                         'description' => 'Server Error',
                     ],
-                ],  
+                ],
+            ],
+        ),
+        new Patch(
+            uriTemplate: '/animals/{id}',
+            security: 'is_granted("ROLE_ADMIN")',
+            openapiContext: [
+                'summary' => 'Update an animal',
+                'description' => 'Update an animal',
+                'responses' => [
+                    '200' => [
+                        'description' => 'Animal updated',
+                    ],
+                    '401' => [
+                        'description' => 'Not authorized, you are not logged in',
+                    ],
+                    '403' => [
+                        'description' => 'Not authorized, you do not have the rights',
+                    ],
+                    '404' => [
+                        'description' => 'The animal does not exist',
+                    ],
+                    '500' => [
+                        'description' => 'Server Error',
+                    ],
+                ],
+                'parameters' => [
+                    [
+                        'name' => 'id',
+                        'in' => 'path',
+                        'description' => 'The id of the animal',
+                        'required' => true,
+                        'type' => 'integer',
+                        'openapi' => [
+                            'example' => 1,
+                        ],
+                    ],
+                ],
             ],
         ),
     ]
