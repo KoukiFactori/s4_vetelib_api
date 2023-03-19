@@ -25,7 +25,7 @@ class CreateEspeceCest
         $I->sendPOST('/api/especes', [
             'name' => 'test',
         ]);
-        $I->seeResponseCodeIs(HTTPCode::CREATED);
+        $I->seeResponseCodeIs(HttpCode::CREATED);
     }
 
     public function authenticatedClientCannotCreateEspece(ApiTester $I): void
@@ -35,7 +35,7 @@ class CreateEspeceCest
         $I->sendPOST('/api/especes', [
             'name' => 'test',
         ]);
-        $I->seeResponseCodeiS(HttpCode::FORBIDDEN);
+        $I->seeResponseCodeIs(HttpCode::FORBIDDEN);
     }
 
     public function authenticatedVeterinaireCannotCreateEspece(ApiTester $I): void

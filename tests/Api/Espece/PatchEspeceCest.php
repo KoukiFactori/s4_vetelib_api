@@ -7,6 +7,7 @@ use App\Factory\ClientFactory;
 use App\Factory\EspeceFactory;
 use App\Factory\VeterinaireFactory;
 use App\Tests\Support\ApiTester;
+use Codeception\Util\HttpCode;
 
 class PatchEspeceCest
 {
@@ -16,7 +17,7 @@ class PatchEspeceCest
         $I->sendPATCH('/api/especes/1', [
             'name' => 'test',
         ]);
-        $I->seeResponseCodeIs(401);
+        $I->seeResponseCodeIs(HttpCode::UNAUTHORIZED);
     }
 
     public function authenticatedAdminCanPatchEspece(ApiTester $I): void
@@ -27,7 +28,7 @@ class PatchEspeceCest
         $I->sendPATCH('/api/especes/1', [
             'name' => 'test',
         ]);
-        $I->seeResponseCodeIs(200);
+        $I->seeResponseCodeIs(HttpCode::OK);
     }
 
     public function authenticatedClientCannotPatchEspece(ApiTester $I): void
@@ -38,7 +39,7 @@ class PatchEspeceCest
         $I->sendPATCH('/api/especes/1', [
             'name' => 'test',
         ]);
-        $I->seeResponseCodeIs(403);
+        $I->seeResponseCodeIs(HttpCode::FORBIDDEN);
     }
 
     public function authenticatedVeterinaireCannotPatchEspece(ApiTester $I): void
@@ -49,7 +50,7 @@ class PatchEspeceCest
         $I->sendPATCH('/api/especes/1', [
             'name' => 'test',
         ]);
-        $I->seeResponseCodeIs(403);
+        $I->seeResponseCodeIs(HttpCode::FORBIDDEN);
     }
 
 }

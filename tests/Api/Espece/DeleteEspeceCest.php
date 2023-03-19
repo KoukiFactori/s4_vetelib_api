@@ -7,6 +7,7 @@ use App\Factory\ClientFactory;
 use App\Factory\EspeceFactory;
 use App\Factory\VeterinaireFactory;
 use App\Tests\Support\ApiTester;
+use Codeception\Util\HttpCode;
 
 class DeleteEspeceCest
 {
@@ -14,7 +15,7 @@ class DeleteEspeceCest
     {
         EspeceFactory::createOne();
         $I->sendDELETE('/api/especes/1');
-        $I->seeResponseCodeIs(401);
+        $I->seeResponseCodeIs(HttpCode::UNAUTHORIZED);
     }
 
     public function authenticatedAdminCanDeleteEspece(ApiTester $I): void
@@ -23,7 +24,7 @@ class DeleteEspeceCest
         EspeceFactory::createOne();
         $I->amLoggedInAs($user->object());
         $I->sendDELETE('/api/especes/1');
-        $I->seeResponseCodeIs(204);
+        $I->seeResponseCodeIs(HttpCode::NO_CONTENT);
     }
 
     public function authenticatedClientCannotDeleteEspece(ApiTester $I): void
@@ -32,7 +33,7 @@ class DeleteEspeceCest
         EspeceFactory::createOne();
         $I->amLoggedInAs($user->object());
         $I->sendDELETE('/api/especes/1');
-        $I->seeResponseCodeIs(403);
+        $I->seeResponseCodeIs(HttpCode::FORBIDDEN);
     }
 
     public function authenticatedVeterinaireCannotDeleteEspece(ApiTester $I): void
@@ -41,7 +42,7 @@ class DeleteEspeceCest
         EspeceFactory::createOne();
         $I->amLoggedInAs($user->object());
         $I->sendDELETE('/api/especes/1');
-        $I->seeResponseCodeIs(403);
+        $I->seeResponseCodeIs(HttpCode::FORBIDDEN);
     }
 
 }
