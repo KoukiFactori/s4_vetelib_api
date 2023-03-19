@@ -11,14 +11,26 @@ services:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
 
+
+
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
+    
     App\:
         resource: '../src/'
         exclude:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
+
+when@test:
+    services:
+        # Fix wrong container being used
+        # https://github.com/Codeception/module-symfony/issues/34
+        security.helper:
+            class: Symfony\Component\Security\Core\Security
+            arguments:
+                - '@test.service_container'
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
