@@ -27,10 +27,9 @@ class AnimalsCreateIsOwnByAuthenticatedClientListener
     }
     public function prePersist(Animal $animal): void
     {     
-        if ($this->security->isGranted('ROLE_CLIENT')) {
-            if ($this->security->getUser()->getId() != $animal->getClient()->getId()) {
-
-                throw new AccessDeniedException("Vous ne pouvez pas créer un animal pour un autre client");
+        if ($this->security->isGranted('ROLE_CLIENT')){
+            if($animal->getClient() === null){
+                $animal->setClient($this->security->getUser());
             }
         }
     }
