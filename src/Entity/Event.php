@@ -16,6 +16,7 @@ use App\Controller\GetAllEventOfAnimalController;
 use App\Controller\GetAllEventOfClientController;
 use App\Controller\GetAllEventOfVeterinaireController;
 use App\Repository\EventRepository;
+use App\Validator\AuthenticatedUserEvent;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -55,11 +56,8 @@ use Doctrine\ORM\Mapping as ORM;
             ]
         ),
         new Post(
-            exceptionToStatus: [
-                'App\Exception\AccessDeniedException' => 403,
-            ],
             uriTemplate: '/events',
-            security: 'is_granted("ROLE_USER")',
+            security: 'is_granted("ROLE_CLIENT") or is_granted("ROLE_ADMIN")',
             openapiContext: [
                     'summary' => 'Create an event',
                     'description' => 'Create an event',
@@ -212,6 +210,7 @@ class Event
 
     #[ORM\ManyToOne(inversedBy: 'events')]
     #[ORM\JoinColumn(nullable: false)]
+    #[AuthenticatedUserEvent]
     private ?Animal $animal = null;
 
     #[ORM\ManyToOne(inversedBy: 'events')]
