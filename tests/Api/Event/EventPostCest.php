@@ -12,7 +12,7 @@ use App\Factory\TypeEventFactory;
 use App\Factory\VeterinaireFactory;
 use App\Tests\Support\ApiTester;
 use Codeception\Util\HttpCode;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+
 
 class EventPostCest
 {
@@ -49,7 +49,7 @@ class EventPostCest
     $I->sendPOST('/api/events', $dataInitPost);
     $I->seeResponseCodeIs(HttpCode::UNAUTHORIZED);
 }
-    public function authenticatedVeterinaireCanPostOwnEvent(ApiTester $I){
+    public function authenticatedVeterinaireCantPostOwnEvent(ApiTester $I){
         TypeEventFactory::createOne();
         $client = ClientFactory::createOne();
         $espece=EspeceFactory::createOne();
@@ -67,7 +67,7 @@ class EventPostCest
             "veterinaire"=> "/api/veterinaires/2"
         ];
         $I->sendPOST('/api/events',$dataInitPost);
-        $I->seeResponseCodeIs(HttpCode::CREATED);
+        $I->seeResponseCodeIs(HttpCode::FORBIDDEN);
 
     }
     public function authenticatedClientCanPostOwnEvent(APITester $I){
@@ -113,12 +113,10 @@ class EventPostCest
            'typeEvent' => '/api/type_events/1',
            'veterinaire' => '/api/veterinaires/1',
         ];
-        try {
+        
         $I->sendPOST('/api/events', $dataInitPost);
-    }
-     catch (AccessDeniedException $th) {
         $I->seeResponseCodeIs(HttpCode::FORBIDDEN);
-    }
+    
     }
     public function authenticatedClientCantPostForOther(ApiTester $I)
     {
@@ -142,13 +140,9 @@ class EventPostCest
            'typeEvent' => '/api/type_events/1',
            'veterinaire' => '/api/veterinaires/1',
         ];
-
-        try {
-            $I->sendPOST('/api/events', $dataInitPost);
-        }
-         catch (AccessDeniedException $th) {
-            $I->seeResponseCodeIs(HttpCode::FORBIDDEN);
-        }
+        $I->sendPOST('/api/events', $dataInitPost);
+        $I->seeResponseCodeIs(HttpCode::UNPROCESSABLE_ENTITY);
+        
     }
     public function adminCanPostOther(ApiTester $I)
     {

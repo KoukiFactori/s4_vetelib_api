@@ -139,11 +139,11 @@ class EventPut
             'description' => 'test2',
         ];
         $I->amLoggedInAs(VeterinaireFactory::createOne()->object());
-    try {
+    
         $I->sendPUT('/api/events/2', $dataInitPut);
-    } catch (AccessDeniedException $th) {
+    
         $I->seeResponseCodeIs(HttpCode::FORBIDDEN);
-    }
+    
     }
     public function authenticatedClientCantPutForOther(ApiTester $I)
     {

@@ -139,11 +139,9 @@ class EventPatch
             'description' => 'test2',
         ];
         $I->amLoggedInAs(VeterinaireFactory::createOne()->object());
-    try {
+   
         $I->sendPatch('/api/events/2', $dataInitPatch);
-    } catch (AccessDeniedException $th) {
         $I->seeResponseCodeIs(HttpCode::FORBIDDEN);
-    }
     }
     public function authenticatedClientCantPatchForOther(ApiTester $I)
     {
@@ -174,11 +172,10 @@ class EventPatch
             'description' => 'test2',
         ];
 
-        try {
+    
             $I->sendPatch('/api/events/2', $dataInitPatch);
-        } catch (AccessDeniedException $th) {
             $I->seeResponseCodeIs(HttpCode::FORBIDDEN);
-        }
+        
     }
     public function adminCanPatchEventForOther(ApiTester $I)
     {
