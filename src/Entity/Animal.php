@@ -9,12 +9,14 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
+use App\Controller\GetAllAnimalOfVeterinaireController;
 use App\Repository\AnimalRepository;
 use App\Validator\AuthenticatedUserAnimal;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Fig\Link\Link;
 
 #[ORM\Entity(repositoryClass: AnimalRepository::class)]
 #[ApiResource(
@@ -201,6 +203,34 @@ use Doctrine\ORM\Mapping as ORM;
                 ],
             ],
         ),
+    ]
+)]
+#[ApiResource(
+    uriTemplate: '/veterinaires/{id}/animals',
+    operations: [
+        new GetCollection(
+            security: 'is_granted("ROLE_ADMIN") or is_granted("ROLE_VETERINAIRE")',
+            paginationEnabled: false,
+            controller: GetAllAnimalOfVeterinaireController::class,
+            openapiContext: [
+                'tags' => ['Veterinaire'],
+                'summary' => 'Get collection of events of the same type',
+                'description' => 'Get all events by type',
+                'response' => ['200', '401', '403', '404'],
+                'parameters' => [
+                    'libType' => [
+                        'name' => 'libType',
+                        'in' => 'query',
+                        'description' => 'The type of the event we want to get  (Urgent, Non Urgent)',
+                        'type' => 'string',
+                        'required' => false,
+                        'openapi' => [
+                            'example' => 'Urgent',
+                        ],
+                    ],
+                ],
+            ]
+        )
     ]
 )]
 class Animal
