@@ -6,6 +6,7 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Link;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
@@ -16,7 +17,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Fig\Link\Link;
 
 #[ORM\Entity(repositoryClass: AnimalRepository::class)]
 #[ApiResource(
@@ -230,7 +230,23 @@ use Fig\Link\Link;
                     ],
                 ],
             ]
-        )
+        ),
+    ]
+)]
+#[ApiResource(
+    uriTemplate: '/clients/{id}/animals',
+    uriVariables: ['id' => new Link(
+        fromClass: Client::class,
+        fromProperty: 'animals',
+    )],
+    openapiContext: [
+        'tags' => ['Client'],
+    ],
+    operations: [
+        new GetCollection(
+            security: 'is_granted("ROLE_ADMIN") or (is_granted("ROLE_CLIENT") and id == user.getId())',
+            paginationEnabled: false,
+        ),
     ]
 )]
 class Animal
