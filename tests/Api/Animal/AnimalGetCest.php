@@ -55,4 +55,39 @@ class AnimalGetCest
         $I->seeResponseCodeIs(HttpCode::OK);
     }
     
+    public function authenticatedVeterinaireCanGetHisAnimalCollection(ApiTester $I): void
+    {
+        $user = VeterinaireFactory::createOne();
+        AnimalFactory::createOne(['name' => 'Miaousse', 'espece' => EspeceFactory::createOne(['name' => 'Chien']), 'client' => ClientFactory::createOne()]);
+        $I->amLoggedInAs($user->object());
+        $I->sendGet('/api/veterinaires/1/animals');
+        $I->seeResponseCodeIs(HttpCode::OK);
+    }
+
+    public function authenticatedVeterinaireCannotGetOtherAnimalCollection(ApiTester $I): void
+    {
+        $user = VeterinaireFactory::createOne();
+        AnimalFactory::createOne(['name' => 'Miaousse', 'espece' => EspeceFactory::createOne(['name' => 'Chien']), 'client' => ClientFactory::createOne()]);
+        $I->amLoggedInAs($user->object());
+        $I->sendGet('/api/veterinaires/2/animals');
+        $I->seeResponseCodeIs(HttpCode::FORBIDDEN);
+    }
+
+    public function authenticatedClientCanGetHisAnimalCollection(ApiTester $I): void
+    {
+        $user = ClientFactory::createOne();
+        AnimalFactory::createOne(['name' => 'Miaousse', 'espece' => EspeceFactory::createOne(['name' => 'Chien']), 'client' => $user]);
+        $I->amLoggedInAs($user->object());
+        $I->sendGet('/api/clients/1/animals');
+        $I->seeResponseCodeIs(HttpCode::OK);
+    }
+
+    public function authenticatedClientCannotGetOtherAnimalCollection(ApiTester $I): void
+    {
+        $user = ClientFactory::createOne();
+        AnimalFactory::createOne(['name' => 'Miaousse', 'espece' => EspeceFactory::createOne(['name' => 'Chien']), 'client' => ClientFactory::createOne()]);
+        $I->amLoggedInAs($user->object());
+        $I->sendGet('/api/clients/2/animals');
+        $I->seeResponseCodeIs(HttpCode::FORBIDDEN);
+    }
 }
