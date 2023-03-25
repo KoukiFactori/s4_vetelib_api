@@ -43,7 +43,7 @@ class EventPostCest
         'date' => '2023-03-11T09:30:00+00:00',
         'description' => 'test1',
         'animal' => '/api/animals/1',
-        'typeEvent' => '/api/type_events/1',
+        'typeEvent' => '/api/typeEvents/1',
         'veterinaire' => '/api/veterinaires/1',
     ];
     $I->sendPOST('/api/events', $dataInitPost);
@@ -63,7 +63,7 @@ class EventPostCest
             "date"=> "2023-03-11T09:30:00+00:00",
             "description"=> "test1",
             "animal"=> "/api/animals/1",
-            "typeEvent"=> "/api/type_events/1",
+            "typeEvent"=> "/api/typeEvents/1",
             "veterinaire"=> "/api/veterinaires/2"
         ];
         $I->sendPOST('/api/events',$dataInitPost);
@@ -85,8 +85,9 @@ class EventPostCest
             "date"=> "2023-03-11T09:30:00+00:00",
             "description"=> "test1",
             "animal"=> "/api/animals/1",
-            "typeEvent"=> "/api/type_events/1",
-            "veterinaire"=> "/api/veterinaires/1"
+            "typeEvent"=> "/api/typeEvents/1",
+            "veterinaire"=> "/api/veterinaires/1",
+            "isUrgent"=> false
         ];
         $I->sendPOST('/api/events',$dataInitPost);
         $I->seeResponseCodeIs(HttpCode::CREATED);
@@ -110,8 +111,9 @@ class EventPostCest
            'date' => '2023-03-11T09:30:00+00:00',
            'description' => 'test1',
            'animal' => '/api/animals/1',
-           'typeEvent' => '/api/type_events/1',
+           'typeEvent' => '/api/typeEvents/1',
            'veterinaire' => '/api/veterinaires/1',
+           "isUrgent"=> false
         ];
         
         $I->sendPOST('/api/events', $dataInitPost);
@@ -137,8 +139,9 @@ class EventPostCest
            'date' => '2023-03-11T09:30:00+00:00',
            'description' => 'test1',
            'animal' => '/api/animals/1',
-           'typeEvent' => '/api/type_events/1',
+           'typeEvent' => '/api/typeEvents/1',
            'veterinaire' => '/api/veterinaires/1',
+            "isUrgent"=> false
         ];
         $I->sendPOST('/api/events', $dataInitPost);
         $I->seeResponseCodeIs(HttpCode::UNPROCESSABLE_ENTITY);
@@ -162,8 +165,9 @@ class EventPostCest
            'date' => '2023-03-11T09:30:00+00:00',
            'description' => 'test1',
            'animal' => '/api/animals/1',
-           'typeEvent' => '/api/type_events/1',
+           'typeEvent' => '/api/typeEvents/1',
            'veterinaire' => '/api/veterinaires/1',
+            "isUrgent"=> false
         ];
         $I->sendPOST('/api/events', $dataInitPost);
         $I->seeResponseCodeIs(HttpCode::CREATED);
