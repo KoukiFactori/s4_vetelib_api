@@ -13,7 +13,6 @@ use App\Repository\TypeEventRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use ApiPlatform\Metadata\Get;
 
 #[ORM\Entity(repositoryClass: TypeEventRepository::class)]
 #[ApiResource(
