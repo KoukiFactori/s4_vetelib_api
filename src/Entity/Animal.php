@@ -214,18 +214,34 @@ use Doctrine\ORM\Mapping as ORM;
             controller: GetAllAnimalOfVeterinaireController::class,
             openapiContext: [
                 'tags' => ['Veterinaire'],
-                'summary' => 'Get collection of events of the same type',
-                'description' => 'Get all events by type',
-                'response' => ['200', '401', '403', '404'],
+                'summary' => 'Get all animals of a veterinaire',
+                'description' => 'Get all animals of a veterinaire',
+                'responses' => [
+                    '200' => [
+                        'description' => 'Animals of a veterinaire',
+                    ],
+                    '401' => [
+                        'description' => 'Not authorized, you are not logged in',
+                    ],
+                    '403' => [
+                        'description' => 'Not authorized, you do not have the rights',
+                    ],
+                    '404' => [
+                        'description' => 'The veterinaire does not exist',
+                    ],
+                    '500' => [
+                        'description' => 'Server Error',
+                    ],
+                    ],
                 'parameters' => [
-                    'libType' => [
-                        'name' => 'libType',
-                        'in' => 'query',
-                        'description' => 'The type of the event we want to get  (Urgent, Non Urgent)',
-                        'type' => 'string',
-                        'required' => false,
+                    [
+                        'name' => 'id',
+                        'in' => 'path',
+                        'description' => 'The id of the veterinarian',
+                        'required' => true,
+                        'type' => 'integer',
                         'openapi' => [
-                            'example' => 'Urgent',
+                            'example' => 1,
                         ],
                     ],
                 ],
