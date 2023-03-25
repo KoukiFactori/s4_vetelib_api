@@ -71,11 +71,11 @@ class EventPut
         ];
         $I->sendPOST('/api/events',$dataInitPost);
         $I->seeResponseCodeIs(HttpCode::CREATED);
-        $dataInitPatch=[
+        $dataInitPut=[
             "id"=>2,
             "description"=> "test2",
         ];
-        $I->sendPATCH('/api/events/1',$dataInitPatch);
+        $I->sendPut('/api/events/1',$dataInitPut);
         $I->seeResponseCodeIs(HttpCode::OK);
         $dataInitPut=[
             "description"=> "test3",
@@ -208,5 +208,37 @@ class EventPut
         ];
         $I->sendPUT('/api/events/2', $dataInitPut);
         $I->seeResponseCodeIs(HttpCode::OK);
+    }
+    public function userCantPutEventBefore8OrAfter18(ApiTester $I)
+    {
+        VeterinaireFactory::createOne();
+        TypeEventFactory::createOne();
+        $client = ClientFactory::createOne();
+        $espece = EspeceFactory::createOne();
+        AnimalFactory::createOne(
+            ['espece' => $espece,
+                'client' => $client,
+            ]
+        );
+        $I->amOnPage('/login');
+        $I->amLoggedInAs($client->object());
+        EventFactory::createOne(
+            ['date' => '2023-03-11T08:30:00+00:00',
+                'description' => 'test1',
+                'animal' => '/api/animals/1',
+                'typeEvent' => '/api/type_events/1',
+                'veterinaire' => '/api/veterinaires/1',
+            ]
+        );
+        $dataInitPut = [
+            'date' => '2023-03-11T07:30:00+00:00',
+                'description' => 'test1',
+                'animal' => '/api/animals/1',
+                'typeEvent' => '/api/type_events/1',
+                'veterinaire' => '/api/veterinaires/1',
+            
+        ];
+        $I->sendPut('/api/events/1', $dataInitPut);
+        $I->seeResponseCodeIs(HttpCode::UNPROCESSABLE_ENTITY);
     }
 }
