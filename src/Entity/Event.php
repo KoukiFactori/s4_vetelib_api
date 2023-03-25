@@ -27,28 +27,16 @@ use Doctrine\ORM\Mapping as ORM;
         new GetCollection(
             uriTemplate: '/events',
             security: 'is_granted("ROLE_ADMIN")',
-            openapiContext:
-            [
-                'parameters'=>[
-                    'name'=>'id',
-                    'in'=>'path',
-                    'required'=>true,
-                ]
-            ]
+           
+            
             
         ),
         new Get(
             uriTemplate: '/events/{id}',
             paginationEnabled: false,
-            security: 'is_granted("ROLE_USER") and (object.getVeterinaire() == user or object.getAnimal().getClient() == user)',
-            openapiContext:
-            [
-                'parameters'=>[
-                    'name'=>'id',
-                    'in'=>'path',
-                    'required'=>true,
-                ]
-            ]
+            security: 'is_granted("ROLE_USER") and (object.getVeterinaire() == user or object.getAnimal().getClient() == user) or is_granted("ROLE_ADMIN")',
+           
+            
         ),
         new Post(
             uriTemplate: '/events',
@@ -57,39 +45,21 @@ use Doctrine\ORM\Mapping as ORM;
         ),
         new Patch(
             uriTemplate: '/events/{id}',
-            security: 'is_granted("ROLE_USER") and (object.getVeterinaire() == user or object.getAnimal().getClient() == user)',
-            openapiContext:
-            [
-                'parameters'=>[
-                    'name'=>'id',
-                    'in'=>'path',
-                    'required'=>true,
-                ]
-            ]
+            security: 'is_granted("ROLE_USER") and (object.getVeterinaire() == user or object.getAnimal().getClient() == user) or is_granted("ROLE_ADMIN")',
+           
+            
         ),
         new Delete(
             uriTemplate: '/events/{id}',
-            security: 'is_granted("ROLE_USER") and (object.getVeterinaire() == user or object.getAnimal().getClient() == user)',
-            openapiContext:
-            [
-                'parameters'=>[
-                    'name'=>'id',
-                    'in'=>'path',
-                    'required'=>true,
-                ]
-            ]
+            security: 'is_granted("ROLE_USER") and (object.getVeterinaire() == user or object.getAnimal().getClient() == user) or is_granted("ROLE_ADMIN")',
+           
+            
         ),
         new Put(
             uriTemplate: '/events/{id}',
-            security: 'is_granted("ROLE_USER") and (object.getVeterinaire() == user or object.getAnimal().getClient() == user)',
-            openapiContext:
-            [
-                'parameters'=>[
-                    'name'=>'id',
-                    'in'=>'path',
-                    'required'=>true,
-                ]
-            ]
+            security: 'is_granted("ROLE_USER") and (object.getVeterinaire() == user or object.getAnimal().getClient() == user) or is_granted("ROLE_ADMIN")',
+           
+            
         ),
             ]
 )]
