@@ -56,6 +56,20 @@ class VeterinaireRepository extends ServiceEntityRepository
         return $events;
     }
 
+    public function findEventByStartingTime(\DateTimeInterface $date): array
+    {
+        $events = $this->createQueryBuilder('veto')
+            ->addSelect('event')
+            ->leftJoin("veto.events", 'event')
+            ->where('event.date >= :start')
+            ->orderBy('event.date')
+            ->setParameter('start', $date->format('Y-m-d H:i:s'))
+            ->getQuery()
+            ->getResult()
+        ;
+
+        return $events;
+    }
     public function getAvailableSlots(array $vetoAndEvents): array
     {
         $interval = new \DateInterval('PT30M'); // intervalle de 30 minutes
