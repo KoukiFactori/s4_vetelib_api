@@ -27,107 +27,34 @@ use Doctrine\ORM\Mapping as ORM;
         new GetCollection(
             uriTemplate: '/events',
             security: 'is_granted("ROLE_ADMIN")',
-            openapiContext: [
-                'summary' => 'Get collection of events of the same type',
-                'description' => 'Get all events by type',
-                'response' => ['200', '401', '403', '404'],
-                
-                ],
+           
             
         ),
         new Get(
             uriTemplate: '/events/{id}',
             paginationEnabled: false,
             security: 'is_granted("ROLE_USER") and (object.getVeterinaire() == user or object.getAnimal().getClient() == user)',
-            openapiContext: [
-                'summary' => 'Get one events',
-                'description' => 'Get event by id',
-                'responses' => ['200', '401', '403', '404'],
-                'parameters' => [
-                    'id' => [
-                        'name' => 'id',
-                        'in' => 'path',
-                        'description' => 'The id of the event we want to get',
-                        'type' => 'integer',
-                        'required' => true,
-                        'openapi' => [
-                            'example' => 1,
-                        ],
-                    ],
-                ],
-            ]
+           
         ),
         new Post(
             uriTemplate: '/events',
             security: 'is_granted("ROLE_CLIENT") or is_granted("ROLE_ADMIN")',
-            openapiContext: [
-                    'summary' => 'Create an event',
-                    'description' => 'Create an event',
-                    'responses' => ['200', '401', '403', '404'],
-                ],
+
         ),
         new Patch(
             uriTemplate: '/events/{id}',
             security: 'is_granted("ROLE_USER") and (object.getVeterinaire() == user or object.getAnimal().getClient() == user)',
-            openapiContext: [
-                    'summary' => 'Update an event',
-                    'description' => 'Update an event',
-                    'responses' => ['200', '401', '403', '404'],
-                    'parameters' => [
-                        'id' => [
-                            'name' => 'id',
-                            'in' => 'path',
-                            'description' => 'The id of the event you want to update',
-                            'type' => 'integer',
-                            'required' => true,
-                            'openapi' => [
-                                'example' => 1,
-                            ],
-                        ],
-                    ],
-                ]
+            
         ),
         new Delete(
             uriTemplate: '/events/{id}',
             security: 'is_granted("ROLE_USER") and (object.getVeterinaire() == user or object.getAnimal().getClient() == user)',
-            openapiContext: [
-                    'summary' => 'Delete an event',
-                    'description' => 'Delete an event',
-                    'responses' => ['200', '401', '403', '404'],
-                    'parameters' => [
-                        'id' => [
-                                'name' => 'id',
-                                'in' => 'path',
-                                'description' => 'The id of the event you want to delete',
-                                'type' => 'integer',
-                                'required' => true,
-                                'openapi' => [
-                                    'example' => 1,
-                                ],
-                            ],
-                    ],
-                ]
+
         ),
         new Put(
             uriTemplate: '/events/{id}',
             security: 'is_granted("ROLE_USER") and (object.getVeterinaire() == user or object.getAnimal().getClient() == user)',
-            openapiContext: [
-                        'summary' => 'Update an event',
-                        'description' => 'Update an event',
-                        'responses' => ['200', '401', '403', '404'],
-                        'parameters' => [
-                            'id' => [
-                                'name' => 'id',
-                                'in' => 'path',
-                                'description' => 'The id of the event you want to update',
-                                'type' => 'integer',
-                                'required' => true,
-                                'openapi' => [
-                                    'example' => 1,
-                                ],
-                            ],
-                        ],
-                    ]
+            
         ),
             ]
 )]
@@ -160,12 +87,7 @@ use Doctrine\ORM\Mapping as ORM;
         new GetCollection(
             security: 'is_granted("ROLE_VETERINAIRE") or is_granted("ROLE_ADMIN")',
             paginationEnabled: false,
-            openapiContext: [
-                'tags' => ['Veterinaire'],
-                'summary' => 'Get collection of events of the same type',
-                'description' => 'Get all events by type',
-                'response' => ['200', '401', '403', '404'],
-                    ],
+        
                 
         ),
     ]
