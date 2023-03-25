@@ -2,11 +2,10 @@
 
 namespace App\Repository;
 
-
 use App\Entity\Animal;
+use App\Entity\Veterinaire;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use App\Repository\ClientRepository;
 
 /**
  * @extends ServiceEntityRepository<Animal>
@@ -40,11 +39,13 @@ class AnimalRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
+
     /**
      * @param Client client dont on souhaite avoir les animaux
-     * @return Animal[]  return an array de tout les animaux d'un client
-    */
-    public function getAllAnimalsByClient(string $clientId): Array 
+     *
+     * @return Animal[] return an array de tout les animaux d'un client
+     */
+    public function getAllAnimalsByClient(string $clientId): array
     {
         $qb = $this->createQueryBuilder('a')
         ->innerJoin('a.client', 'c')
@@ -53,10 +54,20 @@ class AnimalRepository extends ServiceEntityRepository
         ->getQuery();
 
         return $qb->execute();
-
     }
-    
-    
+
+    public function getAllAnimalByVeterinaire(Veterinaire $veterinaire)
+    {
+        $qb = $this->createQueryBuilder('a')
+        ->innerJoin(
+            'App\Entity\Event',
+            'e',
+            \Doctrine\ORM\Query\Expr\Join::WITH,
+            'e.animal = a.id');
+
+        return $qb->getQuery()->execute();
+    }
+
 //    /**
 //     * @return Animal[] Returns an array of Animal objects
 //     */
