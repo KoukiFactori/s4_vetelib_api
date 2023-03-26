@@ -29,39 +29,27 @@ use Doctrine\ORM\Mapping as ORM;
         new GetCollection(
             uriTemplate: '/events',
             security: 'is_granted("ROLE_ADMIN")',
-           
-            
-            
         ),
         new Get(
             uriTemplate: '/events/{id}',
             paginationEnabled: false,
             security: 'is_granted("ROLE_USER") and (object.getVeterinaire() == user or object.getAnimal().getClient() == user) or is_granted("ROLE_ADMIN")',
-           
-            
         ),
         new Post(
             uriTemplate: '/events',
             security: 'is_granted("ROLE_CLIENT") or is_granted("ROLE_ADMIN")',
-
         ),
         new Patch(
             uriTemplate: '/events/{id}',
             security: 'is_granted("ROLE_USER") and (object.getVeterinaire() == user or object.getAnimal().getClient() == user) or is_granted("ROLE_ADMIN")',
-           
-            
         ),
         new Delete(
             uriTemplate: '/events/{id}',
             security: 'is_granted("ROLE_USER") and (object.getVeterinaire() == user or object.getAnimal().getClient() == user) or is_granted("ROLE_ADMIN")',
-           
-            
         ),
         new Put(
             uriTemplate: '/events/{id}',
             security: 'is_granted("ROLE_USER") and (object.getVeterinaire() == user or object.getAnimal().getClient() == user) or is_granted("ROLE_ADMIN")',
-           
-            
         ),
             ]
 )]
@@ -97,8 +85,6 @@ use Doctrine\ORM\Mapping as ORM;
         new GetCollection(
             security: 'is_granted("ROLE_VETERINAIRE") or is_granted("ROLE_ADMIN")',
             paginationEnabled: false,
-        
-                
         ),
     ]
 )]
@@ -119,6 +105,7 @@ use Doctrine\ORM\Mapping as ORM;
 ),
 ]
 #[ApiFilter(SearchFilter::class, properties: ['typeEvent.getLibType()' => 'exact'])]
+#[EventAtTheSameTime]
 class Event
 {
     #[ORM\Id]
@@ -128,7 +115,6 @@ class Event
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     #[EventBefore]
-    #[EventAtTheSameTime]
     #[EventCanStartAt]
     private ?\DateTimeInterface $date = null;
 
@@ -155,7 +141,7 @@ class Event
     {
         return $this->id;
     }
-    
+
     public function getDate(): ?\DateTimeInterface
     {
         return $this->date;

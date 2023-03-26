@@ -16,5 +16,5 @@ class EventAtTheSameTime extends Constraint
      * Any public properties become valid options for the annotation.
      * Then, use these in your validator class.
      */
-    public $message = 'Il existe deja un rendez vous a cet heure la   "{{ value }}" pour ce veterinaire';
+    public $message = 'Il existe deja un rendez vous a cet heure la   "{{ value }}" pour le  veterinaire {{ value2 }}';
 }
