@@ -241,4 +241,35 @@ class EventPut
         $I->sendPut('/api/events/1', $dataInitPut);
         $I->seeResponseCodeIs(HttpCode::UNPROCESSABLE_ENTITY);
     }
+    public function EventStartCanOnlyStartAt30Or00(ApiTester $I){
+        VeterinaireFactory::createOne();
+        TypeEventFactory::createOne();
+        $client = ClientFactory::createOne();
+        $espece = EspeceFactory::createOne();
+        AnimalFactory::createOne(
+            ['espece' => $espece,
+                'client' => $client,
+            ]
+        );
+        $I->amOnPage('/login');
+        $I->amLoggedInAs($client->object());
+        $I->sendPost('/api/events',
+            ['date' => '2023-03-11T08:30:00+00:00',
+                'description' => 'test1',
+                'animal' => '/api/animals/1',
+                'typeEvent' => '/api/typeEvents/1',
+                'veterinaire' => '/api/veterinaires/1',
+            ]
+        );
+        $dataInitPut = [
+            'date' => '2023-03-11T08:15:00+00:00',
+                'description' => 'test1',
+                'animal' => '/api/animals/1',
+                'typeEvent' => '/api/typeEvents/1',
+                'veterinaire' => '/api/veterinaires/1',
+            
+        ];
+        $I->sendPut('/api/events/1', $dataInitPut);
+        $I->seeResponseCodeIs(HttpCode::UNPROCESSABLE_ENTITY);
+    }
 }
