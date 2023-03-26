@@ -28,7 +28,7 @@ when@test:
         # Fix wrong container being used
         # https://github.com/Codeception/module-symfony/issues/34
         security.helper:
-            class: Symfony\Component\Security\Core\Security
+            class: Symfony\Bundle\SecurityBundle\Security
             arguments:
                 - '@test.service_container'
 
