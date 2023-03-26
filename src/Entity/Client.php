@@ -7,9 +7,25 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\OpenApi\Model;
+use App\Controller\GetUserAnimals;
 
 #[ORM\Entity(repositoryClass: ClientRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    operations: [
+        new GetCollection(
+            uriTemplate: '/me/animals',
+            controller: GetUserAnimals::class,
+            security: 'is_granted("ROLE_CLIENT")',
+            normalizationContext: ['animal:read:collection'],
+            openapi: new Model\Operation(
+                summary: 'Get all animals from the current user',
+                description: 'Allow the current connected user to get all the animals they have',
+            )
+        )
+    ]
+)]
 class Client extends User
 {
     #[ORM\OneToMany(mappedBy: 'client', targetEntity: Animal::class)]
