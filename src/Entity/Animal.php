@@ -17,6 +17,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: AnimalRepository::class)]
 #[ApiResource(
@@ -273,17 +274,21 @@ class Animal
     private ?int $id = null;
 
     #[ORM\Column(length: 40)]
+    #[Groups('animal:read:collection')]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[Groups('animal:read:collection')]
     private ?\DateTimeInterface $birthdate = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups('animal:read:collection')]
     private ?Espece $espece = null;
 
     #[ORM\ManyToOne(inversedBy: 'animals')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups('animal:read:collection')]
     #[AuthenticatedUserAnimal]
     private ?Client $client = null;
 

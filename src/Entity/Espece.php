@@ -2,11 +2,12 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
-use ApiPlatform\Metadata\GetCollection;
-use App\Repository\EspeceRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\EspeceRepository;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: EspeceRepository::class)]
 #[ApiResource(
@@ -68,6 +69,7 @@ class Espece
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
+    #[Groups('animal:read:collection')]
     private ?string $name = null;
 
     public function getId(): ?int
