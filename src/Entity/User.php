@@ -28,36 +28,45 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 )]
 #[GetCollection(
     security: 'is_granted("ROLE_ADMIN")',
-    openapiContext: [
-        'summary' => 'Retrieves all users',
-        'description' => 'Retrieves all the users in the database',
-        'responses' => [
+    openapi: new Model\Operation(
+        summary: 'Retrieves all users',
+        description: 'Retrieves all the users in the database',
+        responses: [
             '200' => [
                 'description' => 'List of users',
             ],
             '401' => [
+                'description' => 'Unauthorized'
+            ],
+            '403' => [
                 'description' => "You don't have permission to interact with this route",
             ],
         ],
-    ]
+    )
 )]
 #[GetCollection(
     controller: GetMeController::class,
     paginationEnabled: false,
     security: 'is_granted("ROLE_USER")',
     uriTemplate: '/me',
-    openapiContext: [
-        'summary' => 'Retrieves the connected user',
-        'description' => 'Retrieves the current connected user',
-        'responses' => [
+    openapi: new Model\Operation(
+        summary: 'Retrieves the connected user',
+        description: 'Retrieves the current connected user, returns an error if user is not connected',
+        responses: [
             '200' => [
-                'description' => 'User!!!!',
+                'description' => 'Current user returns by the security layout',
+                'headers' => [
+                    'Content-Type' => 'application/json'
+                ]
             ],
-            '400' => [
-                'description' => 'Throw an error when not connected',
+            '401' => [
+                'description' => 'Unauthorized',
             ],
+            '403' => [
+                'description' => "You don't have access to this ressource"
+            ]
         ],
-    ]
+    )
 )]
 #[Patch(
     security: 'is_granted("ROLE_USER") and object = user',
