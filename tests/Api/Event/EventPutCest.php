@@ -43,7 +43,7 @@ class EventPut
             "date"=> "2023-03-11T09:30:00+00:00",
             "description"=> "test1",
             "animal"=> "/api/animals/1",
-            "typeEvent"=> "/api/type_events/1",
+            "typeEvent"=> "/api/typeEvents/1",
             "veterinaire"=> "/api/veterinaires/1"
         ];
         $I->sendPOST('/api/events',$dataInitPost);
@@ -66,7 +66,7 @@ class EventPut
             "date"=> "2023-03-11T09:30:00+00:00",
             "description"=> "test1",
             "animal"=> "/api/animals/1",
-            "typeEvent"=> "/api/type_events/1",
+            "typeEvent"=> "/api/typeEvents/1",
             "veterinaire"=> "/api/veterinaires/2"
         ];
         $I->sendPOST('/api/events',$dataInitPost);
@@ -101,7 +101,7 @@ class EventPut
             "date"=> "2023-03-11T09:30:00+00:00",
             "description"=> "test1",
             "animal"=> "/api/animals/1",
-            "typeEvent"=> "/api/type_events/1",
+            "typeEvent"=> "/api/typeEvents/1",
             "veterinaire"=> "/api/veterinaires/1"
         ];
         $I->sendPOST('/api/events',$dataInitPost);
@@ -130,7 +130,7 @@ class EventPut
            'date' => '2023-03-11T09:30:00+00:00',
            'description' => 'test1',
            'animal' => '/api/animals/1',
-           'typeEvent' => '/api/type_events/1',
+           'typeEvent' => '/api/typeEvents/1',
            'veterinaire' => '/api/veterinaires/1',
         ];
         
@@ -164,7 +164,7 @@ class EventPut
            'date' => '2023-03-11T09:30:00+00:00',
            'description' => 'test1',
            'animal' => '/api/animals/1',
-           'typeEvent' => '/api/type_events/1',
+           'typeEvent' => '/api/typeEvents/1',
            'veterinaire' => '/api/veterinaires/1',
         ];
 
@@ -197,7 +197,7 @@ class EventPut
            'date' => '2023-03-11T09:30:00+00:00',
            'description' => 'test1',
            'animal' => '/api/animals/1',
-           'typeEvent' => '/api/type_events/1',
+           'typeEvent' => '/api/typeEvents/1',
            'veterinaire' => '/api/veterinaires/1',
         ];
 
@@ -222,11 +222,11 @@ class EventPut
         );
         $I->amOnPage('/login');
         $I->amLoggedInAs($client->object());
-        EventFactory::createOne(
+        $I->sendPost('/api/events',
             ['date' => '2023-03-11T08:30:00+00:00',
                 'description' => 'test1',
                 'animal' => '/api/animals/1',
-                'typeEvent' => '/api/type_events/1',
+                'typeEvent' => '/api/typeEvents/1',
                 'veterinaire' => '/api/veterinaires/1',
             ]
         );
@@ -234,7 +234,7 @@ class EventPut
             'date' => '2023-03-11T07:30:00+00:00',
                 'description' => 'test1',
                 'animal' => '/api/animals/1',
-                'typeEvent' => '/api/type_events/1',
+                'typeEvent' => '/api/typeEvents/1',
                 'veterinaire' => '/api/veterinaires/1',
             
         ];
