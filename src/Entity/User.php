@@ -72,7 +72,6 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
     security: 'is_granted("ROLE_USER") and object = user',
     denormalizationContext: ['groups' => ['user:set']],
     openapi: new Model\Operation(
-        tags: ["patch", "user", "update"],
         summary: 'Patch an User',
         description: 'Allow user to patch current informations by providing updated said informations',
         responses: [
