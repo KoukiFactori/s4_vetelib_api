@@ -17,6 +17,7 @@ use App\Controller\GetAllEventOfAnimalController;
 use App\Controller\GetAllEventOfClientController;
 use App\Repository\EventRepository;
 use App\Validator\AuthenticatedUserEvent;
+use App\Validator\EventAtTheSameTime;
 use App\Validator\EventBefore;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -122,6 +123,8 @@ class Event
     private ?int $id = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[EventBefore]
+    #[EventAtTheSameTime]
     private ?\DateTimeInterface $date = null;
 
     #[ORM\Column(length: 255)]
@@ -147,7 +150,7 @@ class Event
     {
         return $this->id;
     }
-    #[EventBefore]
+    
     public function getDate(): ?\DateTimeInterface
     {
         return $this->date;
