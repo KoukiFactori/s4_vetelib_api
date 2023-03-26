@@ -234,4 +234,31 @@ class EventPatch
         $I->sendPatch('/api/events/1', $dataInitPatch);
         $I->seeResponseCodeIs(HttpCode::UNPROCESSABLE_ENTITY);
     }
+    public function EventStartCanOnlyStartAt30Or00(ApiTester $I){
+        VeterinaireFactory::createOne();
+        TypeEventFactory::createOne();
+        $client = ClientFactory::createOne();
+        $espece = EspeceFactory::createOne();
+        AnimalFactory::createOne(
+            ['espece' => $espece,
+                'client' => $client,
+            ]
+        );
+        EventFactory::createOne(
+            ['date' => '2023-03-11T08:30:00+00:00',
+                'description' => 'test1',
+                'animal' => '/api/animals/1',
+                'typeEvent' => '/api/type_events/1',
+                'veterinaire' => '/api/veterinaires/1',
+            ]
+        );
+        $I->amOnPage('/login');
+        $I->amLoggedInAs($client->object());
+
+        $dataInitPatch = [
+            'date' => '2023-03-11T08:15:00+00:00',
+        ];
+        $I->sendPatch('/api/events/1', $dataInitPatch);
+        $I->seeResponseCodeIs(HttpCode::UNPROCESSABLE_ENTITY);
+    }
 }
