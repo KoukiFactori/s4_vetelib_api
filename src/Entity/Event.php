@@ -19,6 +19,7 @@ use App\Repository\EventRepository;
 use App\Validator\AuthenticatedUserEvent;
 use App\Validator\EventAtTheSameTime;
 use App\Validator\EventBefore;
+use App\Validator\EventCanStartAt;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -88,6 +89,9 @@ use Doctrine\ORM\Mapping as ORM;
         fromClass: Veterinaire::class,
         fromProperty: 'events',
     )],
+    openapiContext: [
+        'tags' => ['Veterinaire'],
+    ],
 
     operations: [
         new GetCollection(
@@ -125,6 +129,7 @@ class Event
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     #[EventBefore]
     #[EventAtTheSameTime]
+    #[EventCanStartAt]
     private ?\DateTimeInterface $date = null;
 
     #[ORM\Column(length: 255)]
