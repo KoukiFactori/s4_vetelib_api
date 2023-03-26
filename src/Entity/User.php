@@ -2,21 +2,21 @@
 
 namespace App\Entity;
 
-use ApiPlatform\OpenApi\Model;
-use Doctrine\DBAL\Types\Types;
-use ApiPlatform\Metadata\Patch;
-use Doctrine\ORM\Mapping as ORM;
-use App\Repository\UserRepository;
-use App\Controller\GetMeController;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
-use Doctrine\ORM\Mapping\InheritanceType;
-use Doctrine\ORM\Mapping\DiscriminatorMap;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\OpenApi\Model;
+use App\Controller\GetMeController;
+use App\Repository\UserRepository;
+use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\DiscriminatorColumn;
-use Symfony\Component\Serializer\Annotation\Groups;
-use Symfony\Component\Security\Core\User\UserInterface;
+use Doctrine\ORM\Mapping\DiscriminatorMap;
+use Doctrine\ORM\Mapping\InheritanceType;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[InheritanceType('SINGLE_TABLE')]
@@ -36,7 +36,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
                 'description' => 'List of users',
             ],
             '401' => [
-                'description' => 'Unauthorized'
+                'description' => 'Unauthorized',
             ],
             '403' => [
                 'description' => "You don't have permission to interact with this route",
@@ -56,15 +56,15 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
             '200' => [
                 'description' => 'Current user returns by the security layout',
                 'headers' => [
-                    'Content-Type' => 'application/json'
-                ]
+                    'Content-Type' => 'application/json',
+                ],
             ],
             '401' => [
                 'description' => 'Unauthorized',
             ],
             '403' => [
-                'description' => "You don't have access to this ressource"
-            ]
+                'description' => "You don't have access to this ressource",
+            ],
         ],
     )
 )]
@@ -75,10 +75,10 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
         summary: 'Patch an User',
         description: 'Allow user to patch current informations by providing updated said informations',
         responses: [
-            "500" => "Server Error, try later",
-            "403" => "You don't permission to interact with this entity",
-            "401" => "Unauthorized.",
-            "201" => "Updated"
+            '500' => 'Server Error, try later',
+            '403' => "You don't permission to interact with this entity",
+            '401' => 'Unauthorized.',
+            '201' => 'Updated',
         ]
     )
 )]
