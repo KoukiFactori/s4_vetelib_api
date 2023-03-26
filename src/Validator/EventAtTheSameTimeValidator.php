@@ -19,7 +19,7 @@ class EventAtTheSameTimeValidator extends ConstraintValidator
     }
 
     // TODO: implement the validation here
-    if (null != $this->vr->findEventByStartingTime($value) or ($value->format('i') != '00' or '30')) {
+    if (null != $this->vr->findEventByStartingTime($value)) {
         $this->context->buildViolation($constraint->message)
             ->setParameter('{{ value }}', $value->format('Y-m-d H:i:s'))
             ->addViolation();
