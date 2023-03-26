@@ -63,8 +63,9 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
     security: 'is_granted("ROLE_USER") and object = user',
     denormalizationContext: ['groups' => ['user:set']],
     openapi: new Model\Operation(
+        tags: ["patch", "user", "update"],
         summary: 'Patch an User',
-        description: 'Allow user to patch informations by providing said informations',
+        description: 'Allow user to patch current informations by providing updated said informations',
         responses: [
             "500" => "Server Error, try later",
             "403" => "You don't permission to interact with this entity",
