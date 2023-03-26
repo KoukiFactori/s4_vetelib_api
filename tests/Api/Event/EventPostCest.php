@@ -173,7 +173,7 @@ class EventPostCest
         $I->sendPOST('/api/events', $dataInitPost);
         $I->seeResponseCodeIs(HttpCode::CREATED);
     }
-    public function userCanPostEventBefore8OrAfter18(ApiTester $I)
+    public function userCantPostEventBefore8(ApiTester $I)
     {
         TypeEventFactory::createOne();
         VeterinaireFactory::createOne();
@@ -187,6 +187,28 @@ class EventPostCest
         $I->amLoggedInAs($client->object());
         $dataInitPost=[
             "date"=> "2023-03-11T06:30:00+00:00",
+            "description"=> "test1",
+            "animal"=> "/api/animals/1",
+            "typeEvent"=> "/api/typeEvents/1",
+            "veterinaire"=> "/api/veterinaires/1",
+            "isUrgent"=> false
+        ];
+        $I->sendPost('/api/events', $dataInitPost);
+        $I->seeResponseCodeIs(HttpCode::UNPROCESSABLE_ENTITY);
+    }
+    public function userCantPostAfter18(ApiTester $I){
+        TypeEventFactory::createOne();
+        VeterinaireFactory::createOne();
+        $client = ClientFactory::createOne();
+        $espece=EspeceFactory::createOne();
+        AnimalFactory::createOne(
+            [   'espece' => $espece,
+                'client' => $client
+            ]
+        );
+        $I->amLoggedInAs($client->object());
+        $dataInitPost=[
+            "date"=> "2023-03-11T19:30:00+00:00",
             "description"=> "test1",
             "animal"=> "/api/animals/1",
             "typeEvent"=> "/api/typeEvents/1",
@@ -228,7 +250,7 @@ class EventPostCest
         $I->seeResponseCodeIs(HttpCode::UNPROCESSABLE_ENTITY);
     }
 
-    public function EventStartCanOnlyStartAt30Or00(ApiTester $I){
+    public function eventStartCanOnlyStartAt30Or00(ApiTester $I){
         $veterinaire = VeterinaireFactory::createOne();
         $type=TypeEventFactory::createOne();
         $client = ClientFactory::createOne();
