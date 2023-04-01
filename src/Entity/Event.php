@@ -17,11 +17,11 @@ use App\Controller\GetAllEventOfAnimalController;
 use App\Controller\GetAllEventOfClientController;
 use App\Repository\EventRepository;
 use App\Validator\AuthenticatedUserEvent;
-use App\Validator\EventAtTheSameTime;
 use App\Validator\EventBefore;
 use App\Validator\EventCanStartAt;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: EventRepository::class)]
 #[ApiResource(
@@ -105,7 +105,8 @@ use Doctrine\ORM\Mapping as ORM;
 ),
 ]
 #[ApiFilter(SearchFilter::class, properties: ['typeEvent.getLibType()' => 'exact'])]
-#[EventAtTheSameTime]
+#[UniqueEntity(['date', 'animal'],message: 'Vous avez déjà un rendez-vous à cette date',)]
+#[UniqueEntity(['date', 'veterinaire'],message: 'Le vétérinaire est déjà pris à cette date',)]
 class Event
 {
     #[ORM\Id]
