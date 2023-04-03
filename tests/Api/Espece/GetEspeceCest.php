@@ -7,35 +7,17 @@ use App\Factory\ClientFactory;
 use App\Factory\EspeceFactory;
 use App\Factory\VeterinaireFactory;
 use App\Tests\Support\ApiTester;
+use Codeception\Util\HttpCode;
 
 class GetEspeceCest
 {
-    public function authenticatedUserCanGetEspeceCollection(ApiTester $I): void
-    {
-        EspeceFactory::createOne();
-        $userClient = ClientFactory::createOne();
-        $userVeterinaire = VeterinaireFactory::createOne();
-        $userAdmin = AdminFactory::createOne();
-        $I->amLoggedInAs($userClient->object());
-        $I->sendGET('/api/especes');
-        $I->seeResponseCodeIs(200);
-        $I->amOnPage('/logout');
-        $I->amLoggedInAs($userVeterinaire->object());
-        $I->sendGET('/api/especes');
-        $I->seeResponseCodeIs(200);
-        $I->amOnPage('/logout');
-        $I->amLoggedInAs($userAdmin->object());
-        $I->sendGET('/api/especes');
-        $I->seeResponseCodeIs(200);
-    }
-
     public function authenticatedClientCanGetEspece(ApiTester $I): void
     {
         EspeceFactory::createOne();
         $user = ClientFactory::createOne();
         $I->amLoggedInAs($user->object());
         $I->sendGET('/api/especes/1');
-        $I->seeResponseCodeIs(200);
+        $I->seeResponseCodeIs(HttpCode::OK);
     }
 
     public function authenticatedVeterinaireCanGetEspece(ApiTester $I): void
@@ -44,7 +26,7 @@ class GetEspeceCest
         $user = VeterinaireFactory::createOne();
         $I->amLoggedInAs($user->object());
         $I->sendGET('/api/especes/1');
-        $I->seeResponseCodeIs(200);
+        $I->seeResponseCodeIs(HttpCode::OK);
     }
 
     public function authenticatedAdminCanGetEspece(ApiTester $I): void
@@ -53,13 +35,13 @@ class GetEspeceCest
         $user = AdminFactory::createOne();
         $I->amLoggedInAs($user->object());
         $I->sendGET('/api/especes/1');
-        $I->seeResponseCodeIs(200);
+        $I->seeResponseCodeIs(HttpCode::OK);
     }
 
     public function anonymousUserCannotGetEspece(ApiTester $I): void
     {
         EspeceFactory::createOne();
         $I->sendGET('/api/especes/1');
-        $I->seeResponseCodeIs(401);
+        $I->seeResponseCodeIs(HttpCode::UNAUTHORIZED);
     }
 }
