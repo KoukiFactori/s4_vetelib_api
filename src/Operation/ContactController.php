@@ -16,13 +16,15 @@ class ContactController extends AbstractController
  * @Route("/contact", name="contact", methods={"POST"})
  */
     public function contact(Request $request, MailerInterface $mailer): Response
-    {
+    {   
         $email = $request->get('email');
         $name = $request->get('lastname');
         $firstname = $request->get('firstname');
         $object = $request->get('message');
         $title = $request->get('title');
-
+        if (empty($email) || empty($name) || empty($firstname) || empty($object) || empty($title)) {
+            return new Response(null, Response::HTTP_BAD_REQUEST);
+        }
         $emailMessage = (new Email())
             ->from($email)
             ->to('simon@simon511000.fr ')
