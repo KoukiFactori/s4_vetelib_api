@@ -50,12 +50,12 @@ class AdminDashboardController extends AbstractDashboardController
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
 
         yield MenuItem::section('Client related stuff');
-        yield MenuItem::linkToCrud('Utilisateurs', 'fa fa-tags', User::class);
-        yield MenuItem::linkToCrud('Animaux', 'fa fa-tags', Animal::class);
-        yield MenuItem::linkToCrud('Evenements', 'fa fa-tags', Event::class);
+        yield MenuItem::linkToCrud('Utilisateurs', 'fa fa-user', User::class);
+        yield MenuItem::linkToCrud('Animaux', 'fa fa-cat', Animal::class);
+        yield MenuItem::linkToCrud('Evenements', 'fa fa-calendar-days', Event::class);
 
         yield MenuItem::section('Others');
-        yield MenuItem::linkToCrud('Especes', 'fa fa-tags', Espece::class);
-        yield MenuItem::linkToCrud('Types évènement', 'fa fa-tags', TypeEvent::class);
+        yield MenuItem::linkToCrud('Especes', 'fa fa-list', Espece::class);
+        yield MenuItem::linkToCrud('Types évènement', 'fa fa-list', TypeEvent::class);
     }
 }
