@@ -71,13 +71,13 @@ class VeterinaireRepository extends ServiceEntityRepository
 
         return $events;
     }
-    public function getAvailableSlots(array $vetoAndEvents): array
+    public function getAvailableSlots(Veterinaire $veto): array
     {
         $interval = new \DateInterval('PT30M'); // intervalle de 30 minutes
         $slots = [];
 
         // pour chaque vétérinaire
-        foreach ($vetoAndEvents as $veto) {
+      
             $events = $veto->getEvents(); // récupère les rendez-vous pour le vétérinaire en cours
             $start = new \DateTime('8:00'); // début à 8h
             $end = new \DateTime('18:30'); // fin à 18h30
@@ -109,8 +109,6 @@ class VeterinaireRepository extends ServiceEntityRepository
                 $slotStart->add($interval);
                 $slotEnd->add($interval);
             }
-        }
-
         return $slots;
     }
 
