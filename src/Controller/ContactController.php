@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace App\Operation;
+namespace App\Controller;
+
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
+use Symfony\Component\Routing\Route;
 
 
 class ContactController extends AbstractController
 {
-/**
- * @Route("/contact", name="contact", methods={"POST"})
- */
+    #[Route('/contact', name: 'contact', methods: ['POST'])]
     public function contact(Request $request, MailerInterface $mailer): Response
     {   
         $email = $request->get('email');
