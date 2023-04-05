@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ContactController extends AbstractController
 {
-    #[Route('/contact', name: 'contact')]
+    #[Route('/contact', name: 'contact', methods: ['POST'])]
     public function contact(Request $request, MailerInterface $mailer): Response
     {   
         $email = $request->get('email');
