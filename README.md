@@ -55,3 +55,22 @@ Il peut être reformaté automatiquement avec :
 
 Via Codeception:
 `composer test:cs`
+
+### Comment contribuer ?
+
+Pour contribuer sur ce dépot, il est nécessaire au préalable de récupérer la dernière version de la branche principale.
+Toute nouvelle branche doit obligatoirement être basé sur le dernier commit, ainsi qu'au moment du merge request.
+
+Le reset a été choisi pour s'assurer qu'aucun commit en trop ou conflit ne soit possible.
+
+```bash
+git checkout main
+git fetch
+git reset --hard origin/main
+```
+
+Tout nouveau commit doit se faire sur une branche séparée
+Il est recommandé de rebaser ou de merger les changements de main le plus souvent possible, afin d'éviter le plus possible les conflits.
+
+Lors du rebase/merge, en cas d'installation d'une nouvelle dépendance sur la branche, il est possible que git passe en mode conflit.
+Pour corriger ce problème et éviter les désynchronisations du composer.lock, il est recommandé de rebaser jusqu'au conflit, de retirer les modifications apportées par la branche aux fichiers de composer, puis de réinstaller la dépendance. De cette façon, composer se base sur le lockfile de la branche main et ne devrait pas poser de soucis par la suite. Les nouveaux fichiers peuvent ensuite être ajouter à git et le rebase peut se continuer sans erreur (normalement)
