@@ -30,7 +30,9 @@
         "symfony/serializer": "6.2.*",
         "symfony/twig-bundle": "6.2.*",
         "symfony/validator": "6.2.*",
-        "symfony/yaml": "6.2.*"
+        "symfony/yaml": "6.2.*",
+        "zenstruck/foundry": "^1.30"
+
     },
     "config": {
         "allow-plugins": {
@@ -82,12 +84,13 @@
             "php-cs-fixer fix"
         ],
         "db": [
+            "Composer\\Config::disableProcessTimeout",
             "php bin/console doctrine:database:drop --force",
             "php bin/console doctrine:database:create",
             "php bin/console doctrine:schema:create",
             "php bin/console doctrine:fixtures:load --no-interaction"
         ],
-        "test:codeception": [
+        "test:codeception":[
             "php vendor/bin/codecept clean",
             "cross-env APP_ENV=test php bin/console doctrine:database:drop --force",
             "cross-env APP_ENV=test php bin/console doctrine:database:create",
@@ -98,6 +101,7 @@
         [
             "@test:codeception"
         ]
+
     },
     "scripts-descriptions": {
         "start": "Lance un serveur web symfony",
@@ -126,7 +130,6 @@
         "codeception/module-symfony": "^3.1",
         "doctrine/doctrine-fixtures-bundle": "^3.4",
         "friendsofphp/php-cs-fixer": "^3.14",
-        "symfony/maker-bundle": "^1.48",
-        "zenstruck/foundry": "^1.28"
+        "symfony/maker-bundle": "^1.48"
     }
 }

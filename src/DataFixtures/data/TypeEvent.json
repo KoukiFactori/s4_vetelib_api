@@ -1,8 +1,20 @@
 [
     {
-        "libType": "Non Urgent"
+        "libType": "Routine"
     },
     {
-        "libType": "Urgent"
+        "libType": "Vaccin"
+    },
+    {
+        "libType": "euthanasie"
+    },
+    {
+        "libType": "Autre"
+    },
+    {
+        "libType":"mise au monde"
+    },
+    {
+        "libType":"accident"
     }
 ]
