@@ -24,6 +24,7 @@ L'objectif du projet est de permettre (principalement) à une application front-
 ## Installation du projet
 
 Le projet peut simplement être cloné puis lancer en prenant soin d'installer les dépendances à l'aide de `composer`
+
 ```bash
 git clone https://iut-info.univ-reims.fr/gitlab/rain0005/sae4-01-api
 cd sae4-01-api
@@ -33,17 +34,18 @@ composer install
 ## Scripts
 
 ### Lancer le serveur de test
+
 - `composer start` : Pour démarrer le serveur web
 
 ### Style de codage
 
 Le code peut être contrôlé avec :
 
-    composer test:cs
+`composer test:cs`
 
 Il peut être reformaté automatiquement avec :
-    
-    composer fix:cs
+
+`composer fix:cs`
 
 ### Création de données fixtives
 
