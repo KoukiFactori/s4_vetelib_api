@@ -24,6 +24,7 @@ L'objectif du projet est de permettre (principalement) à une application front-
 ## Installation du projet
 
 Le projet peut simplement être cloné puis lancer en prenant soin d'installer les dépendances à l'aide de `composer`
+Avant de lancer `composer install`, il est nécessaire de configurer la variable DATABASE_URL dans le `.env` (ou `.env.local`)
 
 ```bash
 git clone https://iut-info.univ-reims.fr/gitlab/rain0005/sae4-01-api
@@ -47,7 +48,7 @@ Il peut être reformaté automatiquement avec :
 
 `composer fix:cs`
 
-### Création de données fixtives
+### Création de données fictives
 
 - On peut créer une nouvelle base de données en supprimant l'ancienne, et en y créant des données factices en utilisant la commande : `composer db`
 
