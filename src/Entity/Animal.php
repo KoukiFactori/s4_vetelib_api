@@ -23,7 +23,7 @@ use Doctrine\ORM\Mapping as ORM;
     operations: [
         new GetCollection(
             uriTemplate: '/animals',
-            security: 'is_granted("ROLE_ADMIN")',
+            security: 'is_granted("ROLE_ADMIN") or is_granted("ROLE_VETERINAIRE")',
             openapiContext: [
                 'summary' => 'Get all animals',
                 'description' => 'Get all animals',
