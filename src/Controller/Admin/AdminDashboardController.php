@@ -2,17 +2,17 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\Animal;
-use App\Entity\Client;
-use App\Entity\Espece;
-use App\Entity\Event;
-use App\Entity\TypeEvent;
 use App\Entity\User;
-use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
-use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
-use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
+use App\Entity\Event;
+use App\Entity\Animal;
+use App\Entity\Espece;
+use App\Entity\TypeEvent;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
+use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
+use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 
 class AdminDashboardController extends AbstractDashboardController
 {
@@ -57,5 +57,10 @@ class AdminDashboardController extends AbstractDashboardController
         yield MenuItem::section('Others');
         yield MenuItem::linkToCrud('Especes', 'fa fa-list', Espece::class);
         yield MenuItem::linkToCrud('Types évènement', 'fa fa-list', TypeEvent::class);
+    }
+
+    public function configureAssets(): Assets
+    {
+       return parent::configureAssets()->addCssFile("https://fonts.googleapis.com/icon?family=Material+Icons");
     }
 }
