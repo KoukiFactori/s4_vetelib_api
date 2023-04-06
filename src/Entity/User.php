@@ -24,7 +24,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[DiscriminatorMap(['client' => Client::class, 'veterinaire' => Veterinaire::class, 'admin' => Admin::class])]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 #[ApiResource(
-    normalizationContext: ['groups' => ['user:get']]
+    normalizationContext: ['groups' => ['user:read']]
 )]
 #[GetCollection(
     security: 'is_granted("ROLE_ADMIN")',
