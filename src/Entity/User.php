@@ -87,19 +87,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups('user:get')]
+    #[Groups('user:read')]
     protected ?int $id = null;
 
-    #[Groups(['user:get', 'user:set'])]
     #[ORM\Column(length: 50)]
+    #[Groups(['user:read', 'user:write'])]
     private ?string $lastname = null;
 
-    #[Groups(['user:get', 'user:set'])]
     #[ORM\Column(length: 50)]
+    #[Groups(['user:read', 'user:write'])]
     private ?string $firstname = null;
 
-    #[Groups(['user:get', 'user:set'])]
     #[ORM\Column(length: 180, unique: true)]
+    #[Groups(['user:read', 'user:write'])]
     protected ?string $email = null;
 
     #[ORM\Column]
@@ -109,27 +109,27 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var string The hashed password
      */
     #[ORM\Column]
-    #[Groups('user:set')]
+    #[Groups(['user:write'])]
     protected ?string $password = null;
 
-    #[Groups(['user:get', 'user:set'])]
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['user:read', 'user:write'])]
     private ?string $phone = null;
 
-    #[Groups(['user:get', 'user:set'])]
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    #[Groups(['user:read', 'user:write'])]
     private ?\DateTimeInterface $birthdate = null;
 
-    #[Groups(['user:get', 'user:set'])]
     #[ORM\Column(length: 60, nullable: true)]
+    #[Groups(['user:read', 'user:write'])]
     private ?string $city = null;
 
-    #[Groups(['user:get', 'user:set'])]
     #[ORM\Column(length: 20, nullable: true)]
+    #[Groups(['user:read', 'user:write'])]
     private ?string $zipcode = null;
 
-    #[Groups(['user:get', 'user:set'])]
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['user:read', 'user:write'])]
     private ?string $address = null;
 
     public function getId(): ?int
