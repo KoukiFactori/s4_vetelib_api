@@ -11,9 +11,22 @@ services:
       - MYSQL_ROOT_PASSWORD=secretR00tPassw0rd
     volumes:
       - database_data:/var/lib/mysql:rw
+    networks:
+      - symfony_api
+  
+  nginx:
+    image: moss0006/vetetib_nginx
+    restart: always
+    ports:
+      - 8080:80
+    networks:
+      - symfony_api
 ###< doctrine/doctrine-bundle ###
 
 volumes:
 ###> doctrine/doctrine-bundle ###
   database_data:
 ###< doctrine/doctrine-bundle ###
+
+networks:
+  symfony_api:
