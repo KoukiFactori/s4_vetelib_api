@@ -14,6 +14,7 @@ use ApiPlatform\Metadata\Link;
 use ApiPlatform\Metadata\Patch;
 use APiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
+use App\Controller\GetAllEventAvailableOfVeterinaireController;
 use App\Controller\GetAllEventOfAnimalController;
 use App\Controller\GetAllEventOfClientController;
 use App\Repository\EventRepository;
@@ -21,7 +22,6 @@ use App\Validator\AuthenticatedUserEvent;
 use App\Validator\EventBefore;
 use App\Validator\EventCanStartAt;
 use Doctrine\DBAL\Types\Types;
-use App\Controller\GetAllEventAvailableOfVeterinaireController;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
@@ -53,10 +53,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
             uriTemplate: '/events/{id}',
             security: 'is_granted("ROLE_USER") and (object.getVeterinaire() == user or object.getAnimal().getClient() == user) or is_granted("ROLE_ADMIN")',
         ),
-        
             ]
 )]
-
 #[ApiFilter(SearchFilter::class, properties: ['typeEvent.libType' => 'exact'])]
 #[ApiFilter(BooleanFilter::class)]
 #[ApiResource(
@@ -75,7 +73,6 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
             controller: GetAllEventOfAnimalController::class,
         ),
 ])]
-#[ApiFilter(DateFilter::class, properties: ['date' =>  DateFilter::EXCLUDE_NULL])]
 #[ApiResource(
     uriTemplate: '/veterinaires/{id}/events',
     uriVariables: ['id' => new Link(
@@ -99,7 +96,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
                 fromClass: Veterinaire::class,
                 fromProperty: 'events',
             )],
-        )
+        ),
     ]
 )]
 #[ApiFilter(SearchFilter::class, properties: ['typeEvent.libType' => 'exact'])]
@@ -119,6 +116,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 ),
 ]
 #[ApiFilter(SearchFilter::class, properties: ['typeEvent.getLibType()' => 'exact'])]
+#[ApiFilter(DateFilter::class, properties: ['date' => DateFilter::EXCLUDE_NULL])]
 #[UniqueEntity(['date', 'animal'], message: 'Vous avez déjà un rendez-vous à cette date', )]
 #[UniqueEntity(['date', 'veterinaire'], message: 'Le vétérinaire est déjà pris à cette date', )]
 class Event
