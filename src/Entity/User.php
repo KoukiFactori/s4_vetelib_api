@@ -69,7 +69,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
     )
 )]
 #[Patch(
-    security: 'is_granted("ROLE_USER") and object = user',
+    uriTemplate: '/users/{id}',
+    requirements: ['id' => '\d+'],
+    security: "is_granted('ROLE_ADMIN') or (is_granted('ROLE_USER') and object == user)",
     denormalizationContext: ['groups' => ['user:set']],
     openapi: new Model\Operation(
         summary: 'Patch an User',
