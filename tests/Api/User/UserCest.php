@@ -71,4 +71,45 @@ class UserCest
         $tester->seeResponseIsJson();
         $tester->seeResponseIsAnEntity(Admin::class, '/api/admins/1');
     }
+
+    public function anonymCantUpdatePassword(ApiTester $tester)
+    {
+        ClientFactory::createOne();
+        $tester->sendPatch("/api/users/1", [
+            "password" => "FunkyScarletP0lice!"
+        ]);
+        $tester->seeResponseCodeIs(HttpCode::UNAUTHORIZED);
+    }
+
+    public function userCanUpdateTheirPassword(ApiTester $tester)
+    {
+        $user = ClientFactory::createOne();
+        $tester->amLoggedInAs($user->object());
+
+        $tester->sendPatch("/api/users/{$user->getId()}", [
+            "password" => "FunkyScarletP0lice!"
+        ]);
+        $tester->seeResponseCodeIs(HttpCode::OK);
+
+        $tester->logoutProgrammatically();
+
+        $tester->amOnRoute('app_login');
+        $tester->submitForm('.form_login', [
+            'login' => $user->getEmail(),
+            'password' => "FunkyScarletP0lice!"
+        ]);
+        $tester->seeResponseCodeIs(HttpCode::OK);
+    }
+
+    public function userCantUpdateOtherUserPassword(ApiTester $tester)
+    {
+        $user = ClientFactory::createOne();
+        $fake = ClientFactory::createOne(); //fake user
+        $tester->amLoggedInAs($user->object());
+
+        $tester->sendPatch("/api/users/{$fake->getId()}", [
+            "password" => "FunkyScarletP0lice!"
+        ]);
+        $tester->seeResponseCodeIs(HttpCode::FORBIDDEN);
+    }
 }
