@@ -2,14 +2,14 @@
 
 namespace App\Entity;
 
-use App\Repository\ClientRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\OpenApi\Model;
 use App\Controller\GetUserAnimals;
+use App\Repository\ClientRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ClientRepository::class)]
 #[ApiResource(
@@ -23,7 +23,7 @@ use App\Controller\GetUserAnimals;
                 summary: 'Get all animals from the current user',
                 description: 'Allow the current connected user to get all the animals they have',
             )
-        )
+        ),
     ]
 )]
 class Client extends User
