@@ -14,6 +14,7 @@ use App\Repository\VeterinaireRepository;
 use App\Tests\Support\ApiTester;
 use Codeception\Util\HttpCode;
 use App\Exception\PostEventAccessDeniedException;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 class EventGetCest
 {   
 
@@ -120,7 +121,7 @@ class EventGetCest
         $I->amLoggedInAs($user->object());
         try {
             $I->sendGET('/api/clients/2/events');
-        } catch (PostEventAccessDeniedException $e) {
+        } catch (AccessDeniedException $e) {
             $I->seeResponseCodeIs(HttpCode::FORBIDDEN);
         }
     }
@@ -147,6 +148,49 @@ class EventGetCest
         $I->sendGET('/api/clients/1/events');
         $I->seeResponseCodeIs(HttpCode::OK);
 
+    }
+    public function AuthentifiedUserCanGetAvailableEventOfVeterinaire(ApiTester $I){
+        $veterinaire = VeterinaireFactory::createOne();
+        $type=TypeEventFactory::createOne();
+        $client = ClientFactory::createOne();
+        $espece=EspeceFactory::createOne();
+        $animal = AnimalFactory::createOne(
+            [   'espece' => $espece,
+                'client' => $client
+            ]
+        );
+        EventFactory::createOne(
+            [   'typeEvent' => $type,
+                'date' => new \DateTime('2023-03-11T08:30:00+00:00'),
+                'veterinaire' => $veterinaire,
+                'animal' => $animal,
+                'isUrgent' => false,
+            ]
+        );
+        $I->amLoggedInAs($client->object());
+        $I->sendGet('/api/veterinaires/1/events/available/');
+        $I->seeResponseCodeIs(HttpCode::OK);
+    }
+    public function AnonymousUserCantGetAvailableEventOfVeterinaire(ApiTester $I){
+        $veterinaire = VeterinaireFactory::createOne();
+        $type=TypeEventFactory::createOne();
+        $client = ClientFactory::createOne();
+        $espece=EspeceFactory::createOne();
+        $animal = AnimalFactory::createOne(
+            [   'espece' => $espece,
+                'client' => $client
+            ]
+        );
+        EventFactory::createOne(
+            [   'typeEvent' => $type,
+                'date' => new \DateTime('2023-03-11T08:30:00+00:00'),
+                'veterinaire' => $veterinaire,
+                'animal' => $animal,
+                'isUrgent' => false,
+            ]
+        );
+        $I->sendGet('/api/veterinaires/1/events/available/');
+        $I->seeResponseCodeIs(HttpCode::UNAUTHORIZED);
     }
 
 }

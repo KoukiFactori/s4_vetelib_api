@@ -272,4 +272,6 @@ class EventPostCest
         $I->sendPost('/api/events', $dataInitPost);
         $I->seeResponseCodeIs(HttpCode::UNPROCESSABLE_ENTITY);
     }
+
+  
 }

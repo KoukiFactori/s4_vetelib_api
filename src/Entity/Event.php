@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use ApiPlatform\Doctrine\Orm\Filter\BooleanFilter;
+use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
@@ -20,6 +21,7 @@ use App\Validator\AuthenticatedUserEvent;
 use App\Validator\EventBefore;
 use App\Validator\EventCanStartAt;
 use Doctrine\DBAL\Types\Types;
+use App\Controller\GetAllEventAvailableOfVeterinaireController;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
@@ -51,8 +53,10 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
             uriTemplate: '/events/{id}',
             security: 'is_granted("ROLE_USER") and (object.getVeterinaire() == user or object.getAnimal().getClient() == user) or is_granted("ROLE_ADMIN")',
         ),
+        
             ]
 )]
+
 #[ApiFilter(SearchFilter::class, properties: ['typeEvent.libType' => 'exact'])]
 #[ApiFilter(BooleanFilter::class)]
 #[ApiResource(
@@ -71,6 +75,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
             controller: GetAllEventOfAnimalController::class,
         ),
 ])]
+#[ApiFilter(DateFilter::class, properties: ['date' =>  DateFilter::EXCLUDE_NULL])]
 #[ApiResource(
     uriTemplate: '/veterinaires/{id}/events',
     uriVariables: ['id' => new Link(
@@ -86,6 +91,15 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
             security: 'is_granted("ROLE_VETERINAIRE") or is_granted("ROLE_ADMIN")',
             paginationEnabled: false,
         ),
+        new GetCollection(
+            uriTemplate: '/veterinaires/{id}/events/available',
+            controller: GetAllEventAvailableOfVeterinaireController::class,
+            security: 'is_granted("ROLE_USER")',
+            uriVariables: ['id' => new Link(
+                fromClass: Veterinaire::class,
+                fromProperty: 'events',
+            )],
+        )
     ]
 )]
 #[ApiFilter(SearchFilter::class, properties: ['typeEvent.libType' => 'exact'])]
@@ -105,8 +119,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 ),
 ]
 #[ApiFilter(SearchFilter::class, properties: ['typeEvent.getLibType()' => 'exact'])]
-#[UniqueEntity(['date', 'animal'],message: 'Vous avez déjà un rendez-vous à cette date',)]
-#[UniqueEntity(['date', 'veterinaire'],message: 'Le vétérinaire est déjà pris à cette date',)]
+#[UniqueEntity(['date', 'animal'], message: 'Vous avez déjà un rendez-vous à cette date', )]
+#[UniqueEntity(['date', 'veterinaire'], message: 'Le vétérinaire est déjà pris à cette date', )]
 class Event
 {
     #[ORM\Id]
