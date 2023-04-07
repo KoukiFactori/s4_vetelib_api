@@ -16,7 +16,7 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class VeterinaireRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, private ClientRepository $cr)
     {
         parent::__construct($registry, Veterinaire::class);
     }
@@ -43,7 +43,7 @@ class VeterinaireRepository extends ServiceEntityRepository
     {
         $events = $this->createQueryBuilder('veto')
             ->addSelect('event')
-            ->leftJoin("veto.events", 'event')
+            ->leftJoin('veto.events', 'event')
             ->where('event.date >= :start')
             ->andWhere('event.date <= :end')
             ->orderBy('event.date')
@@ -56,11 +56,11 @@ class VeterinaireRepository extends ServiceEntityRepository
         return $events;
     }
 
-    public function findByStartingTimeAndVeterinaire(\DateTimeInterface $date , Veterinaire $veterinaire): array
+    public function findByStartingTimeAndVeterinaire(\DateTimeInterface $date, Veterinaire $veterinaire): array
     {
         $events = $this->createQueryBuilder('veto')
             ->addSelect('event')
-            ->leftJoin("veto.events", 'event')
+            ->leftJoin('veto.events', 'event')
             ->where('event.date = :start')
             ->andWhere('veto.id = :veto')
             ->orderBy('event.date')
@@ -110,6 +110,20 @@ class VeterinaireRepository extends ServiceEntityRepository
                 $slotEnd->add($interval);
             }
         return $slots;
+    }
+
+    public function retrieveAllClientRelatedToVeterinaire(int $vetId): array
+    {
+        $clients = $this->cr->createQueryBuilder('client')
+            ->innerJoin('client.animals', 'animal')
+            ->innerJoin('animal.events', 'event')
+            ->innerJoin('event.veterinaire', 'vet')
+            ->where('vet.id = :id')
+            ->setParameter('id', $vetId)
+            ->orderBy('client.id')
+            ->getQuery()->execute();
+
+        return $clients;
     }
 
 //    /**

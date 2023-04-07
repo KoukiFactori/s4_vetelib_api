@@ -10,7 +10,9 @@ use ApiPlatform\Metadata\Link;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
+use ApiPlatform\OpenApi\Model;
 use App\Controller\GetAllAnimalOfVeterinaireController;
+use App\Controller\GetUserAnimalsController;
 use App\Repository\AnimalRepository;
 use App\Validator\AuthenticatedUserAnimal;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -262,6 +264,21 @@ use Doctrine\ORM\Mapping as ORM;
         new GetCollection(
             security: 'is_granted("ROLE_ADMIN") or (is_granted("ROLE_CLIENT") and id == user.getId())',
             paginationEnabled: false,
+        ),
+    ]
+)]
+#[ApiResource(
+    operations: [
+        new GetCollection(
+            uriTemplate: '/me/animals',
+            security: 'is_granted("ROLE_USER")',
+            controller: GetUserAnimalsController::class,
+            itemUriTemplate: '/animals/{id}',
+            openapi: new Model\Operation(
+                tags: ['Client'],
+                summary: 'Get all animals from the current user',
+                description: 'Allow the current connected user to get all the animals they have',
+            )
         ),
     ]
 )]

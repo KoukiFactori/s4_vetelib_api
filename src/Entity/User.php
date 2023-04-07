@@ -3,6 +3,10 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\OpenApi\Model;
+use App\Controller\GetMeController;
 use App\Repository\UserRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -12,27 +16,92 @@ use Doctrine\ORM\Mapping\InheritanceType;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[InheritanceType('SINGLE_TABLE')]
 #[DiscriminatorColumn(name: 'discr', type: 'string')]
 #[DiscriminatorMap(['client' => Client::class, 'veterinaire' => Veterinaire::class, 'admin' => Admin::class])]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
-#[ApiResource]
+#[ApiResource(
+    normalizationContext: ['groups' => ['user:read']]
+)]
+#[GetCollection(
+    security: 'is_granted("ROLE_ADMIN")',
+    openapi: new Model\Operation(
+        summary: 'Retrieves all users',
+        description: 'Retrieves all the users in the database',
+        responses: [
+            '200' => [
+                'description' => 'List of users',
+            ],
+            '401' => [
+                'description' => 'Unauthorized',
+            ],
+            '403' => [
+                'description' => "You don't have permission to interact with this route",
+            ],
+        ],
+    )
+)]
+#[GetCollection(
+    controller: GetMeController::class,
+    paginationEnabled: false,
+    security: 'is_granted("ROLE_USER")',
+    uriTemplate: '/me',
+    openapi: new Model\Operation(
+        summary: 'Retrieves the connected user',
+        description: 'Retrieves the current connected user, returns an error if user is not connected',
+        responses: [
+            '200' => [
+                'description' => 'Current user returns by the security layout',
+                'headers' => [
+                    'Content-Type' => 'application/json',
+                ],
+            ],
+            '401' => [
+                'description' => 'Unauthorized',
+            ],
+            '403' => [
+                'description' => "You don't have access to this ressource",
+            ],
+        ],
+    )
+)]
+#[Patch(
+    uriTemplate: '/users/{id}',
+    requirements: ['id' => '\d+'],
+    security: "is_granted('ROLE_ADMIN') or (is_granted('ROLE_USER') and object == user)",
+    denormalizationContext: ['groups' => ['user:set']],
+    openapi: new Model\Operation(
+        summary: 'Patch an User',
+        description: 'Allow user to patch current informations by providing updated said informations',
+        responses: [
+            '500' => 'Server Error, try later',
+            '403' => "You don't permission to interact with this entity",
+            '401' => 'Unauthorized.',
+            '201' => 'Updated',
+        ]
+    )
+)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups('user:read')]
     protected ?int $id = null;
 
     #[ORM\Column(length: 50)]
+    #[Groups(['user:read', 'user:write'])]
     private ?string $lastname = null;
 
     #[ORM\Column(length: 50)]
+    #[Groups(['user:read', 'user:write'])]
     private ?string $firstname = null;
 
     #[ORM\Column(length: 180, unique: true)]
+    #[Groups(['user:read', 'user:write'])]
     protected ?string $email = null;
 
     #[ORM\Column]
@@ -42,21 +111,27 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var string The hashed password
      */
     #[ORM\Column]
+    #[Groups(['user:write'])]
     protected ?string $password = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['user:read', 'user:write'])]
     private ?string $phone = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    #[Groups(['user:read', 'user:write'])]
     private ?\DateTimeInterface $birthdate = null;
 
     #[ORM\Column(length: 60, nullable: true)]
+    #[Groups(['user:read', 'user:write'])]
     private ?string $city = null;
 
     #[ORM\Column(length: 20, nullable: true)]
+    #[Groups(['user:read', 'user:write'])]
     private ?string $zipcode = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['user:read', 'user:write'])]
     private ?string $address = null;
 
     public function getId(): ?int
@@ -160,7 +235,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-        /**
+    /**
      * A visual identifier that represents this user.
      *
      * @see UserInterface
