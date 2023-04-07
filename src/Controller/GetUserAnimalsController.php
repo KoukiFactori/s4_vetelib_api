@@ -5,7 +5,7 @@ namespace App\Controller;
 use App\Entity\Client;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-class GetUserAnimals extends AbstractController
+class GetUserAnimalsController extends AbstractController
 {
     public function __invoke()
     {
