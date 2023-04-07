@@ -1,12 +1,12 @@
-ARG NGINX_VERSION=1.23
 ARG PHP_VERSION=8.1
+ARG NGINX_VERSION=1.23
 
 # Tool for easier installation of PHP deps
 FROM mlocati/php-extension-installer:latest AS php_extension_installer
 
-FROM php:${PHP_VERSION}-fpm-alpine AS VETELIB_PHP
+FROM php:${PHP_VERSION}-fpm-alpine AS vetelib_php
 
-COPY --from=php_extension_installer --link /usr/bin/install-php-extensions /usr/local/bin/
+COPY --from=php_extension_installer /usr/bin/install-php-extensions /usr/local/bin/
 
 RUN apk add --no-cache \
 		acl \
@@ -22,12 +22,15 @@ RUN set -eux; \
     	intl \
 		  opcache \
     	zip \
+			pdo_mysql \
     ;
 
-RUN ln -s $PHP_INI_DIR/php.ini-production $PHP_INI_DIR/php.ini
 
 COPY --from=composer/composer:latest-bin /composer /usr/bin/composer
 ENV COMPOSER_ALLOW_SUPERUSER=1
+
+RUN ln -s $PHP_INI_DIR/php.ini-production $PHP_INI_DIR/php.ini
+COPY ./docker/php/conf.d/prod.ini $PHP_INI_DIR/conf.d/api.ini
 
 RUN set -eux; \
 composer global config --no-plugins allow-plugins.symfony/flex true; \
@@ -49,7 +52,7 @@ RUN set -eux; \
     composer install --prefer-dist --no-dev --no-scripts --no-progress; \
     composer clear-cache
 
-COPY .env ./
+COPY .env .env
 RUN composer dump-env prod
 
 COPY bin ./bin/
@@ -74,7 +77,7 @@ RUN chmod +x /usr/local/bin/docker-entrypoint
 ENTRYPOINT ["docker-entrypoint"]
 CMD ["php-fpm"]
 
-FROM nginx:${NGINX_VERSION}-alpine AS VETELIB_NGINX
+FROM nginx:${NGINX_VERSION}-alpine AS vetelib_nginx
 
 COPY ./docker/nginx/conf.d/default.conf /etc/nginx/conf.d/
 
