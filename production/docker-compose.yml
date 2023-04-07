@@ -12,6 +12,8 @@ services:
       - database_data:/var/lib/mysql:rw
     networks:
       - symfony_api
+    expose:
+      - 3306
     env_file:
       - .env
   
