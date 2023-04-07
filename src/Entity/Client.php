@@ -44,6 +44,11 @@ use Doctrine\ORM\Mapping as ORM;
                 ]
             )
         ),
+        new GetCollection(
+            uriTemplate: '/clients',
+            normalizationContext: ['groups' => ['user:read']],
+            security: 'is_granted("ROLE_VETERINAIRE") or is_granted("ROLE_ADMIN")'
+        )
     ]
 )]
 class Client extends User
