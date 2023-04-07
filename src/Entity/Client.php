@@ -33,6 +33,9 @@ use Doctrine\ORM\Mapping as ORM;
     operations: [
         new GetCollection(
             controller: GetAllClientOfVeterinaireController::class,
+            normalizationContext: [
+                'groups' => 'user:read'
+            ],
             openapi: new Model\Operation(
                 tags: ['Veterinaire'],
                 summary: 'Retrieves all clients related to a veterinaire',
