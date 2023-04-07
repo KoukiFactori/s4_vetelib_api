@@ -1,36 +1,57 @@
 ARG PHP_VERSION=8.1
 ARG NGINX_VERSION=1.23
 
-# Tool for easier installation of PHP deps
-FROM mlocati/php-extension-installer:latest AS php_extension_installer
-
 FROM php:${PHP_VERSION}-fpm-alpine AS vetelib_php
 
-COPY --from=php_extension_installer /usr/bin/install-php-extensions /usr/local/bin/
-
+# persistent / runtime deps
 RUN apk add --no-cache \
-		acl \
-		fcgi \
-		file \
-		gettext \
-		git \
-	;
+    acl \
+    fcgi \
+    file \
+    gettext \
+    git \
+  ;
 
+ARG APCU_VERSION=5.1.22
 RUN set -eux; \
-    install-php-extensions \
-    	apcu \
-    	intl \
-		  opcache \
-    	zip \
-			pdo_mysql \
-    ;
+  apk add --no-cache --virtual .build-deps \
+    $PHPIZE_DEPS \
+    icu-dev \
+    libzip-dev \
+    ; \
+  \
+  docker-php-ext-configure zip; \
+  docker-php-ext-install -j$(nproc) \
+  intl \
+  pdo_mysql \
+  zip \
+  ; \
+  pecl install \
+  apcu-${APCU_VERSION} \
+  ; \
+  pecl clear-cache; \
+  docker-php-ext-enable \
+  apcu \
+  opcache \
+  ; \
+  \
+  runDeps="$( \
+  scanelf --needed --nobanner --format '%n#p' --recursive /usr/local/lib/php/extensions \
+  | tr ',' '\n' \
+  | sort -u \
+  | awk 'system("[ -e /usr/local/lib/" $1 " ]") == 0 { next } { print "so:" $1 }' \
+  )"; \
+  apk add --no-cache --virtual .api-phpexts-rundeps $runDeps; \
+  \
+  apk del .build-deps
 
-
-COPY --from=composer/composer:latest-bin /composer /usr/bin/composer
-ENV COMPOSER_ALLOW_SUPERUSER=1
+COPY --from=composer /usr/bin/composer /usr/bin/composer
 
 RUN ln -s $PHP_INI_DIR/php.ini-production $PHP_INI_DIR/php.ini
+
 COPY ./docker/php/conf.d/prod.ini $PHP_INI_DIR/conf.d/api.ini
+
+ENV COMPOSER_ALLOW_SUPERUSER=1
 
 RUN set -eux; \
 composer global config --no-plugins allow-plugins.symfony/flex true; \
@@ -71,6 +92,8 @@ RUN set -eux; \
   composer run-script --no-dev post-install-cmd; \
   chmod +x bin/console; sync
 
+VOLUME [ "/srv/api/var" ]
+
 COPY ./docker/php/docker-entrypoint.sh /usr/local/bin/docker-entrypoint
 RUN chmod +x /usr/local/bin/docker-entrypoint
 
@@ -83,4 +106,4 @@ COPY ./docker/nginx/conf.d/default.conf /etc/nginx/conf.d/
 
 WORKDIR /srv/api/public
 
-COPY --from=VETELIB_PHP /srv/api/public ./
+COPY --from=vetelib_php /srv/api/public ./
