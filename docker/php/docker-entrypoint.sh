@@ -30,9 +30,9 @@ if [ "$1" = 'php-fpm' ] || [ "$1" = 'bin/console' ] || { [ "$1" = 'php' ] && [ "
        echo "The db is now ready and reachable"
     fi
 
-    if ls -A migrations/*.php > /dev/null 2>&1; then
-        bin/console doctrine:migrations:migrate --no-interaction
-    fi
+    bin/console doctrine:database:drop --force
+    bin/console doctrine:database:create
+    bin/console doctrine:schema:create
 fi
 
 exec docker-php-entrypoint "$@"
