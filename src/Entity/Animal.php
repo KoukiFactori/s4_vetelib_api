@@ -10,14 +10,15 @@ use ApiPlatform\Metadata\Link;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
+use ApiPlatform\OpenApi\Model;
 use App\Controller\GetAllAnimalOfVeterinaireController;
+use App\Controller\GetUserAnimalsController;
 use App\Repository\AnimalRepository;
 use App\Validator\AuthenticatedUserAnimal;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: AnimalRepository::class)]
 #[ApiResource(
@@ -266,6 +267,21 @@ use Symfony\Component\Serializer\Annotation\Groups;
         ),
     ]
 )]
+#[ApiResource(
+    operations: [
+        new GetCollection(
+            uriTemplate: '/me/animals',
+            security: 'is_granted("ROLE_USER")',
+            controller: GetUserAnimalsController::class,
+            itemUriTemplate: '/animals/{id}',
+            openapi: new Model\Operation(
+                tags: ['Client'],
+                summary: 'Get all animals from the current user',
+                description: 'Allow the current connected user to get all the animals they have',
+            )
+        ),
+    ]
+)]
 class Animal
 {
     #[ORM\Id]
@@ -274,21 +290,17 @@ class Animal
     private ?int $id = null;
 
     #[ORM\Column(length: 40)]
-    #[Groups('animal:read:collection')]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    #[Groups('animal:read:collection')]
     private ?\DateTimeInterface $birthdate = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups('animal:read:collection')]
     private ?Espece $espece = null;
 
     #[ORM\ManyToOne(inversedBy: 'animals')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups('animal:read:collection')]
     #[AuthenticatedUserAnimal]
     private ?Client $client = null;
 

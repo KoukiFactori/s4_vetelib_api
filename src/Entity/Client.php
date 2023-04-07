@@ -6,27 +6,12 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\OpenApi\Model;
 use App\Controller\GetAllClientOfVeterinaireController;
-use App\Controller\GetUserAnimalsController;
 use App\Repository\ClientRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ClientRepository::class)]
-#[ApiResource(
-    operations: [
-        new GetCollection(
-            uriTemplate: '/me/animals',
-            controller: GetUserAnimalsController::class,
-            security: 'is_granted("ROLE_CLIENT")',
-            normalizationContext: ['animal:read:collection'],
-            openapi: new Model\Operation(
-                summary: 'Get all animals from the current user',
-                description: 'Allow the current connected user to get all the animals they have',
-            )
-        ),
-    ]
-)]
 #[ApiResource(
     uriTemplate: '/veterinaire/{id}/clients',
     security: 'is_granted("ROLE_ADMIN") or is_granted("ROLE_VETERINAIRE")',
