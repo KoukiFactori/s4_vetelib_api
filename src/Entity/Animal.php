@@ -2,23 +2,24 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
-use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\Link;
-use ApiPlatform\Metadata\Patch;
-use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
+use ApiPlatform\Metadata\Link;
+use ApiPlatform\Metadata\Post;
 use ApiPlatform\OpenApi\Model;
-use App\Controller\GetAllAnimalOfVeterinaireController;
-use App\Controller\GetUserAnimalsController;
-use App\Repository\AnimalRepository;
-use App\Validator\AuthenticatedUserAnimal;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Delete;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\AnimalRepository;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
+use App\Validator\AuthenticatedUserAnimal;
+use Doctrine\Common\Collections\Collection;
+use App\Controller\GetUserAnimalsController;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
+use App\Controller\GetAllAnimalOfVeterinaireController;
 
 #[ORM\Entity(repositoryClass: AnimalRepository::class)]
 #[ApiResource(
@@ -34,6 +35,9 @@ use Doctrine\ORM\Mapping as ORM;
         new Get(
             uriTemplate: '/animals/{id}',
             paginationEnabled: false,
+            normalizationContext: [
+                'groups' => ['animal:read', 'animal:owner:read']
+            ],
             security: 'is_granted("ROLE_ADMIN") or is_granted("ROLE_VETERINAIRE") or (is_granted("ROLE_CLIENT") and object.getClient() == user)',   // Un client ne peut voir que ses animaux
             openapiContext: [
                 'summary' => 'Get One Animal',
@@ -287,12 +291,15 @@ class Animal
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups('animal:read')]
     private ?int $id = null;
 
     #[ORM\Column(length: 40)]
+    #[Groups('animal:read')]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[Groups('animal:read')]
     private ?\DateTimeInterface $birthdate = null;
 
     #[ORM\ManyToOne]
@@ -302,6 +309,7 @@ class Animal
     #[ORM\ManyToOne(inversedBy: 'animals')]
     #[ORM\JoinColumn(nullable: false)]
     #[AuthenticatedUserAnimal]
+    #[Groups('animal:owner:read')]
     private ?Client $client = null;
 
     #[ORM\OneToMany(mappedBy: 'animal', targetEntity: Event::class)]
