@@ -43,7 +43,7 @@ class VeterinaireRepository extends ServiceEntityRepository
     {
         $events = $this->createQueryBuilder('veto')
             ->addSelect('event')
-            ->leftJoin("veto.events", 'event')
+            ->leftJoin('veto.events', 'event')
             ->where('event.date >= :start')
             ->andWhere('event.date <= :end')
             ->orderBy('event.date')
@@ -56,11 +56,11 @@ class VeterinaireRepository extends ServiceEntityRepository
         return $events;
     }
 
-    public function findByStartingTimeAndVeterinaire(\DateTimeInterface $date , Veterinaire $veterinaire): array
+    public function findByStartingTimeAndVeterinaire(\DateTimeInterface $date, Veterinaire $veterinaire): array
     {
         $events = $this->createQueryBuilder('veto')
             ->addSelect('event')
-            ->leftJoin("veto.events", 'event')
+            ->leftJoin('veto.events', 'event')
             ->where('event.date = :start')
             ->andWhere('veto.id = :veto')
             ->orderBy('event.date')
@@ -110,6 +110,20 @@ class VeterinaireRepository extends ServiceEntityRepository
                 $slotEnd->add($interval);
             }
         return $slots;
+    }
+
+    public function retrieveAllClientRelatedToVeterinaire(int $vetId): array
+    {
+        $clients = $this->createQueryBuilder('veto')
+            ->select('client')
+            ->where('veto.id = :id')
+            ->innerJoin('veto.events', 'event')
+            ->innerJoin('event.animal', 'animal')
+            ->innerJoin('animal.client', 'client')
+            ->setParameter('id', $vetId)
+            ->getQuery()->execute();
+
+        return $clients;
     }
 
 //    /**
