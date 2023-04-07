@@ -13,10 +13,10 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ClientRepository::class)]
 #[ApiResource(
-    uriTemplate: '/veterinaire/{id}/clients',
-    security: 'is_granted("ROLE_ADMIN") or is_granted("ROLE_VETERINAIRE")',
     operations: [
         new GetCollection(
+            uriTemplate: '/veterinaires/{id}/clients',
+            security: 'is_granted("ROLE_ADMIN") or is_granted("ROLE_VETERINAIRE")',
             controller: GetAllClientOfVeterinaireController::class,
             normalizationContext: [
                 'groups' => 'user:read'
