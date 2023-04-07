@@ -14,6 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\AnimalRepository;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\OpenApi\Model\Parameter;
 use App\Validator\AuthenticatedUserAnimal;
 use Doctrine\Common\Collections\Collection;
 use App\Controller\GetUserAnimalsController;
@@ -23,63 +24,72 @@ use App\Controller\GetAllAnimalOfVeterinaireController;
 
 #[ORM\Entity(repositoryClass: AnimalRepository::class)]
 #[ApiResource(
+    normalizationContext: [
+        'groups' => ['animal:read', 'animal:owner:read', 'animal:espece:read']
+    ],
     operations: [
         new GetCollection(
             uriTemplate: '/animals',
             security: 'is_granted("ROLE_ADMIN")',
-            openapiContext: [
-                'summary' => 'Get all animals',
-                'description' => 'Get all animals',
-            ],
+            openapi: new Model\Operation(
+                summary: 'Get all animals',
+                description: 'Get all animals',
+                operationId: 'fetchAllAnimals',
+                responses: [
+                    '200' => new Model\Response(
+                        description: 'A list of animals',
+                    ),
+                    '401' => new Model\Response(
+                        description: 'Not authorized, you are not logged in',
+                    ),
+                    '403' => new Model\Response(
+                        description: 'Not authorized, you do not have the rights',
+                    ),
+                    '404' => new Model\Response(
+                        description: 'The animal does not exist',
+                    )
+                ]
+            )
         ),
         new Get(
             uriTemplate: '/animals/{id}',
-            paginationEnabled: false,
-            normalizationContext: [
-                'groups' => ['animal:read', 'animal:owner:read']
-            ],
             security: 'is_granted("ROLE_ADMIN") or is_granted("ROLE_VETERINAIRE") or (is_granted("ROLE_CLIENT") and object.getClient() == user)',   // Un client ne peut voir que ses animaux
-            openapiContext: [
-                'summary' => 'Get One Animal',
-                'description' => 'Get one Animal',
-                'responses' => [
-                    '200' => [
-                        'description' => 'Recovery of the animal by its id',
-                    ],
-                    '401' => [
-                        'description' => 'Not authorized, you are not logged in',
-                    ],
-                    '403' => [
-                        'description' => 'Not authorized, you do not have the rights',
-                    ],
-                    '404' => [
-                        'description' => 'The animal does not exist',
-                    ],
-                    '500' => [
-                        'description' => 'Server Error',
-                    ],
+            openapi: new Model\Operation(
+                summary: 'Get One Animal',
+                description: 'Get one Animal',
+                operationId: 'fetchOneAnimal',
+                responses: [
+                    '200' => new Model\Response(
+                        description: 'Returns an objet representing an Animal',
+                    ),
+                    '401' => new Model\Response(
+                        description: 'Not authorized, you are not logged in',
+                    ),
+                    '403' => new Model\Response(
+                        description: 'Not authorized, you do not have the rights',
+                    ),
+                    '404' => new Model\Response(
+                        description: 'The animal does not exist',
+                    )
                 ],
-                'parameters' => [
-                    [
-                        'name' => 'id',
-                        'in' => 'path',
-                        'description' => 'The id of the animal',
-                        'required' => true,
-                        'type' => 'integer',
-                        'openapi' => [
-                            'example' => 1,
-                        ],
-                    ],
+                parameters: [
+                    new Model\Parameter(
+                        name: 'id',
+                        in: 'path',
+                        description: 'The id of the animal',
+                        required: true,
+                        examples: new \ArrayObject([1])
+                    )
                 ],
-            ],
+            )
         ),
         new Post(
             uriTemplate: '/animals',
             security: 'is_granted("ROLE_ADMIN") or is_granted("ROLE_CLIENT")',   // Un client ne peut pas créer d'animal pour un autre client
-            openapiContext: [
-                'summary' => 'Create an animal',
-                'description' => 'Create an animal',
-                'responses' => [
+            openapi: new Model\Operation(
+                summary: 'Create an animal',
+                description: 'Create an animal',
+                responses: [
                     '201' => [
                         'description' => 'Animal created',
                     ],
@@ -96,15 +106,15 @@ use App\Controller\GetAllAnimalOfVeterinaireController;
                         'description' => 'Server Error',
                     ],
                 ],
-            ],
+            )
         ),
         new Patch(
             uriTemplate: '/animals/{id}',
             security: 'is_granted("ROLE_ADMIN") or (is_granted("ROLE_CLIENT") and object.getClient() == user)',   // Un client ne peut pas modifier un animal qui ne lui appartient pas
-            openapiContext: [
-                'summary' => 'Update an animal',
-                'description' => 'Update an animal',
-                'responses' => [
+            openapi: new Model\Operation(
+                summary: 'Update an animal',
+                description: 'Update an animal',
+                responses: [
                     '200' => [
                         'description' => 'Animal updated',
                     ],
@@ -121,27 +131,23 @@ use App\Controller\GetAllAnimalOfVeterinaireController;
                         'description' => 'Server Error',
                     ],
                 ],
-                'parameters' => [
-                    [
-                        'name' => 'id',
-                        'in' => 'path',
-                        'description' => 'The id of the animal',
-                        'required' => true,
-                        'type' => 'integer',
-                        'openapi' => [
-                            'example' => 1,
-                        ],
-                    ],
-                ],
-            ],
+                parameters: [
+                    new Model\Parameter(
+                        name: 'id',
+                        in: 'path',
+                        description: 'The id of the animal',
+                        required: true
+                    )
+                ]
+            )
         ),
         new Put(
             uriTemplate: '/animals/{id}',
             security: 'is_granted("ROLE_ADMIN")',
-            openapiContext: [
-                'summary' => 'Update an animal',
-                'description' => 'Update an animal',
-                'responses' => [
+            openapi: new Model\Operation(
+                summary: 'Update an animal',
+                description: 'Update an animal',
+                responses: [
                     '200' => [
                         'description' => 'Animal updated',
                     ],
@@ -158,27 +164,23 @@ use App\Controller\GetAllAnimalOfVeterinaireController;
                         'description' => 'Server Error',
                     ],
                 ],
-                'parameters' => [
-                    [
-                        'name' => 'id',
-                        'in' => 'path',
-                        'description' => 'The id of the animal',
-                        'required' => true,
-                        'type' => 'integer',
-                        'openapi' => [
-                            'example' => 1,
-                        ],
-                    ],
-                ],
-            ],
+                parameters: [
+                    new Model\Parameter(
+                        name: 'id',
+                        in: 'path',
+                        description: 'The id of the animal',
+                        required: true
+                    )
+                ]
+            )
         ),
         new Delete(
             uriTemplate: '/animals/{id}',
             security: 'is_granted("ROLE_ADMIN") or (is_granted("ROLE_CLIENT") and object.getClient() == user)',   // Un client ne peut pas supprimer un animal qui ne lui appartient pas
-            openapiContext: [
-                'summary' => 'Delete an animal',
-                'description' => 'Delete an animal',
-                'responses' => [
+            openapi: new Model\Operation(
+                summary: 'Delete an animal',
+                description: 'Delete an animal',
+                responses: [
                     '204' => [
                         'description' => 'Animal deleted',
                     ],
@@ -195,34 +197,35 @@ use App\Controller\GetAllAnimalOfVeterinaireController;
                         'description' => 'Server Error',
                     ],
                 ],
-                'parameters' => [
-                    [
-                        'name' => 'id',
-                        'in' => 'path',
-                        'description' => 'The id of the animal',
-                        'required' => true,
-                        'type' => 'integer',
-                        'openapi' => [
-                            'example' => 1,
-                        ],
-                    ],
-                ],
-            ],
-        ),
+                parameters: [
+                    new Model\Parameter(
+                        name: 'id',
+                        in: 'path',
+                        description: 'The id of the animal',
+                        required: true
+                    )
+                ]
+            )
+        )
     ]
 )]
 #[ApiResource(
     uriTemplate: '/veterinaires/{id}/animals',
+    requirements: [
+        'id' => '\d+'
+    ],
+    normalizationContext: [
+        'groups' => ['animal:read', 'animal:owner:read', 'animal:espece:read']
+    ],
     operations: [
         new GetCollection(
             security: 'is_granted("ROLE_ADMIN") or is_granted("ROLE_VETERINAIRE")',
-            paginationEnabled: false,
             controller: GetAllAnimalOfVeterinaireController::class,
-            openapiContext: [
-                'tags' => ['Veterinaire'],
-                'summary' => 'Get all animals of a veterinaire',
-                'description' => 'Get all animals of a veterinaire',
-                'responses' => [
+            openapi: new Model\Operation(
+                tags: ['Veterinaire'],
+                summary: 'Get all animals of a veterinaire',
+                description: 'Get all animals of a veterinaire',
+                responses: [
                     '200' => [
                         'description' => 'Animals of a veterinaire',
                     ],
@@ -238,20 +241,17 @@ use App\Controller\GetAllAnimalOfVeterinaireController;
                     '500' => [
                         'description' => 'Server Error',
                     ],
-                    ],
-                'parameters' => [
-                    [
-                        'name' => 'id',
-                        'in' => 'path',
-                        'description' => 'The id of the veterinarian',
-                        'required' => true,
-                        'type' => 'integer',
-                        'openapi' => [
-                            'example' => 1,
-                        ],
-                    ],
                 ],
-            ]
+                parameters: [
+                    new Parameter(
+                        name: 'id',
+                        in: 'path',
+                        description: 'The id of the veterinarian',
+                        required: true,
+                        example: 1
+                    )
+                ],
+            )
         ),
     ]
 )]
@@ -261,13 +261,26 @@ use App\Controller\GetAllAnimalOfVeterinaireController;
         fromClass: Client::class,
         fromProperty: 'animals',
     )],
-    openapiContext: [
-        'tags' => ['Client'],
+    requirements: [
+        'id' => '\d+'
     ],
     operations: [
         new GetCollection(
             security: 'is_granted("ROLE_ADMIN") or (is_granted("ROLE_CLIENT") and id == user.getId()) or is_granted("ROLE_VETERINAIRE")',
             paginationEnabled: false,
+            openapi: new Model\Operation(
+                summary: 'Retrieves all the animals for a given client',
+                description: 'Retrieves all the animals for a given client',
+                tags: ['Client'],
+                parameters: [
+                    new Model\Parameter(
+                        name: 'id',
+                        in: 'path',
+                        description: 'The id of the animal',
+                        required: true
+                    )
+                ]
+            )
         ),
     ]
 )]
@@ -304,6 +317,7 @@ class Animal
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups('animal:espece:read')]
     private ?Espece $espece = null;
 
     #[ORM\ManyToOne(inversedBy: 'animals')]
