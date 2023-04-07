@@ -2,25 +2,31 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\Get;
+use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
 use App\Repository\VeterinaireRepository;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 #[ORM\Entity(repositoryClass: VeterinaireRepository::class)]
 #[ApiResource(
-    security: 'is_granted("ROLE_USER")',
     operations: [
+        new Get(
+            security: 'is_granted("ROLE_USER")',
+            normalizationContext: ['groups' => ['veterinaire:read']]
+        ),
         new GetCollection(
-            normalizationContext: ['groups' => ['user:read']]
+            security: 'is_granted("ROLE_USER")',
+            normalizationContext: ['groups' => ['veterinaire:read']]
         )
     ]
 )]
 class Veterinaire extends User
 {
     #[ORM\OneToMany(mappedBy: 'veterinaire', targetEntity: Event::class)]
+    
     private Collection $events;
 
     public function __construct()
