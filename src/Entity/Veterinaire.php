@@ -9,7 +9,9 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: VeterinaireRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    operations: []
+)]
 class Veterinaire extends User
 {
     #[ORM\OneToMany(mappedBy: 'veterinaire', targetEntity: Event::class)]
@@ -50,4 +52,3 @@ class Veterinaire extends User
         return $this;
     }
 }
- 
