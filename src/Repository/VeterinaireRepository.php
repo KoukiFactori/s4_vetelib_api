@@ -16,7 +16,7 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class VeterinaireRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, private ClientRepository $cr)
     {
         parent::__construct($registry, Veterinaire::class);
     }
@@ -114,13 +114,13 @@ class VeterinaireRepository extends ServiceEntityRepository
 
     public function retrieveAllClientRelatedToVeterinaire(int $vetId): array
     {
-        $clients = $this->createQueryBuilder('veto')
-            ->select('client')
-            ->where('veto.id = :id')
-            ->innerJoin('veto.events', 'event')
-            ->innerJoin('event.animal', 'animal')
-            ->innerJoin('animal.client', 'client')
+        $clients = $this->cr->createQueryBuilder('client')
+            ->innerJoin('client.animals', 'animal')
+            ->innerJoin('animal.events', 'event')
+            ->innerJoin('event.veterinaire', 'vet')
+            ->where('vet.id = :id')
             ->setParameter('id', $vetId)
+            ->orderBy('client.id')
             ->getQuery()->execute();
 
         return $clients;
