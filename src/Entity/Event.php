@@ -69,7 +69,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
     operations: [
         new GetCollection(
             uriTemplate: '/animals/{id}/events',
-            security: 'is_granted("ROLE_USER") or is_granted("ROLE_ADMIN")',
+            security: 'is_granted("ROLE_USER")',
             controller: GetAllEventOfAnimalController::class,
         ),
 ])]
@@ -82,7 +82,6 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
     openapiContext: [
         'tags' => ['Veterinaire'],
     ],
-
     operations: [
         new GetCollection(
             security: 'is_granted("ROLE_VETERINAIRE") or is_granted("ROLE_ADMIN")',

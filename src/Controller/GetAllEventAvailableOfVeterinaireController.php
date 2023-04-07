@@ -2,10 +2,8 @@
 
 namespace App\Controller;
 
-use App\Repository\AnimalRepository;
 use App\Repository\VeterinaireRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class GetAllEventAvailableOfVeterinaireController extends AbstractController
 {
@@ -13,9 +11,9 @@ class GetAllEventAvailableOfVeterinaireController extends AbstractController
     {
     }
 
-    public function __invoke(int $id): array
+    public function __invoke(int $id , string $date): array
     {
 
-        return $this->vr->getAvailableSlots($this->vr->find($id));
+        return $this->vr->getAvailableSlots($this->vr->find($id) , $date);
     }
 }

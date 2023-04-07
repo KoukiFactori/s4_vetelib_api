@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
 use App\Repository\VeterinaireRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -10,7 +11,10 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: VeterinaireRepository::class)]
 #[ApiResource(
-    operations: []
+    security: 'is_granted("ROLE_USER")',
+    operations: [
+        new GetCollection()
+    ]
 )]
 class Veterinaire extends User
 {
