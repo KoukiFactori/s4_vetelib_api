@@ -262,7 +262,7 @@ use Doctrine\ORM\Mapping as ORM;
     ],
     operations: [
         new GetCollection(
-            security: 'is_granted("ROLE_ADMIN") or (is_granted("ROLE_CLIENT") and id == user.getId())',
+            security: 'is_granted("ROLE_ADMIN") or (is_granted("ROLE_CLIENT") and id == user.getId()) or is_granted("ROLE_VETERINAIRE")',
             paginationEnabled: false,
         ),
     ]

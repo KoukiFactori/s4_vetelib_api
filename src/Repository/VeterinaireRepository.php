@@ -71,27 +71,27 @@ class VeterinaireRepository extends ServiceEntityRepository
 
         return $events;
     }
-    public function getAvailableSlots(Veterinaire $veto): array
+    
+    public function getAvailableSlots(Veterinaire $veto , string $date): array
     {
         $interval = new \DateInterval('PT30M'); // intervalle de 30 minutes
         $slots = [];
 
         // pour chaque vétérinaire
-      
+            $date = new \DateTime($date);
+            $date = $date->format('Y-m-d');
             $events = $veto->getEvents(); // récupère les rendez-vous pour le vétérinaire en cours
             $start = new \DateTime('8:00'); // début à 8h
-            $end = new \DateTime('18:30'); // fin à 18h30
+            $end = new \DateTime('18:00'); // fin à 18h00
             $slotStart = clone $start; // on utilise une copie de l'heure de début pour parcourir les créneaux
-            $slotEnd = clone $slotStart;
-            $slotEnd->add($interval); // l'heure de fin du créneau est l'heure de début du créneau + 30 minutes
-            $slots[$veto->getId()] = []; // initialise le tableau de créneaux pour le vétérinaire en cours
+            $slots = []; // initialise le tableau de créneaux pour le vétérinaire en cours
 
             // tant que l'heure de début du créneau est avant l'heure de fin
             while ($slotStart < $end) {
                 $available = true; // on suppose que le créneau est disponible
                 // vérifie s'il y a un rendez-vous à la même heure que le créneau
                 foreach ($events as $event) {
-                    if ($event->getDate() >= $slotStart && $event->getDate() < $slotEnd) {
+                    if ($event->getDate()->format('H:i')>= $slotStart->format('H:i')  and $event->getDate()->format('Y-m-d')==$date) {
                         $available = false; // le créneau n'est pas disponible s'il y a un rendez-vous à la même heure
                         break;
                     }
@@ -99,15 +99,12 @@ class VeterinaireRepository extends ServiceEntityRepository
 
                 if ($available) {
                     // si le créneau est disponible, on l'ajoute au tableau de créneaux
-                    $slots[$veto->getId()][] = [
-                        'start' => $slotStart->format('H:i'),
-                        'end' => $slotEnd->format('H:i'),
-                    ];
+                    $slots[] = $slotStart->format('H:i');
                 }
 
                 // passe au créneau suivant
                 $slotStart->add($interval);
-                $slotEnd->add($interval);
+                
             }
         return $slots;
     }

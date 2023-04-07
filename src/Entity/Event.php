@@ -88,13 +88,19 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
             paginationEnabled: false,
         ),
         new GetCollection(
-            uriTemplate: '/veterinaires/{id}/events/available',
+            uriTemplate: '/veterinaires/{id}/events/available/{date}',
             controller: GetAllEventAvailableOfVeterinaireController::class,
             security: 'is_granted("ROLE_USER")',
-            uriVariables: ['id' => new Link(
-                fromClass: Veterinaire::class,
-                fromProperty: 'events',
-            )],
+            requirements: [
+                'date'=> '.+'
+            ],
+            uriVariables: [
+                'id' => new Link(
+                    fromClass: Veterinaire::class,
+                    fromProperty: 'events',
+                ),
+                'date' => 'string'
+            ],
         ),
     ]
 )]
