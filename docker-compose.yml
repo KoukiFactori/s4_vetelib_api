@@ -1,32 +1,57 @@
 version: '3.4'
 
+#Dev config file for docker-compose
+
 services:
-###> doctrine/doctrine-bundle ###
   db:
     image: mariadb:${MARIADB_VERSION:-latest}
     environment:
       - MYSQL_DATABASE=${MYSQL_DATABASE:-vetelib_api}
       - MYSQL_USER=${MYSQL_USER:-vetelib}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD:-!ChangeMe!}
-      - MYSQL_ROOT_PASSWORD=secretR00tPassw0rd
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-secretR00tPassw0rd}
     volumes:
       - database_data:/var/lib/mysql:rw
     networks:
       - symfony_api
+    env_file:
+      - .env
   
+  php:
+    build:
+      context: .
+      target: vetelib_php
+    volumes:
+      - .:/srv/api:rw
+      - ./docker/php/conf.d/dev.ini:/usr/local/etc/php/php.ini:ro
+    depends_on:
+      - db
+    networks:
+      - symfony_api
+    env_file:
+      - .env
+
   nginx:
-    image: moss0006/vetetib_nginx
-    restart: always
+    build:
+      context: .
+      target: vetelib_nginx  
+    volumes:
+      - ./public:/srv/api/public:ro
+    depends_on:
+      - php
     ports:
       - 8080:80
     networks:
       - symfony_api
-###< doctrine/doctrine-bundle ###
+
+###> symfony/mailer ###
+  mailer:
+    image: schickling/mailcatcher
+    ports: ["1025", "1080"]
+###< symfony/mailer ###
 
 volumes:
-###> doctrine/doctrine-bundle ###
   database_data:
-###< doctrine/doctrine-bundle ###
 
 networks:
   symfony_api:
