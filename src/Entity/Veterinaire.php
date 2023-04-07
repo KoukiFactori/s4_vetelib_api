@@ -13,7 +13,9 @@ use Doctrine\ORM\Mapping as ORM;
 #[ApiResource(
     security: 'is_granted("ROLE_USER")',
     operations: [
-        new GetCollection()
+        new GetCollection(
+            normalizationContext: ['groups' => ['user:read']]
+        )
     ]
 )]
 class Veterinaire extends User
