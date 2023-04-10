@@ -1,7 +1,5 @@
 version: '3.4'
 
-#Dev config file for docker-compose
-
 services:
   db:
     image: mariadb:${MARIADB_VERSION:-latest}
@@ -14,16 +12,22 @@ services:
       - database_data:/var/lib/mysql:rw
     networks:
       - symfony_api
+    expose:
+      - 3306
     env_file:
       - .env
   
   php:
-    build:
-      context: .
-      target: vetelib_php
-    volumes:
-      - .:/srv/api:rw
-      - ./docker/php/conf.d/dev.ini:/usr/local/etc/php/php.ini:ro
+    image: ${PHP_IMAGE}:${APP_VERSION}
+    restart: always
+    environment:
+      - APP_DEBUG=${APP_DEBUG:-0}
+      - APP_ENV=${APP_ENV:-prod}
+      - APP_SECRET=${APP_SECRET:?APP_SECRET is undefined}
+      - CORS_ALLOW_ORIGIN=${CORS_ALLOW_ORIGIN:?CORS_ALLOW_ORIGIN is undefined}
+      - DATABASE_URL=${DATABASE_URL:?DATABASE_URL is undefined}
+      - TRUSTED_HOSTS=${TRUSTED_HOSTS:?TRUSTED_HOSTS is undefined}
+      - TRUSTED_PROXIES=${TRUSTED_PROXIES:-"10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"}
     depends_on:
       - db
     networks:
@@ -32,23 +36,14 @@ services:
       - .env
 
   nginx:
-    build:
-      context: .
-      target: vetelib_nginx  
-    volumes:
-      - ./public:/srv/api/public:ro
+    image: ${NGINX_IMAGE}:${APP_VERSION}
+    restart: always
     depends_on:
       - php
     ports:
       - 8080:80
     networks:
       - symfony_api
-
-###> symfony/mailer ###
-  mailer:
-    image: schickling/mailcatcher
-    ports: ["1025", "1080"]
-###< symfony/mailer ###
 
 volumes:
   database_data:
