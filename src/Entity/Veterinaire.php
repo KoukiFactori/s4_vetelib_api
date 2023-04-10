@@ -9,17 +9,41 @@ use ApiPlatform\Metadata\GetCollection;
 use App\Repository\VeterinaireRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use ApiPlatform\OpenApi\Model;
 
 #[ORM\Entity(repositoryClass: VeterinaireRepository::class)]
 #[ApiResource(
+    #Route should not have security. Everyone need the possibility to search for veterinarian contact info.
+    normalizationContext: [
+        'groups' => ['veterinaire:read']
+    ],
     operations: [
         new Get(
-            security: 'is_granted("ROLE_USER")',
-            normalizationContext: ['groups' => ['veterinaire:read']]
+            uriTemplate: '/veterinaires/{id}',
+            requirements: [
+                'id' => '\d+'
+            ],
+            openapi: new Model\Operation(
+                summary: 'Retrieves a specific veterinarian',
+                description: 'Retrieves a specific veterinarian given his user identifier',
+                parameters: [
+                    new Model\Parameter(
+                        name: 'id',
+                        in: 'path',
+                        description: 'User Identifier',
+                        required: true,
+                        schema: [
+                            'type' => 'integer'
+                        ]
+                    )
+                ]
+            )
         ),
         new GetCollection(
-            security: 'is_granted("ROLE_USER")',
-            normalizationContext: ['groups' => ['veterinaire:read']]
+            openapi: new Model\Operation(
+                summary: 'Retrieves all the veterinarian',
+                description: 'Retrieves all the veterinarian, with limited informations for contact purpose'
+            )
         )
     ]
 )]
