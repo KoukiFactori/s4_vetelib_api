@@ -69,7 +69,7 @@ class Espece
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
-    #[Groups('animal:read:collection')]
+    #[Groups('animal:espece:read')]
     private ?string $name = null;
 
     public function getId(): ?int
