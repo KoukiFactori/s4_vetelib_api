@@ -9,6 +9,7 @@ use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
+use ApiPlatform\OpenApi\Model;
 use App\Repository\TypeEventRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -24,9 +25,19 @@ use Doctrine\ORM\Mapping as ORM;
         ),
         new Get(
             uriTemplate: '/typeEvents/{id}',
-            paginationEnabled: false,
             security: "is_granted('ROLE_USER')",
-            
+            openapi: new Model\Operation(
+                parameters: [
+                    new Model\Parameter(
+                        name: 'id',
+                        in: 'path',
+                        required: true,
+                        schema: [
+                            'type' => 'integer'
+                        ]
+                    )
+                ]
+            )
         ),
         new Post(
             uriTemplate: '/typeEvents',
@@ -36,23 +47,52 @@ use Doctrine\ORM\Mapping as ORM;
         new Patch(
             uriTemplate: '/typeEvents/{id}',
             security: "is_granted('ROLE_ADMIN')",
-           
+            openapi: new Model\Operation(
+                parameters: [
+                    new Model\Parameter(
+                        name: 'id',
+                        in: 'path',
+                        required: true,
+                        schema: [
+                            'type' => 'integer'
+                        ]
+                    )
+                ]
+            )
         ),
         new Put(
             uriTemplate: '/typeEvents/{id}',
             security: "is_granted('ROLE_ADMIN')",
-           
+            openapi: new Model\Operation(
+                parameters: [
+                    new Model\Parameter(
+                        name: 'id',
+                        in: 'path',
+                        required: true,
+                        schema: [
+                            'type' => 'integer'
+                        ]
+                    )
+                ]
+            )
         ),
         new Delete(
             uriTemplate: '/typeEvents/{id}',
             security: "is_granted('ROLE_ADMIN')",
-            
+            openapi: new Model\Operation(
+                parameters: [
+                    new Model\Parameter(
+                        name: 'id',
+                        in: 'path',
+                        required: true,
+                        schema: [
+                            'type' => 'integer'
+                        ]
+                    )
+                ]
+            )
         ),
-        
-        
-        
-        
-],
+    ],
 )]
 class TypeEvent
 {
