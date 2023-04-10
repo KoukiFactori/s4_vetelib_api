@@ -10,6 +10,7 @@ use ApiPlatform\Metadata\ApiResource;
 use APiPlatform\Metadata\Delete;
 use APiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\OpenApi\Model;
 use ApiPlatform\Metadata\Link;
 use ApiPlatform\Metadata\Patch;
 use APiPlatform\Metadata\Post;
@@ -25,6 +26,8 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
+use function Symfony\Component\DependencyInjection\Loader\Configurator\param;
+
 #[ORM\Entity(repositoryClass: EventRepository::class)]
 #[ApiResource(
     operations: [
@@ -36,6 +39,18 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
             uriTemplate: '/events/{id}',
             paginationEnabled: false,
             security: 'is_granted("ROLE_USER") and (object.getVeterinaire() == user or object.getAnimal().getClient() == user) or is_granted("ROLE_ADMIN")',
+            openapi: new Model\Operation(
+                parameters: [
+                    new Model\Parameter(
+                        name: 'id',
+                        in: 'path',
+                        required: true,
+                        schema: [
+                            'type' => 'integer'
+                        ]
+                    )
+                ]
+            )
         ),
         new Post(
             uriTemplate: '/events',
@@ -44,16 +59,52 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
         new Patch(
             uriTemplate: '/events/{id}',
             security: 'is_granted("ROLE_USER") and (object.getVeterinaire() == user or object.getAnimal().getClient() == user) or is_granted("ROLE_ADMIN")',
+            openapi: new Model\Operation(
+                parameters: [
+                    new Model\Parameter(
+                        name: 'id',
+                        in: 'path',
+                        required: true,
+                        schema: [
+                            'type' => 'integer'
+                        ]
+                    )
+                ]
+            )
         ),
         new Delete(
             uriTemplate: '/events/{id}',
             security: 'is_granted("ROLE_USER") and (object.getVeterinaire() == user or object.getAnimal().getClient() == user) or is_granted("ROLE_ADMIN")',
+            openapi: new Model\Operation(
+                parameters: [
+                    new Model\Parameter(
+                        name: 'id',
+                        in: 'path',
+                        required: true,
+                        schema: [
+                            'type' => 'integer'
+                        ]
+                    )
+                ]
+            )
         ),
         new Put(
             uriTemplate: '/events/{id}',
             security: 'is_granted("ROLE_USER") and (object.getVeterinaire() == user or object.getAnimal().getClient() == user) or is_granted("ROLE_ADMIN")',
+            openapi: new Model\Operation(
+                parameters: [
+                    new Model\Parameter(
+                        name: 'id',
+                        in: 'path',
+                        required: true,
+                        schema: [
+                            'type' => 'integer'
+                        ]
+                    )
+                ]
+            )
         ),
-            ]
+    ]
 )]
 #[ApiFilter(SearchFilter::class, properties: ['typeEvent.libType' => 'exact'])]
 #[ApiFilter(BooleanFilter::class)]
@@ -63,14 +114,14 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
         fromClass: Animal::class,
         fromProperty: 'events',
     )],
-    openapiContext: [
-        'tags' => ['Animal'],
-    ],
     operations: [
         new GetCollection(
             uriTemplate: '/animals/{id}/events',
             security: 'is_granted("ROLE_USER")',
             controller: GetAllEventOfAnimalController::class,
+            openapi: new Model\Operation(
+                tags: ['Animal']
+            )
         ),
 ])]
 #[ApiResource(
@@ -79,9 +130,9 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
         fromClass: Veterinaire::class,
         fromProperty: 'events',
     )],
-    openapiContext: [
-        'tags' => ['Veterinaire'],
-    ],
+    openapi: new Model\Operation(
+        tags: ['Veterinaire']
+    ),
     operations: [
         new GetCollection(
             security: 'is_granted("ROLE_VETERINAIRE") or is_granted("ROLE_ADMIN")',
@@ -89,18 +140,32 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
         ),
         new GetCollection(
             uriTemplate: '/veterinaires/{id}/events/available/{date}',
-            controller: GetAllEventAvailableOfVeterinaireController::class,
-            security: 'is_granted("ROLE_USER")',
-            requirements: [
-                'date'=> '.+'
-            ],
             uriVariables: [
                 'id' => new Link(
                     fromClass: Veterinaire::class,
                     fromProperty: 'events',
                 ),
-                'date' => 'string'
             ],
+            controller: GetAllEventAvailableOfVeterinaireController::class,
+            security: 'is_granted("ROLE_USER")',
+            requirements: [
+                'id' => '\d+',
+                'date'=> '.+'
+            ],
+            openapi: new Model\Operation(
+                parameters: [
+                    new Model\Parameter(
+                       name: 'id',
+                       in: 'path',
+                       required: true
+                    ),
+                    new Model\Parameter(
+                        name: 'date',
+                        in: 'path',
+                        required: true
+                    )
+                ]
+            )
         ),
     ]
 )]
@@ -109,9 +174,9 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 #[ApiResource(
     uriTemplate: '/clients/{id}/events',
     security: 'is_granted("ROLE_CLIENT")',
-    openapiContext: [
-        'tags' => ['Client'],
-    ],
+    openapi: new Model\Operation(
+        tags: ['Client']
+    ),
     operations: [
         new GetCollection(
             uriTemplate: '/clients/{id}/events',
