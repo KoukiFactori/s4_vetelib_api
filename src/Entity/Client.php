@@ -16,6 +16,9 @@ use Doctrine\ORM\Mapping as ORM;
     operations: [
         new GetCollection(
             uriTemplate: '/veterinaires/{id}/clients',
+            requirements: [
+                'id' => '\d+'
+            ],
             security: 'is_granted("ROLE_ADMIN") or is_granted("ROLE_VETERINAIRE")',
             controller: GetAllClientOfVeterinaireController::class,
             normalizationContext: [
@@ -41,6 +44,17 @@ use Doctrine\ORM\Mapping as ORM;
                     '500' => [
                         'description' => 'Server error',
                     ],
+                ],
+                parameters: [
+                    new Model\Parameter(
+                        name: 'id',
+                        in: 'path',
+                        description: 'The id of the animal',
+                        required: true,
+                        schema: [
+                            'type' => 'integer'
+                        ]
+                    )
                 ]
             )
         ),
