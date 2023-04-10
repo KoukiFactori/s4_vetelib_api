@@ -2,21 +2,24 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\OpenApi\Model;
+use Doctrine\DBAL\Types\Types;
+use ApiPlatform\Metadata\Patch;
+use Doctrine\ORM\Mapping as ORM;
+use App\Repository\UserRepository;
+use App\Controller\GetMeController;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\Patch;
-use ApiPlatform\OpenApi\Model;
-use App\Controller\GetMeController;
-use App\Repository\UserRepository;
-use Doctrine\DBAL\Types\Types;
-use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\Mapping\DiscriminatorColumn;
-use Doctrine\ORM\Mapping\DiscriminatorMap;
 use Doctrine\ORM\Mapping\InheritanceType;
+use Doctrine\ORM\Mapping\DiscriminatorMap;
+use Doctrine\ORM\Mapping\DiscriminatorColumn;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Serializer\Annotation\Groups;
+
+use function Symfony\Component\DependencyInjection\Loader\Configurator\param;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[InheritanceType('SINGLE_TABLE')]
@@ -32,15 +35,15 @@ use Symfony\Component\Serializer\Annotation\Groups;
         summary: 'Retrieves all users',
         description: 'Retrieves all the users in the database',
         responses: [
-            '200' => [
-                'description' => 'List of users',
-            ],
-            '401' => [
-                'description' => 'Unauthorized',
-            ],
-            '403' => [
-                'description' => "You don't have permission to interact with this route",
-            ],
+            '200' => new Model\Operation(
+                description: 'List of users',
+            ),
+            '401' => new Model\Operation(
+                description: 'Unauthorized',
+            ),
+            '403' => new Model\Operation(
+                description: "You don't have permission to interact with this route",
+            ),
         ],
     )
 )]
@@ -53,20 +56,40 @@ use Symfony\Component\Serializer\Annotation\Groups;
         summary: 'Retrieves the connected user',
         description: 'Retrieves the current connected user, returns an error if user is not connected',
         responses: [
-            '200' => [
-                'description' => 'Current user returns by the security layout',
-                'headers' => [
-                    'Content-Type' => 'application/json',
-                ],
-            ],
-            '401' => [
-                'description' => 'Unauthorized',
-            ],
-            '403' => [
-                'description' => "You don't have access to this ressource",
-            ],
+            '200' => new Model\Response(
+                description: 'Current user returns by the security layout',
+                headers: new \ArrayObject([
+                    'Content-Type' => 'application/json'
+                ])
+            ),
+            '401' => new Model\Response(
+                description: 'Unauthorized',
+            ),
+            '403' => new Model\Response(
+                description: "You don't have access to this ressource",
+            ),
         ],
     )
+)]
+#[Get(
+    uriTemplate: '/users/{id}',
+    requirements: ['id' => '\d+'],
+    security: "is_granted('ROLE_VETERINAIRE') and is_granted('ROLE_ADMIN')",
+    denormalizationContext: ['groups' => ['user:set']],
+    openapi: new Model\Operation(
+        parameters: [
+            new Model\Parameter(
+                name: 'id',
+                in: 'path',
+                description: 'ID of the user',
+                required: true,
+                schema: [
+                    'type' => 'integer'
+                ]
+            )
+        ]
+    )
+
 )]
 #[Patch(
     uriTemplate: '/users/{id}',
@@ -77,10 +100,22 @@ use Symfony\Component\Serializer\Annotation\Groups;
         summary: 'Patch an User',
         description: 'Allow user to patch current informations by providing updated said informations',
         responses: [
-            '500' => 'Server Error, try later',
-            '403' => "You don't permission to interact with this entity",
-            '401' => 'Unauthorized.',
-            '201' => 'Updated',
+            '201' => new Model\Response(description: 'Updated'),
+            '401' => new Model\Response(description: 'Unauthorized.'),
+            '403' => new Model\Response(
+                description: "You don't permission to interact with this entity"
+            ),
+            '500' => new Model\Response(description: 'Server Error, try later'),
+        ],
+        parameters: [
+            new Model\Parameter(
+                name: 'id',
+                in: 'path',
+                description: 'ID of the User',
+                schema: [
+                    'type' => 'integer'
+                ]
+            )
         ]
     )
 )]
@@ -93,15 +128,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     protected ?int $id = null;
 
     #[ORM\Column(length: 50)]
-    #[Groups(['user:read', 'user:write'])]
+    #[Groups(['user:read', 'user:write', 'animal:owner:read', 'veterinaire:read'])]
     private ?string $lastname = null;
 
     #[ORM\Column(length: 50)]
-    #[Groups(['user:read', 'user:write'])]
+    #[Groups(['user:read', 'user:write', 'animal:owner:read', 'veterinaire:read'])]
     private ?string $firstname = null;
 
     #[ORM\Column(length: 180, unique: true)]
-    #[Groups(['user:read', 'user:write'])]
+    #[Groups(['user:read', 'user:write', 'veterinaire:read'])]
     protected ?string $email = null;
 
     #[ORM\Column]
@@ -115,7 +150,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     protected ?string $password = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['user:read', 'user:write'])]
+    #[Groups(['user:read', 'user:write', 'veterinaire:read'])]
     private ?string $phone = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
