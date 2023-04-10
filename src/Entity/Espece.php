@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\EspeceRepository;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\OpenApi\Model;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: EspeceRepository::class)]
@@ -15,19 +16,19 @@ use Symfony\Component\Serializer\Annotation\Groups;
         new GetCollection(
             uriTemplate: '/especes',
             security: "is_granted('ROLE_USER')",
-            openapiContext: [
-                'summary' => 'Récupérer la collection des espèces',
-                'description' => 'Récupérer la collection des espèces',
-            ]
+            openapi: new Model\Operation(
+                summary: 'Récupérer la collection des espèces',
+                description: 'Récupérer la collection des espèces',
+            )
         ),
         new Get(
             uriTemplate: '/especes/{id}',
             paginationEnabled: false,
             security: "is_granted('ROLE_USER')",
-            openapiContext: [
-                'summary' => 'Get One Species',
-                'description' => 'Get one species',
-                'responses' => [
+            openapi: new Model\Operation(
+                summary: 'Get One Species',
+                description: 'Get one species',
+                responses: [
                     '200' => [
                         'description' => 'Recovery of the species by its id',
                     ],
@@ -44,19 +45,19 @@ use Symfony\Component\Serializer\Annotation\Groups;
                         'description' => 'Server Error',
                     ],
                 ],
-                'parameters' => [
-                    [
-                        'name' => 'id',
-                        'in' => 'path',
-                        'description' => 'The id of the species',
-                        'required' => true,
-                        'type' => 'integer',
-                        'openapi' => [
-                            'example' => 1,
+                parameters: [
+                    new Model\Parameter(
+                        name: 'id',
+                        in: 'path',
+                        description: 'The id of the species',
+                        required: true,
+                        examples: new \ArrayObject([1]),
+                        schema: [
+                            'type' => 'integer'
                         ],
-                    ],
+                    ),
                 ],
-            ],
+            ),
         ),
        
     ]
